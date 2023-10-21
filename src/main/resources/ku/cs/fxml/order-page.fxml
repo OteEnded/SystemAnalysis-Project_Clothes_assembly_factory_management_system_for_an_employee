@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.AutoCompleteTextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.OrderPageController">
+   <children>
+      <VBox prefHeight="720.0" prefWidth="256.0" spacing="20.0">
+         <children>
+            <AnchorPane prefHeight="149.0" prefWidth="256.0">
+               <children>
+                  <Text layoutX="78.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="โรงงาน">
+                     <font>
+                        <Font name="System Bold Italic" size="16.0" />
+                     </font>
+                  </Text>
+                  <Button layoutX="59.0" layoutY="94.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="25.0" prefWidth="82.0" text="ออกจากระบบ" />
+               </children>
+            </AnchorPane>
+            <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" text="สั่งงาน">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" text="รายการสินค้า">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" text="จัดการวัตถุดิบ">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" text="งานที่สั่ง">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+      <HBox layoutX="293.0" layoutY="150.0" prefHeight="408.0" prefWidth="816.0">
+         <children>
+            <VBox prefHeight="460.0" prefWidth="336.0">
+               <children>
+                  <AnchorPane prefHeight="97.57" prefWidth="242.68">
+                     <children>
+                        <Text layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ประเภทงาน">
+                           <font>
+                              <Font name="System Bold Italic" size="20.0" />
+                           </font>
+                        </Text>
+                        <ChoiceBox layoutX="14.0" layoutY="45.0" prefHeight="36.0" prefWidth="134.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="97.57" prefWidth="242.68">
+                     <children>
+                        <Text layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="สินค้า">
+                           <font>
+                              <Font name="System Bold Italic" size="20.0" />
+                           </font>
+                        </Text>
+                        <Label layoutX="73.0" layoutY="18.0" text="หากต้องการเพิ่มสินค้า ไปที่หน้า รายการสินค้า เพื่อเพิ่มสินค้าใหม่" />
+                        <AutoCompleteTextField layoutX="14.0" layoutY="51.0" prefHeight="43.0" prefWidth="320.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="97.57" prefWidth="242.68">
+                     <children>
+                        <Text layoutX="14.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="จำนวน">
+                           <font>
+                              <Font name="System Bold Italic" size="20.0" />
+                           </font>
+                        </Text>
+                        <TextField layoutX="14.0" layoutY="46.0" prefHeight="36.0" prefWidth="153.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="97.57" prefWidth="242.68">
+                     <children>
+                        <Text layoutX="14.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="กำหนดส่ง">
+                           <font>
+                              <Font name="System Bold Italic" size="20.0" />
+                           </font>
+                        </Text>
+                        <DatePicker layoutX="14.0" layoutY="49.0" prefHeight="36.0" prefWidth="153.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <VBox prefHeight="408.0" prefWidth="422.0">
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="497.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Text layoutX="14.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="หมายเหตุ">
+                           <font>
+                              <Font name="System Bold Italic" size="20.0" />
+                           </font>
+                        </Text>
+                        <TextArea layoutX="14.0" layoutY="52.0" prefHeight="134.0" prefWidth="470.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Button layoutX="306.0" layoutY="565.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" text="สั่งงาน" />
+      <Text layoutX="309.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="สั่งงาน">
+         <font>
+            <Font name="System Bold Italic" size="32.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

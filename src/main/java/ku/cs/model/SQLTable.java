@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// SQLTable is a class that represents a table in a database
 public class SQLTable {
     private String name;
     private List<SQLColumn> columns = new ArrayList<>();

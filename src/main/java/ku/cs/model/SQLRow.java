@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+// อันนี้เอาไว้เก็บข้อมูลที่ดึงมากจาก sql เป็นแถวๆ และเอาไว้เก็บข้อมูลที่จะเอาไปเขียนลง sql
 public class SQLRow {
     private String tableName;
     private List<String> primaryKey;

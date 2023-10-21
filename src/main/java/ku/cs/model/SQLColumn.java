@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+// อันนี้เป็นคราสที่ระบุคอลัมน์ของ SQLTable แต่ละคอลัมน์จะมีค่าต่างๆ ที่ระบุไว้ในนี้
 public class SQLColumn {
     private String name = "";
     private Class<?> classType = null;

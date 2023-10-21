@@ -19,7 +19,7 @@ public class Users implements Entity {
         sqlColumn = new SQLColumn();
         sqlColumn.setName("id");
         sqlColumn.setType("varchar(255)");
-        sqlColumn.setPrimaryKey(true);
+        sqlColumn.setPrimaryKey();
         sqlTable.addColumObj(sqlColumn);
 
         sqlColumn = new SQLColumn();
@@ -62,13 +62,14 @@ public class Users implements Entity {
         Users.data = data;
     }
 
+    // แก้เป็น U 00001 แล้วเพิ่มเลขไปเรื่อยๆ
     public static String getNewId(){
         if (data == null) load();
-        if (getData().size() == 0) return "Users1";
+        if (getData().size() == 0) return "U1";
         else {
             ArrayList<String> newId = new ArrayList<>(getData().keySet());
             Collections.sort(newId);
-            return "Users" + String.valueOf(Integer.parseInt(newId.get(getData().size() - 1)) + 1);
+            return "U" + String.valueOf(Integer.parseInt(newId.get(getData().size() - 1)) + 1);
         }
     }
 

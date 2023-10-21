@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="scenePane" prefHeight="720.0" prefWidth="1280.0" styleClass="bg" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.HomePageController" />
+<AnchorPane fx:id="scenePane" prefHeight="720.0" prefWidth="1280.0" styleClass="bg" stylesheets="@style/dark-theme.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.HomePageController">
+   <children>
+      <Pane layoutX="501.0" prefHeight="600.0" prefWidth="300.0" styleClass="bg2">
+         <children>
+            <Button layoutX="71.0" layoutY="309.0" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="51.0" prefWidth="161.0" styleClass="btn" text="เข้าใช้งาน">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Button>
+            <Button fx:id="aboutProgramButton" layoutX="66.0" layoutY="461.0" mnemonicParsing="false" onAction="#handleAboutProgramButton" prefHeight="40.0" prefWidth="170.0" styleClass="btn" text="รายละเอียดเพิ่มเติม">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
+            <ImageView fitHeight="250.0" fitWidth="250.0" layoutX="24.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+            <Button layoutX="66.0" layoutY="524.0" mnemonicParsing="false" onAction="#handleDeveloperButton" prefHeight="40.0" prefWidth="170.0" styleClass="btn" text="ผู้พัฒนาโปรแกรม">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <ImageView fitHeight="300.0" fitWidth="300.0" layoutX="95.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+      </ImageView>
+      <ImageView fitHeight="161.0" fitWidth="281.0" layoutX="114.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true">
+      </ImageView>
+      <Button fx:id="changeThemeButton" layoutX="14.0" layoutY="556.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" styleClass="btn-toolbar" text="เปลี่ยนธีมสี" />
+   </children>
+</AnchorPane>

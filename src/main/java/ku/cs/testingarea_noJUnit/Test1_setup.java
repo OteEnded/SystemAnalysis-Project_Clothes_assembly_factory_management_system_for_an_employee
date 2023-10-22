@@ -24,8 +24,9 @@ public class Test1_setup {
 
         Users.addData(user);
         user.save();
-//        user.setName("Ote");
-//        user.save();
+        user = new User("test2", 20);
+        Users.addData(user);
+        user.save();
         ProjectUtility.debug(Users.getData().toString());
 
         Date date = new Date(System.currentTimeMillis());

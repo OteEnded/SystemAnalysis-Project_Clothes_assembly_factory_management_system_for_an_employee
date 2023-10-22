@@ -65,11 +65,11 @@ public class Users implements Entity {
     // แก้เป็น U 00001 แล้วเพิ่มเลขไปเรื่อยๆ
     public static String getNewId(){
         if (data == null) load();
-        if (getData().size() == 0) return "U1";
+        if (getData().size() == 0) return "U" + String.format("%05d", 1);
         else {
-            ArrayList<String> newId = new ArrayList<>(getData().keySet());
-            Collections.sort(newId);
-            return "U" + String.valueOf(Integer.parseInt(newId.get(getData().size() - 1)) + 1);
+            ArrayList<String> oldId = new ArrayList<>(getData().keySet());
+            Collections.sort(oldId);
+            return "U" + String.format("%05d", Integer.valueOf((oldId.get(getData().size() - 1)) + 1));
         }
     }
 

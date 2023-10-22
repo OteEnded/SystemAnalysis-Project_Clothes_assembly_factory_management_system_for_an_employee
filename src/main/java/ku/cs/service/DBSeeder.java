@@ -17,4 +17,8 @@ public class DBSeeder {
         tables.add(DailyRecords.getSqlTable());
     }
 
+    public static void seed() {
+        //
+    }
+
 }

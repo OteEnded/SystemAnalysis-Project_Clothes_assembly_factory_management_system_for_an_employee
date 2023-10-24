@@ -12,15 +12,15 @@ public class User implements Row {
 
     private HashMap<String, Object> data = Users.getMap();
 
-    public User() {
+    public User() throws SQLException {
         this("null", 0);
     }
 
-    public User(String name){
+    public User(String name) throws SQLException {
         this(name, 0);
     }
 
-    public User(String name, int age){
+    public User(String name, int age) throws SQLException {
         data.put("name", name);
         data.put("age", age);
         data.put("sign_up_date", LocalDate.now().toString());

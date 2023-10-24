@@ -5,7 +5,7 @@ import ku.cs.model.SQLTable;
 
 public class MaterialUsages implements Entity {
 
-    private static final ku.cs.model.SQLTable sqlTable = new SQLTable("MaterialUsages");
+    private static final SQLTable sqlTable = new SQLTable("MaterialUsages");
     static {
         SQLColumn sqlColumn;
 

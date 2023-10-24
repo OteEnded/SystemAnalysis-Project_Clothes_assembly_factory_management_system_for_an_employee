@@ -189,6 +189,23 @@ public class SQLTable {
         return preparedStatement;
     }
 
+    public PreparedStatement getDeleteQuery(SQLRow sqlRow) throws SQLException, ParseException {
+        String sql = "DELETE FROM " + name + " WHERE ";
+        for (SQLColumn column: getPrimaryKeys()){
+            sql += column.getName() + " = ? AND ";
+        }
+        sql = sql.substring(0, sql.length() - 5);
+        PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
+        ProjectUtility.debug(sql);
+        ProjectUtility.debug(sqlRow.getValues());
+        for (int i = 1; i <= getPrimaryKeys().size(); i++){
+            ProjectUtility.debug("i=",i);
+            ProjectUtility.debug(sqlRow.getPrimaryKeyValue());
+            preparedStatement.setString(i, (String) sqlRow.getPrimaryKeyValue());
+        }
+        return preparedStatement;
+    }
+
     @Override
     public String toString() {
         String msg_out =  "SQLTable[name(columns.count())]: " + name + "(" + columns.size() + ") {";

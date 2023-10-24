@@ -4,7 +4,7 @@ import ku.cs.model.SQLColumn;
 import ku.cs.model.SQLTable;
 
 public class Products implements Entity {
-    private static final ku.cs.model.SQLTable sqlTable = new SQLTable("Products");
+    private static final SQLTable sqlTable = new SQLTable("Products");
     static {
         SQLColumn sqlColumn;
 

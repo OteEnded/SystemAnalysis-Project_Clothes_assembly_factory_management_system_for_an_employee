@@ -18,7 +18,7 @@ public class Works implements Entity {
     private String note;
     private Products products;
 
-    private static final ku.cs.model.SQLTable sqlTable = new SQLTable("Works");
+    private static final SQLTable sqlTable = new SQLTable("Works");
     static {
         SQLColumn sqlColumn;
 

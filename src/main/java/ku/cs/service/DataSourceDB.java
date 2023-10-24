@@ -169,6 +169,12 @@ public class DataSourceDB {
         return rowsUpdated;
     }
 
+    public static int exePrepare(String query) throws SQLException {
+        return exePrepare(getConnection(true).prepareStatement(query));
+    }
+
+
+
 //    public static boolean insert(SQLRow sqlRow) throws SQLException {
 //        JdbcConnector.connect();
 //        Statement statement = getConnection().createStatement();

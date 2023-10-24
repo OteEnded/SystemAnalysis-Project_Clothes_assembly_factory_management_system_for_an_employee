@@ -47,11 +47,11 @@ public class Users implements Entity {
         data = new HashMap<>();
     }
 
-    public static void load(){
+    // load data from database
+    public static void load() throws SQLException {
         data = new HashMap<>();
-//        for (SQLColumn column : sqlTable.getColums()) {
-//            data.put(column.getName(), null);
-//        }
+        SQLRow sqlRow = DataSourceDB.load(sqlTable);
+
     }
 
     public static HashMap<String, User> getData() {
@@ -63,7 +63,7 @@ public class Users implements Entity {
     }
 
     // แก้เป็น U 00001 แล้วเพิ่มเลขไปเรื่อยๆ
-    public static String getNewId(){
+    public static String getNewId() throws SQLException {
         if (data == null) load();
         if (getData().size() == 0) return "U" + String.format("%05d", 1);
         else {
@@ -73,7 +73,7 @@ public class Users implements Entity {
         }
     }
 
-    public static void addData(User user) {
+    public static void addData(User user) throws SQLException {
         if (data == null) load();
         if (user.getId() == null) {
             user.setId(getNewId());
@@ -98,6 +98,19 @@ public class Users implements Entity {
             }
         }
         return DataSourceDB.exePrepare(sqlTable.getInsertQuery(sqlRow));
+    }
+
+    public static int delete(User user) throws SQLException, ParseException {
+        List<String> columnsStr = new ArrayList<>();
+        for (SQLColumn sqlcolumn: sqlTable.getColumns()){
+            columnsStr.add(sqlcolumn.getName());
+        }
+        List<String> primaryKeysStr = new ArrayList<>();
+        for (SQLColumn sqlcolumn: sqlTable.getPrimaryKeys()){
+            primaryKeysStr.add(sqlcolumn.getName());
+        }
+        SQLRow sqlRow = new SQLRow(sqlTable.getName(), primaryKeysStr, user.getPrimaryKey(), columnsStr, user.getData());
+        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(sqlRow));
     }
 
     public static HashMap<String, Object> getMap() {

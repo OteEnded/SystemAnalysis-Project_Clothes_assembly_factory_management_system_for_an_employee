@@ -10,7 +10,7 @@ public class DailyRecords implements Entity {
     private Works works;
     private int amount;
 
-    private static final ku.cs.model.SQLTable sqlTable = new SQLTable("DailyRecords");
+    private static final SQLTable sqlTable = new SQLTable("DailyRecords");
     static {
         SQLColumn sqlColumn;
 

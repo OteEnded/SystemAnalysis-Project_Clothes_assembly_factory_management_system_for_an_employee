@@ -18,7 +18,17 @@ public class DBSeeder {
     }
 
     public static void seed() {
-        //
+        // seed data here
+//        try {
+//            Users.load();
+//            Materials.load();
+//            Products.load();
+//            MaterialUsages.load();
+//            Works.load();
+//            DailyRecords.load();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        // not sure if this works
     }
-
 }

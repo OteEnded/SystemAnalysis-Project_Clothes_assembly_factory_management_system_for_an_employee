@@ -6,6 +6,7 @@ import ku.cs.model.SQLTable;
 import java.util.ArrayList;
 
 public class DBSeeder {
+
     // list out tables that need to be seeded here
     private static ArrayList<SQLTable> tables = new ArrayList<>();
     static {

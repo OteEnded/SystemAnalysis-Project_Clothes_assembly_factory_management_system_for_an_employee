@@ -41,7 +41,7 @@ public class ProjectUtility {
 
     public static void debug(Object msg){
         if (!isDebug) return;
-        System.out.print(getDateTime().toString() + " [DEBUG]: ");
+        System.out.print("[DEBUG @ " + getDateTime().toString() + "]: ");
         System.out.println(msg.toString());
     }
 
@@ -133,6 +133,17 @@ public class ProjectUtility {
     }
 
     public static boolean connectDB(){
-        return true;
+        boolean isConnectAble = JdbcConnector.connect();
+        JdbcConnector.disconnect();
+        return isConnectAble;
     }
+
+    private static Stage stage;
+    public static void setStage(Stage s){
+        stage = s;
+    }
+    public static Stage getStage(){
+        return stage;
+    }
+
 }

@@ -20,11 +20,11 @@ public class User implements Row {
         this(name, 0);
     }
 
-    public User(String name, int age) throws SQLException {
+    public User(String name, int age){
         data.put("name", name);
         data.put("age", age);
         data.put("sign_up_date", LocalDate.now().toString());
-        Users.load();
+//        Users.load();
     }
 
     public User(HashMap<String, Object> data){
@@ -71,8 +71,33 @@ public class User implements Row {
         data.put("sign_up_date", signUpDate);
     }
 
+    public void addData(String key, Object value){
+        data.put(key, value);
+    }
+
     public int save() throws SQLException, ParseException {
         return Users.save(this);
+    }
+
+    public void load(int id){
+        load("U" + String.format("%05d", id));
+    }
+
+    public void load(String id){
+        boolean isUserNew;
+        try {
+            isUserNew = Users.isNewUser(id);
+        }
+        catch (RuntimeException e){
+            isUserNew = true;
+        }
+        if (isUserNew) throw new RuntimeException("Can find user with user_id: " + id);
+        setData(Users.getData().get(id).getData());
+
+    }
+
+    public int delete() throws SQLException, ParseException {
+        return Users.delete(this);
     }
 
     @Override

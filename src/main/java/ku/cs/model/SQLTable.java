@@ -126,9 +126,10 @@ public class SQLTable {
                     preparedStatement.setBoolean(i, (boolean) sqlRow.getValues().get(i-1));
                     break;
                 case "date":
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    Date date = new Date(dateFormat.parse((String) sqlRow.getValues().get(i-1)).getTime());
-                    preparedStatement.setDate(i, date);
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                    ProjectUtility.debug(sqlRow.getValues().get(i-1).getClass());
+//                    Date date = new Date(dateFormat.parse((String) sqlRow.getValues().get(i-1)).getTime());
+                    preparedStatement.setDate(i, (Date) sqlRow.getValues().get(i-1));
                     break;
                 default:
                     preparedStatement.setString(i, (String) sqlRow.getValues().get(i-1));
@@ -172,9 +173,9 @@ public class SQLTable {
                     preparedStatement.setBoolean(i, (boolean) sqlRow.getValues().get(i-1));
                     break;
                 case "date":
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    Date date = new Date(dateFormat.parse((String) sqlRow.getValues().get(i-1)).getTime());
-                    preparedStatement.setDate(i, date);
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                    Date date = new Date(dateFormat.parse((String) sqlRow.getValues().get(i-1)).getTime());
+                    preparedStatement.setDate(i, (Date) sqlRow.getValues().get(i-1));
                     break;
                 default:
                     preparedStatement.setString(i, (String) sqlRow.getValues().get(i-1));

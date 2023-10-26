@@ -23,12 +23,13 @@ public class Test1_setup {
         ProjectUtility.debug(user.toString());
 
         Users.addData(user);
+        ProjectUtility.debug(Users.getData().toString());
         user.save();
-//        user = new User("test2", 20);
-//        Users.addData(user);
-//        user.save();
+        user = new User("test2", 20);
+        Users.addData(user);
+        user.save();
 
-        Users.delete(user);
+//        Users.delete(user);
         ProjectUtility.debug(Users.getData().toString());
 
         Date date = new Date(System.currentTimeMillis());

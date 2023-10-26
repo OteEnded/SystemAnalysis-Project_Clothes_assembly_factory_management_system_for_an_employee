@@ -1,0 +1,87 @@
+@font-face {
+    font-family: 'Bai Jamjuree';
+    src: url('fonts/BaiJamjuree-Regular.ttf');
+    font-weight: regular;
+}
+
+@font-face {
+    font-family: 'Bai Jamjuree';
+    src: url('fonts/BaiJamjuree-SemiBold.ttf');
+    font-weight: semibold;
+}
+
+* {
+    -fx-font-family: "Bai Jamjuree";
+    -fx-font-weight: semibold;
+}
+
+.root {
+    -fx-background-color: #F6F9FF;
+}
+
+.bold-text {
+    -fx-font-family: "Bai Jamjuree Semibold";
+    -fx-font-weight: 600;
+}
+
+.menu-bar {
+    -fx-background-color: #213555;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #213555;
+    -fx-pref-height: 48px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-label-padding: 10px;
+    -fx-wrap-text: true;
+}
+
+.table-view .cell{
+    -fx-cell-size: 48;
+    -fx-alignment: center-left;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #e8eaee;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 0.0;
+}
+
+.table-view .column-header-background,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: transparent;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical .thumb {
+    -fx-background-color: #213555;
+}
+
+.table-view > .virtual-flow > .scroll-bar:vertical > .track-background {
+    -fx-background-color: transparent;
+}
+
+
+.table-view *.scroll-bar:horizontal *.increment-button,
+.table-view *.scroll-bar:horizontal *.decrement-button {
+    -fx-background-color: none;
+}
+
+.table-view > .virtual-flow > .scroll-bar > .increment-button,
+.table-view > .virtual-flow > .scroll-bar > .decrement-button {
+    -fx-opacity: 0;
+}
+
+.white-btn {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #172B4D;
+    -fx-border-radius: 8px;
+}
+
+

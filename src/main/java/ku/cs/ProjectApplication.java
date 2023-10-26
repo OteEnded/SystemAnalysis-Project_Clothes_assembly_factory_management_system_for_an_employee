@@ -30,13 +30,14 @@ public class ProjectApplication extends Application {
 //        user.load("Ote");
 //        FXRouter.goTo("change-forgotten-password", user);
 
-        FXRouter.goTo("order");
+        FXRouter.goTo("received-work");
     }
 
     private static void configRoute() {
         String packageStr = "ku/cs/fxml/";
         FXRouter.when("home", packageStr + "home-page.fxml");
         FXRouter.when("order", packageStr + "order-page.fxml");
+        FXRouter.when("received-work", packageStr + "received-work-page.fxml");
     }
 
     private static boolean isScreenBigEnoughToShowStage(){ //โค้ดส่วนป้องกันไม่ให้โปรแกรมถูกเปิดบนหน้าจอที่มีขนาดเล็กกว่าหน้าต่างของโปรแกรม - Ote

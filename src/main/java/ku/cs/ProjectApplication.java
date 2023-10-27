@@ -30,13 +30,16 @@ public class ProjectApplication extends Application {
 //        user.load("Ote");
 //        FXRouter.goTo("change-forgotten-password", user);
 
-        FXRouter.goTo("received-work");
+        FXRouter.goTo("order");
     }
 
     private static void configRoute() {
         String packageStr = "ku/cs/fxml/";
         FXRouter.when("home", packageStr + "home-page.fxml");
-        FXRouter.when("order", packageStr + "order-page.fxml");
+        FXRouter.when("order", packageStr + "employer/order-page.fxml");
+        FXRouter.when("product-manage", packageStr + "employer/product-view-page.fxml");
+        FXRouter.when("material-manage", packageStr + "employer/material-view-page.fxml");
+        FXRouter.when("wait-for-receive", packageStr + "employer/wait-for-receive-page.fxml");
         FXRouter.when("received-work", packageStr + "employee/received-work-page.fxml");
         FXRouter.when("waiting-for-material-work", packageStr + "employee/waiting-for-material-work-page.fxml");
         FXRouter.when("work-in-progress-work", packageStr + "employee/work-in-progress-work-page.fxml");

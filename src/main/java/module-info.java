@@ -24,5 +24,7 @@ module cs.ku {
     opens ku.cs.model to java.base;
     exports ku.cs.tool;
     opens ku.cs.tool to java.base;
+    exports ku.cs.controller.employer;
+    opens ku.cs.controller.employer to javafx.fxml;
 
 }

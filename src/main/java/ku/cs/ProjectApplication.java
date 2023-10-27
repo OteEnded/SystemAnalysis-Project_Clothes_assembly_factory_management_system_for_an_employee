@@ -39,7 +39,13 @@ public class ProjectApplication extends Application {
         FXRouter.when("order", packageStr + "employer/order-page.fxml");
         FXRouter.when("product-manage", packageStr + "employer/product-view-page.fxml");
         FXRouter.when("material-manage", packageStr + "employer/material-view-page.fxml");
-        FXRouter.when("wait-for-receive", packageStr + "employer/wait-for-receive-page.fxml");
+        FXRouter.when("wait-for-receive", packageStr + "employer/work-management/wait-for-receive-page.fxml");
+        FXRouter.when("abnormal-work", packageStr + "employer/work-management/abnormal-work-view-page.fxml");
+        FXRouter.when("material-preparation", packageStr + "employer/work-management/material-preparation-view-page.fxml");
+        FXRouter.when("work-in-progress", packageStr + "employer/work-management/work-in-progress-view-page.fxml");
+        FXRouter.when("review-work", packageStr + "employer/work-management/review-work-page.fxml");
+        FXRouter.when("complete-work", packageStr + "employer/work-management/complete-work-view-page.fxml");
+
         FXRouter.when("received-work", packageStr + "employee/received-work-page.fxml");
         FXRouter.when("waiting-for-material-work", packageStr + "employee/waiting-for-material-work-page.fxml");
         FXRouter.when("work-in-progress-work", packageStr + "employee/work-in-progress-work-page.fxml");

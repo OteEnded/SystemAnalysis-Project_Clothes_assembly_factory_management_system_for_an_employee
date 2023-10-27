@@ -25,6 +25,10 @@
     -fx-font-size: 16px;
 }
 
+.menu-bar:hover {
+    -fx-underline: true;
+}
+
 .table-view .column-header {
     -fx-background-color: #213555;
     -fx-pref-height: 48px;

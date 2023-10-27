@@ -38,6 +38,7 @@ public class ProjectApplication extends Application {
         FXRouter.when("home", packageStr + "home-page.fxml");
         FXRouter.when("order", packageStr + "employer/order-page.fxml");
         FXRouter.when("product-manage", packageStr + "employer/product-view-page.fxml");
+        FXRouter.when("add-product",packageStr+"employer/add-product-page.fxml");
         FXRouter.when("material-manage", packageStr + "employer/material-view-page.fxml");
         FXRouter.when("wait-for-receive", packageStr + "employer/work-management/wait-for-receive-page.fxml");
         FXRouter.when("abnormal-work", packageStr + "employer/work-management/abnormal-work-view-page.fxml");

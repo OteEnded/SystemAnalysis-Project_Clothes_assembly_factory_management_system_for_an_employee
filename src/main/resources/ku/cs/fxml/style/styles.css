@@ -89,3 +89,11 @@
     -fx-text-fill: #FFFFFF;
 }
 
+.white-red-btn {
+    -fx-text-fill: #F32013;
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #F32013;
+    -fx-border-radius: 8px;
+}
+

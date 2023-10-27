@@ -76,7 +76,7 @@
                               <Font name="System Bold Italic" size="20.0" />
                            </font>
                         </Text>
-                        <Label layoutX="73.0" layoutY="18.0" text="หากต้องการเพิ่มสินค้า ไปที่หน้า รายการสินค้า เพื่อเพิ่มสินค้าใหม่" textFill="#213555" />
+                        <Label layoutX="73.0" layoutY="19.0" text="หากต้องการเพิ่มสินค้า ไปที่หน้า รายการสินค้า เพื่อเพิ่มสินค้าใหม่" textFill="#213555" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="97.57" prefWidth="242.68">
@@ -118,7 +118,7 @@
             </VBox>
          </children>
       </HBox>
-      <Button layoutX="306.0" layoutY="565.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="สั่งงาน" textFill="WHITE" />
+      <Button layoutX="301.0" layoutY="565.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="สั่งงาน" textFill="WHITE" />
       <Text fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="สั่งงาน">
          <font>
             <Font name="System Bold Italic" size="32.0" />

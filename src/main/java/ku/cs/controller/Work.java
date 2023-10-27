@@ -1,15 +1,28 @@
 package ku.cs.controller;
 
 import java.time.LocalDate;
+import java.util.StringJoiner;
 
 /* for test only */
 
 public class Work {
     private String type;
     private String product;
-    private Integer quantity;
+    private int quantity;
     private LocalDate deadline;
     private String status;
+    private int capacity;
+    private String note;
+
+    public Work(String type, String product, int quantity, LocalDate deadline, String status, int capacity, String note) {
+        this.type = type;
+        this.product = product;
+        this.quantity = quantity;
+        this.deadline = deadline;
+        this.status = status;
+        this.capacity = capacity;
+        this.note = note;
+    }
 
     public String getType() {
         return type;
@@ -27,11 +40,11 @@ public class Work {
         this.product = product;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -51,23 +64,32 @@ public class Work {
         this.status = status;
     }
 
-    public Work(String type, String product, Integer quantity, LocalDate deadline, String status) {
-        this.type = type;
-        this.product = product;
-        this.quantity = quantity;
-        this.deadline = deadline;
-        this.status = status;
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Work{");
-        sb.append("type='").append(type).append('\'');
-        sb.append(", product='").append(product).append('\'');
-        sb.append(", quantity=").append(quantity);
-        sb.append(", deadline=").append(deadline);
-        sb.append(", status='").append(status).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return new StringJoiner(", ", Work.class.getSimpleName() + "[", "]")
+                .add("type='" + type + "'")
+                .add("product='" + product + "'")
+                .add("quantity=" + quantity)
+                .add("deadline=" + deadline)
+                .add("status='" + status + "'")
+                .add("capacity=" + capacity)
+                .add("note=" + note)
+                .toString();
     }
 }

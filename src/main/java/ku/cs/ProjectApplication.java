@@ -37,7 +37,12 @@ public class ProjectApplication extends Application {
         String packageStr = "ku/cs/fxml/";
         FXRouter.when("home", packageStr + "home-page.fxml");
         FXRouter.when("order", packageStr + "order-page.fxml");
-        FXRouter.when("received-work", packageStr + "received-work-page.fxml");
+        FXRouter.when("received-work", packageStr + "employee/received-work-page.fxml");
+        FXRouter.when("waiting-for-material-work", packageStr + "employee/waiting-for-material-work-page.fxml");
+        FXRouter.when("work-in-progress-work", packageStr + "employee/work-in-progress-work-page.fxml");
+        FXRouter.when("finished-work", packageStr + "employee/finished-work-page.fxml");
+        FXRouter.when("waiting-for-check-work", packageStr + "employee/waiting-for-check-work-page.fxml");
+        FXRouter.when("checked-work", packageStr + "employee/checked-work-page.fxml");
     }
 
     private static boolean isScreenBigEnoughToShowStage(){ //โค้ดส่วนป้องกันไม่ให้โปรแกรมถูกเปิดบนหน้าจอที่มีขนาดเล็กกว่าหน้าต่างของโปรแกรม - Ote

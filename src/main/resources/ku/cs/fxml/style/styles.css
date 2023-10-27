@@ -10,18 +10,13 @@
     font-weight: semibold;
 }
 
-* {
-    -fx-font-family: "Bai Jamjuree";
-    -fx-font-weight: semibold;
-}
-
 .root {
     -fx-background-color: #F6F9FF;
+    -fx-font-family: "Bai Jamjuree";
 }
 
 .bold-text {
     -fx-font-family: "Bai Jamjuree Semibold";
-    -fx-font-weight: 600;
 }
 
 .menu-bar {

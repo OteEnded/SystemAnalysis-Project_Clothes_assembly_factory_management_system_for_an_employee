@@ -99,6 +99,10 @@ public class MaterialUsage implements Row {
         load(EntityUtility.idFormatter(Materials.getSqlTable(), material_id) , EntityUtility.idFormatter(Works.getSqlTable(), work_id));
     }
 
+    public void load(Material material, Work work) throws SQLException {
+        load(material.getId(), work.getId());
+    }
+
     public void load(String material_id, String work_id) throws SQLException {
         load(String.join("|", material_id, work_id));
     }

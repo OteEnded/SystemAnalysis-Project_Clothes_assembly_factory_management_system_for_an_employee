@@ -36,17 +36,17 @@ public class DBSeeder {
 
         Material m1 = new Material();
         m1.setName("cloth");
-        m1.setUnit("meter");
+        m1.setUnitName("meter");
         m1.save();
 
         Material m2 = new Material();
         m2.setName("button");
-        m2.setUnit("piece");
+        m2.setUnitName("piece");
         m2.save();
 
         Material m3 = new Material();
         m3.setName("thread");
-        m3.setUnit("meter");
+        m3.setUnitName("meter");
         m3.save();
     }
 }

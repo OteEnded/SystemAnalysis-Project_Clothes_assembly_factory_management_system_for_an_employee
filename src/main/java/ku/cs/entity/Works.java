@@ -206,4 +206,38 @@ public class Works {
         data.remove(getJoinedPrimaryKeys(work));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
     }
+
+    public static HashMap<String, Object> filter;
+    public static void addFilter(String column, Object value) {
+        if (filter == null) filter = new HashMap<>();
+        filter.put(column, value);
+    }
+    public static void setFilter(HashMap<String, Object> filter) {
+        Works.filter = filter;
+    }
+    public static HashMap<String, Object> getFilter() {
+        return filter;
+    }
+
+    public static HashMap<String, Work> getFilteredData(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return getFilteredData();
+    }
+    public static HashMap<String, Work> getFilteredData() throws SQLException {
+        if (filter == null) throw new RuntimeException("Works[getFilteredData]: filter is null. Please set filter first or get all data without filter using -> Works.getdata()");
+        if (data == null) load();
+        HashMap<String, Work> filteredData = new HashMap<>();
+        for (Work work: getData().values()) {
+            boolean isFiltered = true;
+            for (String column: filter.keySet()) {
+                if (!work.getData().get(column).equals(filter.get(column))) {
+                    isFiltered = false;
+                    break;
+                }
+            }
+            if (isFiltered) filteredData.put(work.getId(), work);
+        }
+        filter = null;
+        return filteredData;
+    }
 }

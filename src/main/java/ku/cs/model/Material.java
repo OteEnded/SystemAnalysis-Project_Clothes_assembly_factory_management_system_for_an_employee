@@ -50,11 +50,11 @@ public class Material implements Row{
         data.put("material_name", material_name);
     }
 
-    public String getUnit() {
+    public String getUnitName() {
         return (String) data.get("unit_name");
     }
 
-    public void setUnit(String unit_name) {
+    public void setUnitName(String unit_name) {
         data.put("unit_name", unit_name);
     }
 

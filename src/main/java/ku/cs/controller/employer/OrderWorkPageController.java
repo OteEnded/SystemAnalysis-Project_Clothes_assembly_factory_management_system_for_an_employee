@@ -7,6 +7,7 @@ import ku.cs.entity.Works;
 import ku.cs.model.Product;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class OrderWorkPageController {
@@ -47,6 +48,10 @@ public class OrderWorkPageController {
     private boolean validate(){
         if (amountTextField.getText().isEmpty()){
             promptLabel.setText("กรุณากรอกจำนวนงาน");
+            return false;
+        }
+        if (deadlineDatePicker.getValue().isBefore(LocalDate.now())){
+            promptLabel.setText("กรุณากรอกกำหนดส่งให้ถูกต้อง");
             return false;
         }
         return true;

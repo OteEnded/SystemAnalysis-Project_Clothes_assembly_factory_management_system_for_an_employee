@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
@@ -69,8 +70,8 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Text>
-      <TextField layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" />
-      <TextField layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" />
+      <TextField layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" styleClass="input-border" />
+      <TextField layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" styleClass="input-border" />
       <Text fill="#213555" layoutX="764.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="นิ้ว">
          <font>
             <Font size="16.0" />
@@ -98,8 +99,8 @@
                   </Label>
                   <HBox prefHeight="40.0" prefWidth="343.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="materialNameTextField" prefHeight="32.0" prefWidth="180.0" />
-                        <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" />
+                        <ComboBox fx:id="materialNameComboBox" onAction="#handleComboBoxSelected" prefHeight="32.0" prefWidth="180.0" styleClass="input-border" />
+                        <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" textFill="#213555" />
                      </children>
                   </HBox>
                   <HBox prefHeight="55.0" prefWidth="234.0" spacing="10.0">
@@ -111,7 +112,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="amountTextField" prefHeight="36.0" prefWidth="129.0" />
+                              <TextField fx:id="amountTextField" prefHeight="36.0" prefWidth="129.0" styleClass="input-border" />
                            </children>
                         </VBox>
                         <VBox prefHeight="100.0" prefWidth="135.0" spacing="5.0">
@@ -121,7 +122,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Text fx:id="unitLabel" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="unitLabel">
+                              <Text fx:id="unitText" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="unitText">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -137,7 +138,7 @@
                   </Label>
                   <HBox prefHeight="47.0" prefWidth="343.0" spacing="10.0">
                      <children>
-                        <TextField fx:id="amountTextField1" prefHeight="36.0" prefWidth="108.0" />
+                        <TextField fx:id="yieldTextField" prefHeight="36.0" prefWidth="108.0" styleClass="input-border" />
                         <Text fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="ตัว">
                            <font>
                               <Font size="16.0" />

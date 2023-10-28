@@ -64,7 +64,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="96.0" layoutY="36.0" text="productLabel" textFill="#213555">
+            <Label fx:id="productLabel" layoutX="96.0" layoutY="36.0" text="productLabel" textFill="#213555">
                <font>
                   <Font size="14.0" />
                </font>
@@ -74,7 +74,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ListView layoutX="46.0" layoutY="86.0" prefHeight="102.0" prefWidth="246.0" />
+            <ListView fx:id="materialListView" layoutX="46.0" layoutY="86.0" prefHeight="102.0" prefWidth="246.0" />
          </children>
       </AnchorPane>
       <Text fill="#213555" layoutX="803.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="รายการสินค้าทั้งหมด">
@@ -85,5 +85,6 @@
       <Button layoutX="987.0" layoutY="398.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
       <Button layoutX="1110.0" layoutY="397.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
       <Button layoutX="301.0" layoutY="575.0" mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มสินค้า" />
+      <ListView fx:id="productListView" layoutX="300.0" layoutY="137.0" prefHeight="418.0" prefWidth="469.0" />
     </children>
 </AnchorPane>

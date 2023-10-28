@@ -1,28 +1,37 @@
 package ku.cs.controller.employer;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 
 public class AddProductPageController {
 
     @FXML private ListView<HBox> materialListView;
-    @FXML private TextField materialNameTextField;
+
+    @FXML private ComboBox<String> materialNameComboBox;
+
     @FXML private TextField amountTextField;
+
+    @FXML private TextField yieldTextField;
+    @FXML private Text unitText;
 
 
     @FXML void initialize() {
-
+        // จำลองข้อมูลใน combo box
+        materialNameComboBox.getItems().addAll("ผ้าไหม", "ผ้าฝ้าย");
+        unitText.setText("");
+        yieldTextField.setText("1");
     }
+
+    @FXML public void handleComboBoxSelected(){
+        unitText.setText("ชิ้น");
+    }
+
+
 
     public HBox createMaterialList(String name, int amount){
         HBox box = new HBox();
@@ -51,7 +60,7 @@ public class AddProductPageController {
 
     @FXML
     public void handleAddMaterialToProductButton(){
-        String materialName = materialNameTextField.getText();
+        String materialName = materialNameComboBox.getValue();
         int amount = Integer.parseInt(amountTextField.getText());
         HBox box = createMaterialList(materialName, amount);
         materialListView.getItems().add(box);

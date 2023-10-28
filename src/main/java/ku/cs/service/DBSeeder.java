@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 public class DBSeeder {
+
     // list out tables that need to be seeded here
     private static final ArrayList<SQLTable> tables = new ArrayList<>();
     static {

@@ -19,6 +19,7 @@ public class AddProductPageController {
     @FXML private TextField materialNameTextField;
     @FXML private TextField amountTextField;
 
+
     @FXML void initialize() {
 
     }
@@ -49,12 +50,16 @@ public class AddProductPageController {
     }
 
     @FXML
-    public void handleAddProductButton(){
+    public void handleAddMaterialToProductButton(){
         String materialName = materialNameTextField.getText();
         int amount = Integer.parseInt(amountTextField.getText());
         HBox box = createMaterialList(materialName, amount);
         materialListView.getItems().add(box);
         materialListView.refresh();
+    }
+    @FXML
+    public void handleAddProductButton(){
+
     }
 
     // MenuBar Handle

@@ -26,33 +26,32 @@ public class WaitForReceivePageController {
     @FXML private Label deadlineLabel;
     @FXML private Label amountLabel;
 
-//    @FXML
-//    void initialize() {
-//        // Phubest Code ()
-//        type.setCellValueFactory(new PropertyValueFactory<>("type"));
-//        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-//        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-//        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-//
-//        ObservableList<Work> works = FXCollections.observableArrayList();
-//        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        tableView.setItems(works);
-//        handleSelectedRow();
-//    }
-//
-//    private void handleSelectedRow() {
-//        tableView.getSelectionModel().selectedItemProperty().addListener(
-//                (observable, oldValue, newValue) -> {
-//                    showSelectedRow(newValue);
-//                }
-//        );
-//    }
-//
-//    private void showSelectedRow(Work newValue) {
-//        // productLabel.setText(newValue.getProduct());
-//        productLabel.setText(newValue.toString());
-//    }
+    @FXML
+    void initialize() {
+        // Bez code
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+        product.setCellValueFactory(new PropertyValueFactory<>("product"));
+        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
+
+        ObservableList<Work> works = FXCollections.observableArrayList();
+        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+        tableView.setItems(works);
+        handleSelectedRow();
+    }
+
+    private void handleSelectedRow() {
+        tableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    showSelectedRow(newValue);
+                }
+        );
+    }
+
+    private void showSelectedRow(Work newValue) {
+        productLabel.setText(newValue.getProduct());
+    }
 
 
     // MenuBar Handle
@@ -83,7 +82,6 @@ public class WaitForReceivePageController {
             e.printStackTrace();
         }
     }
-
     @FXML
     public void handleMaterialManagementButton() throws IOException{
         try {
@@ -112,7 +110,7 @@ public class WaitForReceivePageController {
         try {
             com.github.saacsos.FXRouter.goTo("abnormal-work");
         } catch (Exception e){
-            System.err.println("ไปหน้า home ไม่ได้");
+            System.err.println("ไปหน้า abnormal ไม่ได้");
             e.printStackTrace();
         }
     }

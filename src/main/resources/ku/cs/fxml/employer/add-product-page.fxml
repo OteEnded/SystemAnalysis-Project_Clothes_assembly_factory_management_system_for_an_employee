@@ -58,8 +58,8 @@
                 <Font name="System Bold Italic" size="32.0" />
             </font>
         </Text>
-        <Button layoutX="301.0" layoutY="575.0" mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มสินค้า" />
-      <Text fill="#213555" layoutX="305.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ประเภทงาน">
+        <Button layoutX="303.0" layoutY="580.0" mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มสินค้า" />
+      <Text fill="#213555" layoutX="305.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="รูปแบบสินค้า">
          <font>
             <Font name="System Bold Italic" size="20.0" />
          </font>
@@ -86,18 +86,23 @@
             <Font size="16.0" />
          </font>
       </Text>
-      <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="303.0" layoutY="322.0" stroke="#213555" strokeType="INSIDE" width="273.0" />
-      <AnchorPane layoutX="305.0" layoutY="322.0" prefHeight="219.0" prefWidth="265.0">
+      <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="268.0" layoutX="303.0" layoutY="301.0" stroke="#213555" strokeType="INSIDE" width="325.0" />
+      <AnchorPane layoutX="305.0" layoutY="301.0" prefHeight="268.0" prefWidth="265.0">
          <children>
-            <VBox layoutX="16.0" layoutY="15.0" prefHeight="189.0" prefWidth="234.0" spacing="5.0">
+            <VBox layoutX="16.0" layoutY="15.0" prefHeight="253.0" prefWidth="343.0" spacing="5.0">
                <children>
                   <Label text="ชื่อวัตถุดิบ" textFill="#213555">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="materialNameTextField" prefHeight="36.0" prefWidth="219.0" />
-                  <HBox prefHeight="66.0" prefWidth="265.0" spacing="10.0">
+                  <HBox prefHeight="40.0" prefWidth="343.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="materialNameTextField" prefHeight="32.0" prefWidth="180.0" />
+                        <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="55.0" prefWidth="234.0" spacing="10.0">
                      <children>
                         <VBox prefHeight="64.0" prefWidth="127.0">
                            <children>
@@ -116,7 +121,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <Text fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="unitLabel">
+                              <Text fx:id="unitLabel" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="unitLabel">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -125,7 +130,22 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="148.0" styleClass="white-btn" text="เพิ่มในรายการวัตถุดิบ -&gt;" textFill="#213555" />
+                  <Label text="ต่อ สินค้า" textFill="#213555">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <HBox prefHeight="47.0" prefWidth="343.0" spacing="10.0">
+                     <children>
+                        <TextField fx:id="amountTextField1" prefHeight="36.0" prefWidth="108.0" />
+                        <Text fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="ตัว">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <Button mnemonicParsing="false" onAction="#handleAddMaterialToProductButton" prefHeight="34.0" prefWidth="148.0" styleClass="white-btn" text="เพิ่มในรายการวัตถุดิบ -&gt;" textFill="#213555" />
                </children>
             </VBox>
          </children>

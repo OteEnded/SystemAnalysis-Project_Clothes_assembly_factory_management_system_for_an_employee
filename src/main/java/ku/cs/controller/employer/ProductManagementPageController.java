@@ -31,7 +31,7 @@ public class ProductManagementPageController {
         try {
             com.github.saacsos.FXRouter.goTo("order");
         } catch (Exception e){
-            System.err.println("ไปหน้า home ไม่ได้");
+            System.err.println("ไปหน้า order ไม่ได้");
             e.printStackTrace();
         }
     }

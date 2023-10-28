@@ -101,6 +101,16 @@
     -fx-text-fill: #FFFFFF;
     -fx-background-color: #F32013;
     -fx-background-radius: 8px
+}
 
+.input-border {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #B6D3FD;
+    -fx-border-radius: 8px;
+}
+
+.input-border:focused{
+    -fx-border-color: #213555;
 }
 

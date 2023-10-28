@@ -46,7 +46,7 @@ public class Products {
         return sqlTable;
     }
 
-    private static HashMap<String, Product> data = null;
+    private static HashMap<String, Product> data;
     static {
         data = new HashMap<>();
     }
@@ -81,7 +81,7 @@ public class Products {
 
     public static String getNewId() throws SQLException {
         if (data == null) load();
-        if (data.size() == 0) return EntityUtility.idFormatter(sqlTable, 1);
+        if (data.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
         ArrayList<String> oldId = new ArrayList<>(getData().keySet());
         Collections.sort(oldId);
         int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));

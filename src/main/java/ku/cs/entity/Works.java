@@ -17,6 +17,33 @@ import java.util.List;
 
 public class Works {
 
+    public static String type_normal = "งานธรรมดา";
+    public static String type_rush = "งานรีบ";
+    public static String type_repair = "งานแก้";
+
+    public static String status_waitForAccept = "รอรับงาน";
+    public static String status_waitForMaterial = "รอวัตถุดิบ";
+    public static String status_working = "กำลังทำงาน";
+    public static String status_done = "ทำงานเสร็จ";
+    public static String status_sent = "ส่งงานแล้ว";
+    public static String status_checked = "ตรวจแล้ว";
+    public static List<String> typeList = new ArrayList<>();
+    static {
+        typeList.add(type_normal);
+        typeList.add(type_rush);
+        typeList.add(type_repair);
+    }
+
+    public static List<String> statusList = new ArrayList<>();
+    static {
+        statusList.add(status_waitForAccept);
+        statusList.add(status_waitForMaterial);
+        statusList.add(status_working);
+        statusList.add(status_done);
+        statusList.add(status_sent);
+        statusList.add(status_checked);
+    }
+
     private static final SQLTable sqlTable = new SQLTable("Works");
     static {
         SQLColumn sqlColumn;
@@ -148,7 +175,7 @@ public class Works {
     }
 
     public static boolean isNew(Work work) throws SQLException {
-        return isNew(getJoinedPrimaryKeys(work));
+        return isNew(work.getId());
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {

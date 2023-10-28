@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 
 public class Work implements Row {
 
@@ -37,11 +38,16 @@ public class Work implements Row {
     }
 
     public void setWorkType(String work_type) {
+        if (! Works.typeList.contains(work_type)) throw new RuntimeException("Work[setWorkType]: Invalid work_type-> " + work_type + " (not in " + List.of(Works.typeList) + ")");
         data.put("work_type", work_type);
     }
 
     public String getWorkType() {
         return (String) data.get("work_type");
+    }
+
+    public void setProduct(Product product) {
+        setProduct(product.getId());
     }
 
     public void setProduct(String product) {
@@ -79,6 +85,7 @@ public class Work implements Row {
     }
 
     public void setStatus(String status) {
+        if (! Works.statusList.contains(status)) throw new RuntimeException("Work[setStatus]: Invalid status-> " + status + " (not in " + List.of(Works.statusList) + ")");
         data.put("status", status);
     }
 
@@ -108,6 +115,10 @@ public class Work implements Row {
 
     public String getNote() {
         return (String) data.get("note");
+    }
+
+    public void setRepairWork(Work repair_work) {
+        setRepairWork(repair_work.getId());
     }
 
     public void setRepairWork(String repair_work) {

@@ -97,7 +97,7 @@ public class Products {
     }
 
     public static boolean isNew(Product product) throws SQLException {
-        return isNew(getJoinedPrimaryKeys(product));
+        return isNew(product.getId());
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {

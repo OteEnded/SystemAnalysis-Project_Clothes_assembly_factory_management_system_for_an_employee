@@ -94,7 +94,7 @@ public class Materials {
     }
 
     public static boolean isNew(Material material) throws SQLException {
-        return isNew(getJoinedPrimaryKeys(material));
+        return isNew(material.getId());
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {

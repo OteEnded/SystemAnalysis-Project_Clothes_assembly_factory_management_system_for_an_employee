@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +35,7 @@ public class ProjectUtility {
     public static void debug(List<Object> msgs){
         List<String> msgList = new ArrayList<>();
         for (Object i: msgs) {
+            if (i == null) i = "null";
             msgList.add(i.toString());
         }
         debug(String.join(" ", msgList));
@@ -68,6 +70,10 @@ public class ProjectUtility {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(timestamp);
+    }
+
+    public static Date getDate(){
+        return new Date(System.currentTimeMillis());
     }
 
     public static void copyFile(String from, String to){

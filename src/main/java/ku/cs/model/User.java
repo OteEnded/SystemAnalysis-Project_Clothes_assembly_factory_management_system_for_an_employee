@@ -1,7 +1,7 @@
 package ku.cs.model;
 
 import ku.cs.entity.Users;
-import ku.cs.utility.ProjectUtility;
+import ku.cs.utility.EntityUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -24,7 +24,6 @@ public class User implements Row {
         data.put("name", name);
         data.put("age", age);
         data.put("sign_up_date", LocalDate.now().toString());
-//        Users.load();
     }
 
     public User(HashMap<String, Object> data){
@@ -71,29 +70,25 @@ public class User implements Row {
         data.put("sign_up_date", signUpDate);
     }
 
-    public void addData(String key, Object value){
-        data.put(key, value);
-    }
-
     public int save() throws SQLException, ParseException {
         return Users.save(this);
     }
 
-    public void load(int id){
-        load("U" + String.format("%05d", id));
+    public void load(int id) throws SQLException {
+        load(EntityUtility.idFormatter(Users.getSqlTable(), id));
     }
 
-    public void load(String id){
+    public void load(String id) throws SQLException {
+        Users.load();
         boolean isUserNew;
         try {
-            isUserNew = Users.isNewUser(id);
+            isUserNew = Users.isNew(id);
         }
         catch (RuntimeException e){
             isUserNew = true;
         }
         if (isUserNew) throw new RuntimeException("Can find user with user_id: " + id);
         setData(Users.getData().get(id).getData());
-
     }
 
     public int delete() throws SQLException, ParseException {
@@ -101,12 +96,16 @@ public class User implements Row {
     }
 
     @Override
-    public String getPrimaryKey() {
-        return getId();
+    public HashMap<String, Object> getPrimaryKeys() {
+        HashMap<String, Object> primaryKeys = new HashMap<>();
+        for (SQLColumn sqlColumn : Users.getSqlTable().getPrimaryKeys()) {
+            primaryKeys.put(sqlColumn.getName(), data.get(sqlColumn.getName()));
+        }
+        return primaryKeys;
     }
 
     @Override
     public String toString(){
-        return data.toString();
+        return "Object-User: " + data.toString();
     }
 }

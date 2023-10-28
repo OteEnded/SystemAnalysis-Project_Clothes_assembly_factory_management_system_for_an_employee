@@ -138,6 +138,12 @@ public class ProjectUtility {
         return isConnectAble;
     }
 
+    public static String capitalize(String str) {
+        if (str == null || str.isEmpty()) return str;
+        if (str.length() == 1) return str.toUpperCase();
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
     private static Stage stage;
     public static void setStage(Stage s){
         stage = s;

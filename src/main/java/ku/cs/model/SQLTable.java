@@ -6,14 +6,10 @@ import ku.cs.utility.ProjectUtility;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // SQLTable is a class that represents a table in a database
 public class SQLTable {
@@ -91,7 +87,45 @@ public class SQLTable {
         return sql;
     }
 
+    private PreparedStatement typePutter(Object value, String type, int index, PreparedStatement preparedStatement) throws SQLException, ParseException {
+        switch (type){
+            case "int":
+                preparedStatement.setInt(index, (int) value);
+                break;
+            case "bigint":
+                preparedStatement.setLong(index, (long) value);
+                break;
+            case "float":
+                preparedStatement.setFloat(index, (float) value);
+                break;
+            case "double":
+                preparedStatement.setDouble(index, (double) value);
+                break;
+            case "boolean":
+                preparedStatement.setBoolean(index, (boolean) value);
+                break;
+            case "date":
+                try {
+                    preparedStatement.setDate(index, (Date) value);
+                }
+                catch (Exception e){
+                    ProjectUtility.debug("SQLTable[typePutter]: got exception ->", e.getMessage());
+                    ProjectUtility.debug("SQLTable[typePutter]: date format might not Date, trying to parse...");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = new Date(dateFormat.parse((String) value).getTime());
+                    preparedStatement.setDate(index, date);
+                    ProjectUtility.debug("SQLTable[typePutter]: date parsed successfully, date ->", date);
+                }
+                break;
+            default:
+                preparedStatement.setString(index, (String) value);
+                break;
+        }
+        return preparedStatement;
+    }
+
     public PreparedStatement getInsertQuery(SQLRow sqlRow) throws SQLException, ParseException {
+        ProjectUtility.debug("SQLTable[getInsertQuery]: building insert query for ->", sqlRow);
         String sql = "INSERT INTO " + name + " (";
         for (SQLColumn column: columns){
             sql += column.getName() + ", ";
@@ -104,42 +138,16 @@ public class SQLTable {
         sql = sql.substring(0, sql.length() - 2);
         sql += ")";
         PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
-        ProjectUtility.debug(sql);
-        ProjectUtility.debug(sqlRow.getValues());
+        ProjectUtility.debug("SQLTable[getInsertQuery]: built prepareStatement ->", sql);
         for (int i = 1; i <= columns.size(); i++){
-            ProjectUtility.debug("i=",i);
-            ProjectUtility.debug(sqlRow.getValues().get(i-1));
-            switch (columns.get(i-1).getType()){
-                case "int":
-                    preparedStatement.setInt(i, (int) sqlRow.getValues().get(i-1));
-                    break;
-                case "bigint":
-                    preparedStatement.setLong(i, (long) sqlRow.getValues().get(i-1));
-                    break;
-                case "float":
-                    preparedStatement.setFloat(i, (float) sqlRow.getValues().get(i-1));
-                    break;
-                case "double":
-                    preparedStatement.setDouble(i, (double) sqlRow.getValues().get(i-1));
-                    break;
-                case "boolean":
-                    preparedStatement.setBoolean(i, (boolean) sqlRow.getValues().get(i-1));
-                    break;
-                case "date":
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                    ProjectUtility.debug(sqlRow.getValues().get(i-1).getClass());
-//                    Date date = new Date(dateFormat.parse((String) sqlRow.getValues().get(i-1)).getTime());
-                    preparedStatement.setDate(i, (Date) sqlRow.getValues().get(i-1));
-                    break;
-                default:
-                    preparedStatement.setString(i, (String) sqlRow.getValues().get(i-1));
-                    break;
-            }
+            ProjectUtility.debug("SQLTable[getInsertQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getValues().get(i-1), "}");
+            preparedStatement = typePutter(sqlRow.getValues().get(i-1), columns.get(i-1).getType(), i, preparedStatement);
         }
         return preparedStatement;
     }
 
     public PreparedStatement getUpdateQuery(SQLRow sqlRow) throws SQLException, ParseException {
+        ProjectUtility.debug("SQLTable[getUpdateQuery]: building update query for ->", sqlRow);
         String sql = "UPDATE " + name + " SET ";
         for (SQLColumn column: columns){
             sql += column.getName() + " = ?, ";
@@ -151,65 +159,41 @@ public class SQLTable {
         }
         sql = sql.substring(0, sql.length() - 5);
         PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
-        ProjectUtility.debug(sql);
-        ProjectUtility.debug(sqlRow.getValues());
+        ProjectUtility.debug("SQLTable[getUpdateQuery]: built prepareStatement ->", sql);
         for (int i = 1; i <= columns.size(); i++){
-            ProjectUtility.debug("i=",i);
-            ProjectUtility.debug(sqlRow.getValues().get(i-1));
-            switch (columns.get(i-1).getType()){
-                case "int":
-                    preparedStatement.setInt(i, (int) sqlRow.getValues().get(i-1));
-                    break;
-                case "bigint":
-                    preparedStatement.setLong(i, (long) sqlRow.getValues().get(i-1));
-                    break;
-                case "float":
-                    preparedStatement.setFloat(i, (float) sqlRow.getValues().get(i-1));
-                    break;
-                case "double":
-                    preparedStatement.setDouble(i, (double) sqlRow.getValues().get(i-1));
-                    break;
-                case "boolean":
-                    preparedStatement.setBoolean(i, (boolean) sqlRow.getValues().get(i-1));
-                    break;
-                case "date":
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                    Date date = new Date(dateFormat.parse((String) sqlRow.getValues().get(i-1)).getTime());
-                    preparedStatement.setDate(i, (Date) sqlRow.getValues().get(i-1));
-                    break;
-                default:
-                    preparedStatement.setString(i, (String) sqlRow.getValues().get(i-1));
-                    break;
-            }
+            ProjectUtility.debug("SQLTable[getUpdateQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getValues().get(i-1), "}");
+            preparedStatement = typePutter(sqlRow.getValues().get(i-1), columns.get(i-1).getType(), i, preparedStatement);
         }
+        int j = 0;
         for (int i = columns.size()+1; i <= columns.size()+getPrimaryKeys().size(); i++){
-            ProjectUtility.debug("i=",i);
-            ProjectUtility.debug(sqlRow.getPrimaryKeyValue());
-            preparedStatement.setString(i, (String) sqlRow.getPrimaryKeyValue());
+            ProjectUtility.debug("SQLTable[getUpdateQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), "}");
+            preparedStatement = typePutter(sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), getPrimaryKeys().get(j).getType(), i, preparedStatement);
+            j++;
         }
         return preparedStatement;
     }
 
     public PreparedStatement getDeleteQuery(SQLRow sqlRow) throws SQLException, ParseException {
+        ProjectUtility.debug("SQLTable[getDeleteQuery]: building delete query for ->", sqlRow);
         String sql = "DELETE FROM " + name + " WHERE ";
         for (SQLColumn column: getPrimaryKeys()){
             sql += column.getName() + " = ? AND ";
         }
         sql = sql.substring(0, sql.length() - 5);
         PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
-        ProjectUtility.debug(sql);
-        ProjectUtility.debug(sqlRow.getValues());
+        ProjectUtility.debug("SQLTable[getDeleteQuery]: built prepareStatement ->", sql);
+        int j = 0;
         for (int i = 1; i <= getPrimaryKeys().size(); i++){
-            ProjectUtility.debug("i=",i);
-            ProjectUtility.debug(sqlRow.getPrimaryKeyValue());
-            preparedStatement.setString(i, (String) sqlRow.getPrimaryKeyValue());
+            ProjectUtility.debug("SQLTable[getDeleteQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), "}");
+            preparedStatement = typePutter(sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), getPrimaryKeys().get(j).getType(), i, preparedStatement);
+            j++;
         }
         return preparedStatement;
     }
 
     @Override
     public String toString() {
-        String msg_out =  "SQLTable[name(columns.count())]: " + name + "(" + columns.size() + ") {";
+        String msg_out =  "Object-SQLTable[name(columns.count())]: " + name + "(" + columns.size() + ") {";
         for (SQLColumn colum: columns){
             msg_out += "\n\t" + colum.toString();
         }

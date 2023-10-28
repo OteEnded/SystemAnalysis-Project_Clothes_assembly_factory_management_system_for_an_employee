@@ -1,6 +1,8 @@
 package ku.cs.model;
 
+import java.util.HashMap;
+
 public interface Row {
-    String getPrimaryKey();
+    HashMap<String, Object> getPrimaryKeys();
 
 }

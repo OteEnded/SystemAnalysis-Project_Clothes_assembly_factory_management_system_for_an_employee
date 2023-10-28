@@ -14,24 +14,24 @@ public class Test1_setup {
     public static void main(String[] args) throws SQLException, IllegalAccessException, ParseException {
 
 
-        DBMigration.migrate(true);
-//        DataSourceDB.dropTableAll();
-
-//        ProjectUtility.debug(DataSourceDB.load("Users"));
-
-        User user = new User("test", 20);
-        ProjectUtility.debug(user.toString());
-
-        Users.addData(user);
-        ProjectUtility.debug(Users.getData().toString());
-        user.save();
-        user = new User("test2", 20);
-        Users.addData(user);
-        user.save();
-
-//        Users.delete(user);
-        ProjectUtility.debug(Users.getData().toString());
-
-        Date date = new Date(System.currentTimeMillis());
+//        DBMigration.migrate(true);
+////        DataSourceDB.dropTableAll();
+//
+////        ProjectUtility.debug(DataSourceDB.load("Users"));
+//
+//        User user = new User("test", 20);
+//        ProjectUtility.debug(user.toString());
+//
+//        Users.addData(user);
+//        ProjectUtility.debug(Users.getData().toString());
+//        user.save();
+//        user = new User("test2", 20);
+//        Users.addData(user);
+//        user.save();
+//
+////        Users.delete(user);
+//        ProjectUtility.debug(Users.getData().toString());
+//
+//        Date date = new Date(System.currentTimeMillis());
     }
 }

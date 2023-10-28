@@ -5,6 +5,7 @@ import ku.cs.model.SQLRow;
 import ku.cs.model.SQLTable;
 import ku.cs.model.User;
 import ku.cs.service.DataSourceDB;
+import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.text.ParseException;
 import java.util.*;
 
 public class Users implements Entity {
+
     private static final SQLTable sqlTable = new SQLTable("Users");
     static {
         SQLColumn sqlColumn;
@@ -54,19 +56,9 @@ public class Users implements Entity {
     // load data from database
     public static HashMap<String, User> load(boolean updateUsers) throws SQLException {
         HashMap<String, User> dataFromDB = new HashMap<>();
-        SQLRow sqlRow = DataSourceDB.load(sqlTable);
-        ProjectUtility.debug(sqlRow);
-        int rowSize = sqlRow.getValues().size() / sqlRow.getColumns().size();
-        for (int i = 0; i < rowSize; i++){
-            ProjectUtility.debug("i:", i);
-            User user = new User();
-            for (int j = 0; j < sqlRow.getColumns().size(); j++){
-                ProjectUtility.debug("j:", j);
-                ProjectUtility.debug("Adding:", i*sqlRow.getColumns().size() + j, sqlRow.getColumns().get(j), sqlRow.getValues().get(i*sqlRow.getColumns().size() + j));
-                user.addData(sqlRow.getColumns().get(j), sqlRow.getValues().get(i*sqlRow.getColumns().size() + j));
-            }
-            dataFromDB.put(user.getId(), user);
-            ProjectUtility.debug(dataFromDB);
+        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        for (SQLRow sqlRow : sqlRows) {
+            dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new User(sqlRow.getValuesMap()));
         }
         if (updateUsers) data = dataFromDB;
         return dataFromDB;
@@ -83,83 +75,61 @@ public class Users implements Entity {
     // แก้เป็น U 00001 แล้วเพิ่มเลขไปเรื่อยๆ
     public static String getNewId() throws SQLException {
         if (data == null) load();
-        if (getData().size() == 0) return "U" + String.format("%05d", 1);
-        else {
-            ArrayList<String> oldId = new ArrayList<>(getData().keySet());
-            Collections.sort(oldId);
-            int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));
-            String newId = "U" + String.format("%05d", oldLastId + 1);
-            return newId;
-        }
+        if (data.size() == 0) return EntityUtility.idFormatter(sqlTable, 1);
+        ArrayList<String> oldId = new ArrayList<>(getData().keySet());
+        Collections.sort(oldId);
+        int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));
+        return EntityUtility.idFormatter(sqlTable, oldLastId + 1);
     }
 
     public static void addData(User user) throws SQLException {
+        ProjectUtility.debug("Users[addData]: adding user ->", user);
         if (data == null) load();
         if (user.getId() == null) {
             String newId = getNewId();
             user.setId(newId);
-            ProjectUtility.debug("New id: " + user.getId());
         }
         data.put(user.getId(), user);
+        ProjectUtility.debug("Users[addData]: added new user with id ->", user.getId(), "=", user);
     }
 
-    public static boolean isNewUser(User user){
-        return isNewUser(user.getId());
+    public static boolean isNew(User user){
+        return isNew(user.getId());
     }
 
-    public static boolean isNewUser(String id){
-        if (id == null) return false;
-        if (data.containsKey(id)) return false;
-        checkId(id);
-        return true;
-    }
-
-    public static boolean isIdValid(String id){
-        if (id.length() != 6) return false;
-        if (id.startsWith("U")) return false;
-        if (!id.substring(1,6).matches("\\d+")) return false;
-        return true;
-    }
-
-    public static void checkId(String id){
-        if (!isIdValid(id)) throw new RuntimeException("Id: " + id + "is Invalid!");
+    public static boolean isNew(String id){
+        if (id == null) return true;
+        EntityUtility.checkId(sqlTable, id);
+        return !data.containsKey(id);
     }
 
     public static int save(User user) throws SQLException, ParseException {
-        if (isNewUser(user)) addData(user);
+        ProjectUtility.debug("Users[save]: saving user ->", user);
 
         List<String> columnsStr = new ArrayList<>();
         for (SQLColumn sqlcolumn: sqlTable.getColumns()){
             columnsStr.add(sqlcolumn.getName());
         }
-        List<String> primaryKeysStr = new ArrayList<>();
-        for (SQLColumn sqlcolumn: sqlTable.getPrimaryKeys()){
-            primaryKeysStr.add(sqlcolumn.getName());
+        if (isNew(user)){
+            addData(user);
+            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable.getName(), user.getPrimaryKeys(), columnsStr, user.getData())));
         }
-        SQLRow sqlRow = new SQLRow(sqlTable.getName(), primaryKeysStr, user.getPrimaryKey(), columnsStr, user.getData());
-        HashMap<String, Object> dataOnDB = DataSourceDB.load(sqlTable.getName()).getValuesMap();
-        if (!isNewUser(user)){
-            return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(sqlRow));
-        }
-
-        return DataSourceDB.exePrepare(sqlTable.getInsertQuery(sqlRow));
+        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable.getName(), user.getPrimaryKeys(), columnsStr, user.getData())));
     }
 
-//    public static int updateDB(){
-//
-//    }
-
     public static int delete(User user) throws SQLException, ParseException {
+        ProjectUtility.debug("Users[delete]: deleting user ->", user);
         List<String> columnsStr = new ArrayList<>();
         for (SQLColumn sqlcolumn: sqlTable.getColumns()){
             columnsStr.add(sqlcolumn.getName());
         }
-        List<String> primaryKeysStr = new ArrayList<>();
-        for (SQLColumn sqlcolumn: sqlTable.getPrimaryKeys()){
-            primaryKeysStr.add(sqlcolumn.getName());
-        }
-        SQLRow sqlRow = new SQLRow(sqlTable.getName(), primaryKeysStr, user.getPrimaryKey(), columnsStr, user.getData());
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(sqlRow));
+        data.remove(user.getId());
+        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable.getName(), user.getPrimaryKeys(), columnsStr, user.getData())));
+    }
+
+    public static int delete(String id) throws SQLException, ParseException {
+        User user = new User(id);
+        return delete(user);
     }
 
     public static HashMap<String, Object> getMap() {
@@ -169,4 +139,5 @@ public class Users implements Entity {
         }
         return map;
     }
+
 }

@@ -79,4 +79,10 @@
     -fx-border-radius: 8px;
 }
 
+.blue-btn {
+    -fx-background-color: #213555;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+}
+
 

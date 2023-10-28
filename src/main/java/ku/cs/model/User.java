@@ -47,6 +47,7 @@ public class User implements Row {
     }
 
     public void setId(String id) {
+        if (!EntityUtility.isIdValid(Users.getSqlTable(), id)) throw new RuntimeException("User[setId]: Invalid id -> " + id);
         data.put("id", id);
     }
 
@@ -88,6 +89,7 @@ public class User implements Row {
         catch (RuntimeException e){
             cannotLoad = true;
         }
+        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Users.getSqlTable(), primaryKeys);
         if (cannotLoad) throw new RuntimeException("User[load]: Can't load user with primaryKeys: " + primaryKeys);
         setData(Users.getData().get(primaryKeys).getData());
     }

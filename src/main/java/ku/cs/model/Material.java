@@ -38,6 +38,7 @@ public class Material implements Row{
     }
 
     public void setId(String material_id) {
+        if (!EntityUtility.isIdValid(Materials.getSqlTable(), material_id)) throw new RuntimeException("Material[setId]: Invalid material_id -> " + material_id);
         data.put("material_id", material_id);
     }
 
@@ -71,6 +72,7 @@ public class Material implements Row{
         catch (RuntimeException e) {
             cannotLoad = true;
         }
+        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Materials.getSqlTable(), primaryKeys);
         if (cannotLoad) throw new RuntimeException("Material[load]: Can't load material with primaryKeys: " + primaryKeys);
         setData(Materials.getData().get(primaryKeys).getData());
     }

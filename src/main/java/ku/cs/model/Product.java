@@ -46,6 +46,7 @@ public class Product implements Row {
     }
 
     public void setId(String product_id) {
+        if (!EntityUtility.isIdValid(Products.getSqlTable(), product_id)) throw new RuntimeException("Product[setId]: Invalid product_id -> " + product_id);
         data.put("product_id", product_id);
     }
 
@@ -87,7 +88,8 @@ public class Product implements Row {
         catch (RuntimeException e) {
             cannotLoad = true;
         }
-        if (cannotLoad) throw new RuntimeException("Product[load]: Can't load product with primaryKeys: " + primaryKeys);
+        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Products.getSqlTable(), primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Product[load]: Can't load product with primaryKeys -> " + primaryKeys);
         setData(Products.getData().get(primaryKeys).getData());
     }
 

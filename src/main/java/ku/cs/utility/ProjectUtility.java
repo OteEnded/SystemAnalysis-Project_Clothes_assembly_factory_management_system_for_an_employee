@@ -44,6 +44,7 @@ public class ProjectUtility {
     public static void debug(Object msg){
         if (!isDebug) return;
         System.out.print("[DEBUG @ " + getDateTime().toString() + "]: ");
+        if (msg == null) msg = "null";
         System.out.println(msg.toString());
     }
 

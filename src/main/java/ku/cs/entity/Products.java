@@ -101,8 +101,8 @@ public class Products {
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
-        load();
-        if (data == null) return true;
+        if (data == null) load();
+        if (data.isEmpty()) return true;
         return !data.containsKey(primaryKeys);
     }
 
@@ -124,12 +124,8 @@ public class Products {
 
     public static int delete(Product product) throws SQLException, ParseException {
         ProjectUtility.debug("Products[delete]: deleting product ->", product);
-        if (isNew(product)) throw new RuntimeException("Products[delete]: Can not delete product that is not in database");
+        if (isNew(product)) throw new RuntimeException("Products[delete]: Can't delete product that is not in database");
         data.remove(getJoinedPrimaryKeys(product));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
     }
-
-
-
-
 }

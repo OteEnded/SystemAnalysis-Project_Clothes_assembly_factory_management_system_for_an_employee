@@ -179,8 +179,8 @@ public class Works {
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
-        load();
-        if (data == null) return true;
+        if (data == null) load();
+        if (data.isEmpty()) return true;
         return !data.containsKey(primaryKeys);
     }
 

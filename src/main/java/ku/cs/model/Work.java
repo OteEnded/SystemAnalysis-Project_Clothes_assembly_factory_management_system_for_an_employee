@@ -13,9 +13,7 @@ public class Work implements Row {
 
     private HashMap<String, Object> data = EntityUtility.getMap(Works.getSqlTable());
 
-    public Work(){
-
-    }
+    public Work(){}
 
     public Work(HashMap<String, Object> data){
         setData(data);
@@ -30,6 +28,7 @@ public class Work implements Row {
     }
 
     public void setId(String work_id) {
+        if (! EntityUtility.isIdValid(Works.getSqlTable(), work_id)) throw new RuntimeException("Work[setId]: Invalid work_id -> " + work_id);
         data.put("work_id", work_id);
     }
 
@@ -144,6 +143,7 @@ public class Work implements Row {
         } catch (RuntimeException e) {
             cannotLoad = true;
         }
+        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Works.getSqlTable(), primaryKeys);
         if (cannotLoad) throw new RuntimeException("Work[load]: Can't load work with primaryKeys: " + primaryKeys);
         setData(Works.getData().get(primaryKeys).getData());
     }

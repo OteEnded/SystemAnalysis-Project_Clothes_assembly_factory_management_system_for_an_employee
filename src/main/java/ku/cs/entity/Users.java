@@ -100,8 +100,8 @@ public class Users {
     }
 
     public static boolean isNew(String id) throws SQLException {
-        load();
-        if (id == null) return true;
+        if (id == null) load();
+        if (data.isEmpty()) return true;
         return !data.containsKey(id);
     }
 

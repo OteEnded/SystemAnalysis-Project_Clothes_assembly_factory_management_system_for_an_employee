@@ -6,11 +6,13 @@ import ku.cs.utility.EntityUtility;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class User implements Row {
 
-    private HashMap<String, Object> data = Users.getMap();
+    private HashMap<String, Object> data = EntityUtility.getMap(Users.getSqlTable());
 
     public User() throws SQLException {
         this("null", 0);
@@ -30,10 +32,12 @@ public class User implements Row {
         setData(data);
     }
 
+    @Override
     public HashMap<String, Object> getData() {
         return data;
     }
 
+    @Override
     public void setData(HashMap<String, Object> data) {
         this.data = data;
     }
@@ -70,14 +74,12 @@ public class User implements Row {
         data.put("sign_up_date", signUpDate);
     }
 
-    public int save() throws SQLException, ParseException {
-        return Users.save(this);
-    }
-
+    @Override
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Users.getSqlTable(), id));
     }
 
+    @Override
     public void load(String id) throws SQLException {
         Users.load();
         boolean isUserNew;
@@ -87,10 +89,16 @@ public class User implements Row {
         catch (RuntimeException e){
             isUserNew = true;
         }
-        if (isUserNew) throw new RuntimeException("Can find user with user_id: " + id);
+        if (isUserNew) throw new RuntimeException("User[load]: Can't find user with user_id: " + id);
         setData(Users.getData().get(id).getData());
     }
 
+    @Override
+    public int save() throws SQLException, ParseException {
+        return Users.save(this);
+    }
+
+    @Override
     public int delete() throws SQLException, ParseException {
         return Users.delete(this);
     }

@@ -1,6 +1,12 @@
 package ku.cs.utility;
 
+import ku.cs.model.SQLColumn;
 import ku.cs.model.SQLTable;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 public class EntityUtility {
     public static String idFormatter(int id){
@@ -20,5 +26,13 @@ public class EntityUtility {
     public static void checkId(SQLTable sqlTable, String id){
         if (isIdValid(sqlTable, id)) return;
         throw new RuntimeException("Id: " + id + "is Invalid!");
+    }
+
+    public static HashMap<String, Object> getMap(SQLTable sqlTable) {
+        HashMap<String, Object> map = new HashMap<>();
+        for (SQLColumn column : sqlTable.getColumns()) {
+            map.put(column.getName(), null);
+        }
+        return map;
     }
 }

@@ -56,6 +56,18 @@ public class SQLRow {
         for (String column: columns) values.add(valuesMap.get(column));
     }
 
+    //SQLTable, RowInterface
+    public SQLRow(SQLTable sqlTable , Row row) {
+        this.tableName = sqlTable.getName();
+        this.primaryKey = row.getPrimaryKeys();
+        List<String> columns = new ArrayList<>();
+        for (SQLColumn sqlColumn: sqlTable.getColumns()) columns.add(sqlColumn.getName());
+        this.columns = columns;
+        this.valuesMap = row.getData();
+        values = new ArrayList<>();
+        for (String column: columns) values.add(valuesMap.get(column));
+    }
+
     public String getTableName() {
         return tableName;
     }

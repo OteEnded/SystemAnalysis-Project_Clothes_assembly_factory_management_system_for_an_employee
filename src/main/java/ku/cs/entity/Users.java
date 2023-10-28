@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
-public class Users implements Entity {
+public class Users {
 
     private static final SQLTable sqlTable = new SQLTable("Users");
     static {
@@ -49,6 +49,14 @@ public class Users implements Entity {
         data = new HashMap<>();
     }
 
+    public static HashMap<String, User> getData() {
+        return data;
+    }
+
+    public static void setData(HashMap<String, User> data) {
+        Users.data = data;
+    }
+
     public static HashMap<String, User> load() throws SQLException {
         return load(true);
     }
@@ -64,12 +72,9 @@ public class Users implements Entity {
         return dataFromDB;
     }
 
-    public static HashMap<String, User> getData() {
-        return data;
-    }
-
-    public static void setData(HashMap<String, User> data) {
-        Users.data = data;
+    public static String getJoinedPrimaryKeys(User user) {
+        SQLRow sqlRow = new SQLRow(sqlTable, user);
+        return sqlRow.getJoinedPrimaryKeys();
     }
 
     // แก้เป็น U 00001 แล้วเพิ่มเลขไปเรื่อยๆ
@@ -85,59 +90,43 @@ public class Users implements Entity {
     public static void addData(User user) throws SQLException {
         ProjectUtility.debug("Users[addData]: adding user ->", user);
         if (data == null) load();
-        if (user.getId() == null) {
-            String newId = getNewId();
-            user.setId(newId);
-        }
+        if (getJoinedPrimaryKeys(user) == null || getJoinedPrimaryKeys(user) == "") user.setId(getNewId());
         data.put(user.getId(), user);
         ProjectUtility.debug("Users[addData]: added new user with id ->", user.getId(), "=", user);
     }
 
-    public static boolean isNew(User user){
+    public static boolean isNew(User user) throws SQLException {
         return isNew(user.getId());
     }
 
-    public static boolean isNew(String id){
+    public static boolean isNew(String id) throws SQLException {
+        load();
         if (id == null) return true;
-        EntityUtility.checkId(sqlTable, id);
         return !data.containsKey(id);
     }
 
     public static int save(User user) throws SQLException, ParseException {
         ProjectUtility.debug("Users[save]: saving user ->", user);
 
-        List<String> columnsStr = new ArrayList<>();
-        for (SQLColumn sqlcolumn: sqlTable.getColumns()){
-            columnsStr.add(sqlcolumn.getName());
-        }
         if (isNew(user)){
             addData(user);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable.getName(), user.getPrimaryKeys(), columnsStr, user.getData())));
+            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, user)));
         }
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable.getName(), user.getPrimaryKeys(), columnsStr, user.getData())));
-    }
-
-    public static int delete(User user) throws SQLException, ParseException {
-        ProjectUtility.debug("Users[delete]: deleting user ->", user);
-        List<String> columnsStr = new ArrayList<>();
-        for (SQLColumn sqlcolumn: sqlTable.getColumns()){
-            columnsStr.add(sqlcolumn.getName());
-        }
-        data.remove(user.getId());
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable.getName(), user.getPrimaryKeys(), columnsStr, user.getData())));
+        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, user)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
-        User user = new User(id);
+        User user = new User();
+        user.load(id);
         return delete(user);
     }
 
-    public static HashMap<String, Object> getMap() {
-        HashMap<String, Object> map = new HashMap<>();
-        for (SQLColumn column : sqlTable.getColumns()) {
-            map.put(column.getName(), null);
-        }
-        return map;
+
+    public static int delete(User user) throws SQLException, ParseException {
+        ProjectUtility.debug("Users[delete]: deleting user ->", user);
+        if (isNew(user)) throw new RuntimeException("Users[delete]: Can not delete user that is not in database");
+        data.remove(user.getId());
+        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, user)));
     }
 
 }

@@ -23,51 +23,15 @@ public class DataSourceDB {
         return JdbcConnector.getConnection();
     }
 
-    public static SQLRow query(String query) throws SQLException {
+    public static DatabaseMetaData getDBMetaData() throws SQLException {
+        return JdbcConnector.getMetadata();
+    }
+
+    public static List<SQLRow> query(String query) throws SQLException {
         JdbcConnector.connect();
-        SQLRow sqlRow = toSQLRow(JdbcConnector.query(query));
-        sqlRow.setTableName(extractTableName(query));
+        List<SQLRow> sqlRows = SQLRow.castRS(JdbcConnector.query(query));
         JdbcConnector.disconnect();
-        return sqlRow;
-    }
-
-    public static SQLRow toSQLRow(ResultSet rs) throws SQLException {
-        ResultSetMetaData metaData = rs.getMetaData();
-        List<String> columns = new ArrayList<>();
-        int columnCount = metaData.getColumnCount();
-        for (int i = 1; i <= columnCount; i++) {
-            columns.add(metaData.getColumnName(i));
-//            System.out.println("Column Name: " + metaData.getColumnName(i));
-//            System.out.println("Column Type: " + metaData.getColumnTypeName(i));
-//            System.out.println("Column Size: " + metaData.getPrecision(i));
-        }
-        List<Object> values = new ArrayList<>();
-        while (rs.next()) {
-            for (int i = 1; i <= columnCount; i++) {
-                values.add(rs.getObject(i));
-            }
-        }
-        ProjectUtility.debug("columns: " + columns);
-        ProjectUtility.debug("values: " + values);
-        return new SQLRow(columns, values);
-    }
-
-    // Simple method to extract the table name from an SQL query
-    public static String extractTableName(String query) {
-        // This is a very basic example and may not work for all SQL queries
-        // You might need to improve the regex or parsing logic based on your SQL query patterns
-        String tableName = "";
-        String[] parts = query.split("\\s");
-        for (String part : parts) {
-            if (part.equalsIgnoreCase("FROM")) {
-                int index = Arrays.asList(parts).indexOf(part);
-                if (index < parts.length - 1) {
-                    tableName = parts[index + 1];
-                    break;
-                }
-            }
-        }
-        return tableName;
+        return sqlRows;
     }
 
     public static int createTable(SQLTable sqlTable) throws SQLException {
@@ -133,8 +97,8 @@ public class DataSourceDB {
 
     public static List<String> getTableList() throws SQLException {
         List<String> tableList = new ArrayList<>();
-        for (Object table: query("show tables").getValues()){
-            tableList.add((String) table);
+        for (SQLRow sqlRow: query("show tables")){
+            tableList.add((String) sqlRow.getValues().get(0));
         }
         return tableList;
     }
@@ -150,46 +114,25 @@ public class DataSourceDB {
         return affectedRows;
     }
 
-    public static SQLRow load(SQLTable sqlTable) throws SQLException {
+    public static List<SQLRow> load(SQLTable sqlTable) throws SQLException {
         return load(sqlTable.getName());
     }
 
-    public static SQLRow load(String tableName) throws SQLException {
+    public static List<SQLRow> load(String tableName) throws SQLException {
         return query("SELECT * FROM " + tableName);
     }
 
     public static int exePrepare(PreparedStatement preparedStatement) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[exePrepare]: trying to execute ->", preparedStatement);
         int rowsUpdated = 0;
         if (inUse > 0) {
             rowsUpdated = preparedStatement.executeUpdate();
             inUse -= 1;
             getConnection(false);
         }
-        else ProjectUtility.debug("Invalid preparedStatement usage with JDBCO.");
+        else ProjectUtility.debug("DataSourceDB[exePrepare]: Invalid preparedStatement usage with JDBCO.");
+        ProjectUtility.debug("DataSourceDB[exePrepare]: executed, rowsUpdated ->", rowsUpdated);
         return rowsUpdated;
     }
 
-    public static int exePrepare(String query) throws SQLException {
-        return exePrepare(getConnection(true).prepareStatement(query));
-    }
-
-
-
-//    public static boolean insert(SQLRow sqlRow) throws SQLException {
-//        JdbcConnector.connect();
-//        Statement statement = getConnection().createStatement();
-//        String query = "INSERT INTO " + sqlRow.getTableName() + " (";
-//        for (String column : sqlRow.getColumns()) {
-//            query += column + ", ";
-//        }
-//        query = query.substring(0, query.length() - 2);
-//        query += ") VALUES (";
-//        for (Object value : sqlRow.getValues()) {
-//            query += "'" + value + "', ";
-//        }
-//        query = query.substring(0, query.length() - 2);
-//        query += ")";
-//        System.out.println(query);
-//        return statement.executeUpdate(query) > 0;
-//    }
 }

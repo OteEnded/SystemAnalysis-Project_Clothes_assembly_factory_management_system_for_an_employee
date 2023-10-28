@@ -27,7 +27,7 @@ public class JdbcConnector {
             // check connection
             if (db_connection != null) {
                 connectionStack += 1;
-                ProjectUtility.debug("db_connection is not null, connectionStack=", String.valueOf(connectionStack));
+                ProjectUtility.debug("JdbcConnector[connect]: db_connection is not null, connectionStack ->", String.valueOf(connectionStack));
                 return false;
             }
             // setup
@@ -36,7 +36,7 @@ public class JdbcConnector {
             if (db_connection != null) {
                 return true;
             }
-            ProjectUtility.debug("db_connection is null");
+            ProjectUtility.debug("JdbcConnector[connect]: db_connection is not null");
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
         }
@@ -49,7 +49,7 @@ public class JdbcConnector {
             // close connection
             if (connectionStack > 0) {
                 connectionStack -= 1;
-                ProjectUtility.debug("disconnected, connectionStack=", connectionStack);
+                ProjectUtility.debug("JdbcConnector[disconnect]: disconnected a connectionStack, connectionStack ->", connectionStack);
                 return false;
             }
             db_connection.close();

@@ -3,7 +3,7 @@ package ku.cs.entity;
 import ku.cs.model.SQLColumn;
 import ku.cs.model.SQLTable;
 
-public class Materials implements Entity {
+public class Materials {
 
     private static final SQLTable sqlTable = new SQLTable("Materials");
     static {

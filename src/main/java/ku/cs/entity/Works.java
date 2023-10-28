@@ -1,22 +1,9 @@
 package ku.cs.entity;
 
-import ku.cs.common.Status;
-import ku.cs.common.WorkType;
 import ku.cs.model.SQLColumn;
 import ku.cs.model.SQLTable;
 
-import java.sql.Timestamp;
-
-public class Works implements Entity {
-    private String id;
-    private Timestamp deadline;
-    private Timestamp start_date;
-    private WorkType work_type;
-    private Status status;
-    private int goal_amount;
-    private int progress_amount;
-    private String note;
-    private Products products;
+public class Works {
 
     private static final SQLTable sqlTable = new SQLTable("Works");
     static {

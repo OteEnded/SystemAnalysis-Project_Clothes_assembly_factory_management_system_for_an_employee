@@ -1,10 +1,22 @@
 package ku.cs.controller.employer;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import ku.cs.entity.Materials;
+import ku.cs.model.Product;
 
 import java.io.IOException;
 
 public class ProductManagementPageController {
+    @FXML private ListView<Product> productListView;
+    @FXML private ListView<String> materialListView;
+    @FXML private Label productLabel;
+
+    @FXML
+    void initialize(){
+        
+    }
 
     @FXML
     public void handleAddProductButton(){
@@ -31,7 +43,7 @@ public class ProductManagementPageController {
         try {
             com.github.saacsos.FXRouter.goTo("order");
         } catch (Exception e){
-            System.err.println("ไปหน้า home ไม่ได้");
+            System.err.println("ไปหน้า order ไม่ได้");
             e.printStackTrace();
         }
     }

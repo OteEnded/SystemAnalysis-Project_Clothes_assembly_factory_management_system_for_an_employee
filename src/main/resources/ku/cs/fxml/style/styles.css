@@ -10,6 +10,10 @@
     font-weight: semibold;
 }
 
+.text {
+    -fx-font-family: 'Bai Jamjuree';
+}
+
 .root {
     -fx-background-color: #F6F9FF;
     -fx-font-family: "Bai Jamjuree";
@@ -95,6 +99,23 @@
     -fx-background-radius: 8px;
     -fx-border-color: #F32013;
     -fx-border-radius: 8px;
+}
+
+.red-btn {
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #F32013;
+    -fx-background-radius: 8px
+}
+
+.input-border {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #B6D3FD;
+    -fx-border-radius: 8px;
+}
+
+.input-border:focused{
+    -fx-border-color: #213555;
 }
 
 

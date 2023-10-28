@@ -97,3 +97,10 @@
     -fx-border-radius: 8px;
 }
 
+.red-btn {
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #F32013;
+    -fx-background-radius: 8px
+
+}
+

@@ -59,17 +59,17 @@
       <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="803.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
       <AnchorPane layoutX="803.0" layoutY="166.0" prefHeight="219.0" prefWidth="409.0">
          <children>
-            <Label layoutX="46.0" layoutY="36.0" text="สินค้า : ">
+            <Label layoutX="46.0" layoutY="36.0" text="สินค้า : " textFill="#213555">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="96.0" layoutY="36.0" text="productLabel">
+            <Label layoutX="96.0" layoutY="36.0" text="productLabel" textFill="#213555">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="45.0" layoutY="59.0" text="วัตถุดิบที่ใช้ต่อ 1 ชิ้น ">
+            <Label layoutX="45.0" layoutY="59.0" text="วัตถุดิบที่ใช้ต่อ 1 ชิ้น " textFill="#213555">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -82,7 +82,7 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Text>
-      <Button layoutX="987.0" layoutY="398.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" />
+      <Button layoutX="987.0" layoutY="398.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
       <Button layoutX="1110.0" layoutY="397.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
       <Button layoutX="301.0" layoutY="575.0" mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มสินค้า" />
     </children>

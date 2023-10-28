@@ -2,8 +2,10 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -83,5 +85,63 @@
             <Font size="16.0" />
          </font>
       </Text>
+      <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="303.0" layoutY="322.0" stroke="#213555" strokeType="INSIDE" width="273.0" />
+      <AnchorPane layoutX="305.0" layoutY="322.0" prefHeight="219.0" prefWidth="265.0">
+         <children>
+            <VBox layoutX="16.0" layoutY="15.0" prefHeight="189.0" prefWidth="234.0" spacing="5.0">
+               <children>
+                  <Label text="ชื่อวัตถุดิบ" textFill="#213555">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="36.0" prefWidth="219.0" />
+                  <HBox prefHeight="66.0" prefWidth="265.0" spacing="10.0">
+                     <children>
+                        <VBox prefHeight="64.0" prefWidth="127.0">
+                           <children>
+                              <Label text="จำนวน" textFill="#213555">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField prefHeight="36.0" prefWidth="129.0" />
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="100.0" prefWidth="135.0" spacing="5.0">
+                           <children>
+                              <Label text="หน่วย" textFill="#213555">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Text fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="unitLabel">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="148.0" styleClass="white-btn" text="เพิ่มในรายการวัตถุดิบ -&gt;" textFill="#213555" />
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="674.0" layoutY="322.0" stroke="#213555" strokeType="INSIDE" width="420.0" />
+      <AnchorPane layoutX="674.0" layoutY="322.0" prefHeight="219.0" prefWidth="265.0">
+         <children>
+            <VBox layoutX="16.0" layoutY="15.0" prefHeight="189.0" prefWidth="234.0" spacing="5.0">
+               <children>
+                  <Label styleClass="bold-text" text="รายการวัตถุดิบ" textFill="#213555">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>

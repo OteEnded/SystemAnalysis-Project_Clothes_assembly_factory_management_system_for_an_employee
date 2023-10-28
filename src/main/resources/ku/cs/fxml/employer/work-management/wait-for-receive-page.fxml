@@ -111,12 +111,12 @@
                <children>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="ประเภทงาน : ">
+                        <Label text="ประเภทงาน : " textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="workTypeLabel" text="workTypeLabel">
+                        <Label fx:id="workTypeLabel" text="workTypeLabel" textFill="#213555">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -125,12 +125,12 @@
                   </HBox>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="สินค้า : ">
+                        <Label text="สินค้า : " textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="productLabel" text="productLabel">
+                        <Label fx:id="productLabel" text="productLabel" textFill="#213555">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -139,12 +139,12 @@
                   </HBox>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="กำหนดส่ง :">
+                        <Label text="กำหนดส่ง :" textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="deadlineLabel" text="deadlineLabel">
+                        <Label fx:id="deadlineLabel" text="deadlineLabel" textFill="#213555">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -153,12 +153,12 @@
                   </HBox>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="จำนวน : ">
+                        <Label text="จำนวน : " textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label fx:id="amountLabel" text="amountLabel">
+                        <Label fx:id="amountLabel" text="amountLabel" textFill="#213555">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -167,7 +167,7 @@
                   </HBox>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="วัตถุดิบที่ใช้ต่อ 1 ชิ้น">
+                        <Label text="วัตถุดิบที่ใช้ต่อ 1 ชิ้น" textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -186,7 +186,7 @@
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="วัตถุดิบที่ใช้ทั้งหมด">
+                        <Label text="วัตถุดิบที่ใช้ทั้งหมด" textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -205,7 +205,7 @@
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
                      <children>
-                        <Label text="หมายเหตุ">
+                        <Label text="หมายเหตุ" textFill="#213555">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -224,7 +224,7 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="60.0" prefWidth="354.0" text="noteLabel">
+                        <Label prefHeight="60.0" prefWidth="354.0" text="noteLabel" textFill="#213555">
                            <font>
                               <Font size="14.0" />
                            </font>

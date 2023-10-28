@@ -31,7 +31,7 @@ public class ProjectApplication extends Application {
 //        user.load("Ote");
 //        FXRouter.goTo("change-forgotten-password", user);
 
-        FXRouter.goTo("order");
+        FXRouter.goTo("received-work");
     }
 
     private static void configRoute() {
@@ -54,6 +54,7 @@ public class ProjectApplication extends Application {
         FXRouter.when("finished-work", packageStr + "employee/finished-work-page.fxml");
         FXRouter.when("waiting-for-check-work", packageStr + "employee/waiting-for-check-work-page.fxml");
         FXRouter.when("checked-work", packageStr + "employee/checked-work-page.fxml");
+        FXRouter.when("record-daily-result", packageStr + "employee/record-daily-result-page.fxml");
     }
 
     private static boolean isScreenBigEnoughToShowStage(){ //โค้ดส่วนป้องกันไม่ให้โปรแกรมถูกเปิดบนหน้าจอที่มีขนาดเล็กกว่าหน้าต่างของโปรแกรม - Ote

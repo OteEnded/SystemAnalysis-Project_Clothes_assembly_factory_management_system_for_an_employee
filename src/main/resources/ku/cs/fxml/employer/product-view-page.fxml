@@ -25,12 +25,12 @@
                         <Button layoutX="-11.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="25.0" prefWidth="127.0" styleClass="menu-bar" text="ออกจากระบบ" />
                     </children>
                 </AnchorPane>
-                <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="สั่งงาน">
+                <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: left;" styleClass="menu-bar" text="สั่งงาน">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </Button>
-                <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" text="รายการสินค้า">
+                <Button mnemonicParsing="false" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: left;" text="รายการสินค้า">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -39,12 +39,12 @@
                   <String fx:value="bold-text" />
                </styleClass>
                 </Button>
-                <Button mnemonicParsing="false" onAction="#handleMaterialManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="จัดการวัตถุดิบ">
+                <Button mnemonicParsing="false" onAction="#handleMaterialManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: left;" styleClass="menu-bar" text="จัดการวัตถุดิบ">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </Button>
-                <Button mnemonicParsing="false" onAction="#handleWorkManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="งานที่สั่ง">
+                <Button mnemonicParsing="false" onAction="#handleWorkManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: left;" styleClass="menu-bar" text="งานที่สั่ง">
                     <font>
                         <Font size="16.0" />
                     </font>

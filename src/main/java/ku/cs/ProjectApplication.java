@@ -18,6 +18,7 @@ public class ProjectApplication extends Application {
 
         if (!isScreenBigEnoughToShowStage()) return;
 
+        ProjectUtility.setStage(stage);
         stage.setResizable(false);
         stage.getIcons().add(ProjectUtility.getProgramIcon());
 

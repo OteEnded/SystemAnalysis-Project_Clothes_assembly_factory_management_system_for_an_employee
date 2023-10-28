@@ -1,7 +1,19 @@
 package ku.cs.entity;
 
 import ku.cs.model.SQLColumn;
+import ku.cs.model.SQLRow;
 import ku.cs.model.SQLTable;
+import ku.cs.model.Work;
+import ku.cs.service.DataSourceDB;
+import ku.cs.utility.EntityUtility;
+import ku.cs.utility.ProjectUtility;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class Works {
 
@@ -84,5 +96,87 @@ public class Works {
 
     public static SQLTable getSqlTable() {
         return sqlTable;
+    }
+
+    private static HashMap<String, Work> data;
+    static {
+        data = new HashMap<>();
+    }
+
+    public static HashMap<String, Work> getData() {
+        return data;
+    }
+
+    public static void setData(HashMap<String, Work> data) {
+        Works.data = data;
+    }
+
+    public static HashMap<String, Work> load() throws SQLException {
+        return load(true);
+    }
+
+    public static HashMap<String, Work> load(boolean updateBuffer) throws SQLException {
+        HashMap<String, Work> dataFromDB = new HashMap<>();
+        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        for (SQLRow sqlRow: sqlRows) {
+            dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Work(sqlRow.getValuesMap()));
+        }
+        if (updateBuffer) data = dataFromDB;
+        return dataFromDB;
+    }
+
+    public static String getJoinedPrimaryKeys(Work work) {
+        SQLRow sqlRow = new SQLRow(sqlTable, work);
+        return sqlRow.getJoinedPrimaryKeys();
+    }
+
+    public static String getNewId() throws SQLException {
+        if (data == null) load();
+        if (data.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
+        ArrayList<String> oldId = new ArrayList<>(getData().keySet());
+        Collections.sort(oldId);
+        int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));
+        return EntityUtility.idFormatter(sqlTable, oldLastId + 1);
+    }
+
+    public static void addData(Work work) throws SQLException {
+        ProjectUtility.debug("Works[addData]: adding work ->", work);
+        if (data == null) data = new HashMap<>();
+        if (work.getId() == null) work.setId(getNewId());
+        data.put(getJoinedPrimaryKeys(work), work);
+        ProjectUtility.debug("Works[addData]: added work with primaryKeys ->", getJoinedPrimaryKeys(work), "=", work);
+    }
+
+    public static boolean isNew(Work work) throws SQLException {
+        return isNew(getJoinedPrimaryKeys(work));
+    }
+
+    public static boolean isNew(String primaryKeys) throws SQLException {
+        load();
+        if (data == null) return true;
+        return !data.containsKey(primaryKeys);
+    }
+
+    public static int save(Work work) throws SQLException, ParseException {
+        ProjectUtility.debug("Works[save]: saving work ->", work);
+        if (isNew(work)){
+            addData(work);
+            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
+        }
+        data.put(getJoinedPrimaryKeys(work), work);
+        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
+    }
+
+    public static int delete(String id) throws SQLException, ParseException {
+        Work work = new Work();
+        work.load(id);
+        return delete(work);
+    }
+
+    public static int delete(Work work) throws SQLException, ParseException {
+        ProjectUtility.debug("Works[delete]: deleting work ->", work);
+        if (isNew(work)) throw new RuntimeException("Works[delete]: Can't find work with work_id: " + work.getId());
+        data.remove(getJoinedPrimaryKeys(work));
+        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
     }
 }

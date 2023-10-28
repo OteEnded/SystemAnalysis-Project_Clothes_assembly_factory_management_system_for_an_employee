@@ -57,23 +57,22 @@ public class Material implements Row{
         data.put("unit_name", unit_name);
     }
 
-    @Override
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Materials.getSqlTable(), id));
     }
 
     @Override
-    public void load(String id) throws SQLException {
+    public void load(String primaryKeys) throws SQLException {
         Materials.load();
-        boolean isMaterialNew;
+        boolean cannotLoad;
         try {
-            isMaterialNew = Materials.isNew(id);
+            cannotLoad = Materials.isNew(primaryKeys);
         }
         catch (RuntimeException e) {
-            isMaterialNew = true;
+            cannotLoad = true;
         }
-        if (isMaterialNew) throw new RuntimeException("Material[load]: Can't find material with material_id: " + id);
-        setData(Materials.getData().get(id).getData());
+        if (cannotLoad) throw new RuntimeException("Material[load]: Can't load material with primaryKeys: " + primaryKeys);
+        setData(Materials.getData().get(primaryKeys).getData());
     }
 
     @Override

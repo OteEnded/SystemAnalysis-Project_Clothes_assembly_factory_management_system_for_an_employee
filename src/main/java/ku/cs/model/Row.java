@@ -6,10 +6,9 @@ import java.util.HashMap;
 
 public interface Row {
 
-    HashMap<String, Object> getData();
     void setData(HashMap<String, Object> data);
-    void load(int id) throws SQLException;
-    void load(String id) throws SQLException;
+    HashMap<String, Object> getData();
+    void load(String primaryKeys) throws SQLException;
     int save() throws SQLException, ParseException;
     int delete() throws SQLException, ParseException;
     HashMap<String, Object> getPrimaryKeys();

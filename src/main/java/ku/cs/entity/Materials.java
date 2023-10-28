@@ -61,17 +61,17 @@ public class Materials {
         return load(true);
     }
 
-    public static HashMap<String, Material> load(boolean updateMaterials) throws SQLException {
+    public static HashMap<String, Material> load(boolean updateBuffer) throws SQLException {
         HashMap<String, Material> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Material(sqlRow.getValuesMap()));
         }
-        if (updateMaterials) data = dataFromDB;
+        if (updateBuffer) data = dataFromDB;
         return dataFromDB;
     }
 
-    public String getJoinedPrimaryKeys(Material material) {
+    public static String getJoinedPrimaryKeys(Material material) {
         SQLRow sqlRow = new SQLRow(sqlTable, material);
         return sqlRow.getJoinedPrimaryKeys();
     }
@@ -89,31 +89,28 @@ public class Materials {
         ProjectUtility.debug("Materials[addData]: adding material ->", material);
         if (data == null) load();
         if (material.getId() == null) material.setId(getNewId());
-        data.put(material.getId(), material);
-        ProjectUtility.debug("Materials[addData]: added material with id ->", material.getId(), "=", material);
+        data.put(getJoinedPrimaryKeys(material), material);
+        ProjectUtility.debug("Materials[addData]: added material with primaryKeys ->", getJoinedPrimaryKeys(material), "=", material);
     }
 
     public static boolean isNew(Material material) throws SQLException {
-        return isNew(material.getId());
+        return isNew(getJoinedPrimaryKeys(material));
     }
 
-    public static boolean isNew(String id) throws SQLException {
+    public static boolean isNew(String primaryKeys) throws SQLException {
         load();
         if (data == null) return true;
-        return !data.containsKey(id);
+        return !data.containsKey(primaryKeys);
     }
 
     public static int save(Material material) throws SQLException, ParseException {
         ProjectUtility.debug("Materials[save]: saving material ->", material);
-
         if (isNew(material)) {
             addData(material);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, material)));
         }
-        else {
-            data.put(material.getId(), material);
-            return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, material)));
-        }
+        data.put(getJoinedPrimaryKeys(material), material);
+        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, material)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
@@ -125,7 +122,7 @@ public class Materials {
     public static int delete(Material material) throws SQLException, ParseException {
         ProjectUtility.debug("Materials[delete]: deleting material ->", material);
         if (isNew(material)) throw new RuntimeException("Materials[delete]: Can not delete material that is not in database");
-        data.remove(material.getId());
+        data.remove(getJoinedPrimaryKeys(material));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
     }
 }

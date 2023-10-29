@@ -80,7 +80,7 @@ public class DailyRecord implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        DailyRecords.load();
+        if(DailyRecords.getData() == null) DailyRecords.load();
         boolean connotLoad;
         try {
             connotLoad = DailyRecords.isNew(primaryKeys);

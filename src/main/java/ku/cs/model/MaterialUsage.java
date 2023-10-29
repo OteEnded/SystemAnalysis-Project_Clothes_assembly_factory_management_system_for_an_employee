@@ -109,7 +109,7 @@ public class MaterialUsage implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        MaterialUsages.load();
+        if(MaterialUsages.getData() == null) MaterialUsages.load();
         boolean cannotLoad;
         try {
             cannotLoad = MaterialUsages.isNew(primaryKeys);

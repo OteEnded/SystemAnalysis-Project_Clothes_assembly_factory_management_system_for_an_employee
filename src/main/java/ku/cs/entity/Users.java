@@ -41,12 +41,10 @@ public class Users {
         return sqlTable;
     }
 
-    private static HashMap<String, User> data = null;
-    static {
-        data = new HashMap<>();
-    }
+    private static HashMap<String, User> data;
 
     public static HashMap<String, User> getData() {
+        // if(data == null) load();
         return data;
     }
 

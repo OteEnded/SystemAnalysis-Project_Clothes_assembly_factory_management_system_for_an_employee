@@ -80,7 +80,7 @@ public class Product implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        Products.load();
+        if(Products.getData() == null) Products.load();
         boolean cannotLoad;
         try {
             cannotLoad = Products.isNew(primaryKeys);

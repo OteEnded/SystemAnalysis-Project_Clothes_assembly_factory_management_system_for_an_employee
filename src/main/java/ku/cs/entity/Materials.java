@@ -45,11 +45,9 @@ public class Materials {
     }
 
     private static HashMap<String, Material> data;
-    static {
-        data = new HashMap<>();
-    }
 
     public static HashMap<String, Material> getData() {
+        // if(data == null) load();
         return data;
     }
 

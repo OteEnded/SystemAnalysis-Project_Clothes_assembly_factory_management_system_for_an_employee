@@ -64,7 +64,7 @@ public class Material implements Row{
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        Materials.load();
+        if(Materials.getData() == null) Materials.load();
         boolean cannotLoad;
         try {
             cannotLoad = Materials.isNew(primaryKeys);

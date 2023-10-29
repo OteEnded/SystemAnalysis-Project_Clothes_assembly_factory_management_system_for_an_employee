@@ -240,4 +240,20 @@ public class Works {
         filter = null;
         return filteredData;
     }
+
+    public static ArrayList<Work> getSortedBy(String column) {
+        return getSortedBy(column, data);
+    }
+
+    public static ArrayList<Work> getSortedBy(String column, HashMap<String, Work> data) {
+        ArrayList<Work> sortedData = new ArrayList<>(data.values());
+        Collections.sort(sortedData, (o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (Exception e) {
+                return 0;
+            }
+        });
+        return sortedData;
+    }
 }

@@ -14,7 +14,7 @@ public class Test1_setup {
     public static void main(String[] args) throws SQLException, IllegalAccessException, ParseException {
 
 
-        DBMigration.migrate();
+//        DBMigration.migrate();
 ////        DataSourceDB.dropTableAll();
 //
 ////        ProjectUtility.debug(DataSourceDB.load("Users"));
@@ -33,5 +33,7 @@ public class Test1_setup {
 //        ProjectUtility.debug(Users.getData().toString());
 //
 //        Date date = new Date(System.currentTimeMillis());
+
+        ProjectUtility.debug(ProjectUtility.getDate("2021-01-01"));
     }
 }

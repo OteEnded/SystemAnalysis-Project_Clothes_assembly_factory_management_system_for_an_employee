@@ -74,7 +74,12 @@ public class ProjectUtility {
     }
 
     public static Date getDate(){
-        return new Date(System.currentTimeMillis());
+        return getDate(null);
+    }
+
+    public static Date getDate(String date){
+        if (date == null) return new Date(System.currentTimeMillis());
+        return Date.valueOf(date);
     }
 
     public static void copyFile(String from, String to){

@@ -1,8 +1,9 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,29 +11,28 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
+
 import com.github.saacsos.FXRouter;
+import ku.cs.controller.Work;
 
-
-public class WorkInProgressWorkController {
+public class FinishedWorkController {
 
     @FXML
     private TableView<Work> tableView;
     @FXML private TableColumn<Work, String> type;
     @FXML private TableColumn<Work, String> product;
     @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
-    @FXML private TableColumn<Work, Integer> capacity;
 
+    @FXML private Button sendWorkBtn;
     @FXML private Label workDetail;
 
     @FXML
     void initialize() {
 
+        sendWorkBtn.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         product.setCellValueFactory(new PropertyValueFactory<>("product"));
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-        capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 
         ObservableList<Work> works = FXCollections.observableArrayList();
         works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
@@ -51,6 +51,7 @@ public class WorkInProgressWorkController {
 
     private void showSelectedRow(Work newValue) {
         workDetail.setText(newValue.toString());
+        sendWorkBtn.setVisible(true);
     }
 
     /* Navbar Btn */

@@ -1,4 +1,4 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,28 +7,26 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
+import com.github.saacsos.FXRouter;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ku.cs.controller.Work;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
-import com.github.saacsos.FXRouter;
-
-public class FinishedWorkController {
-
+public class WaitingForCheckWorkController {
     @FXML
     private TableView<Work> tableView;
     @FXML private TableColumn<Work, String> type;
     @FXML private TableColumn<Work, String> product;
     @FXML private TableColumn<Work, Integer> quantity;
 
-    @FXML private Button sendWorkBtn;
     @FXML private Label workDetail;
 
     @FXML
     void initialize() {
 
-        sendWorkBtn.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         product.setCellValueFactory(new PropertyValueFactory<>("product"));
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
@@ -50,7 +48,6 @@ public class FinishedWorkController {
 
     private void showSelectedRow(Work newValue) {
         workDetail.setText(newValue.toString());
-        sendWorkBtn.setVisible(true);
     }
 
     /* Navbar Btn */
@@ -107,5 +104,4 @@ public class FinishedWorkController {
             e.printStackTrace();
         }
     }
-
 }

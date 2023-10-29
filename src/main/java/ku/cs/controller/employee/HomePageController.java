@@ -1,4 +1,4 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import com.github.saacsos.FXRouter;
 import javafx.event.ActionEvent;

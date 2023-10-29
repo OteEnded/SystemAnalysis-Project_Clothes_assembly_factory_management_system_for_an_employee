@@ -1,4 +1,4 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.controller.Work;
 
 
 public class WaitingForMaterialWorkController {

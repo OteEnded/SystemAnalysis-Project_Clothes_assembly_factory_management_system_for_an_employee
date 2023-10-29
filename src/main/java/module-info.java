@@ -28,5 +28,7 @@ module cs.ku {
     opens ku.cs.controller.employer to javafx.fxml;
     exports ku.cs.controller.employer.work;
     opens ku.cs.controller.employer.work to javafx.fxml;
+    exports ku.cs.controller.employee;
+    opens ku.cs.controller.employee to javafx.fxml;
 
 }

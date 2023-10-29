@@ -1,4 +1,4 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Pair;
+import ku.cs.controller.Work;
 
 import java.io.IOException;
 import java.time.LocalDate;

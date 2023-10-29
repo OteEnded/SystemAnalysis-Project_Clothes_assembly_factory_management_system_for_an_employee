@@ -11,6 +11,15 @@ public class Test4_products {
 //        p1.save();
         Product pt = new Product();
         pt.load("P00001");
+        pt.setName("shirt");
         System.out.println(pt);
+        pt.setName("pant");
+        pt.save();
+        pt.load("P00001");
+        System.out.println(pt);
+        Product pn = new Product();
+        pn.setName("newShirt");
+        pn.save();
+        System.out.println(pn);
     }
 }

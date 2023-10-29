@@ -110,4 +110,37 @@ public class DailyRecords {
         data.remove(getJoinedPrimaryKeys(dailyRecord));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, dailyRecord)));
     }
+
+    public static HashMap<String, Object> filter;
+    public static void addFilter(String column, Object value) {
+        if (filter == null) filter = new HashMap<>();
+        filter.put(column, value);
+    }
+    public static void setFilter(HashMap<String, Object> filter) {
+        DailyRecords.filter = filter;
+    }
+    public static HashMap<String, Object> getFilter() {
+        return filter;
+    }
+    public static HashMap<String, DailyRecord> getFilteredData(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return getFilteredData();
+    }
+    public static HashMap<String, DailyRecord> getFilteredData() throws SQLException {
+        if (filter == null) throw new RuntimeException("DailyRecords[getFilteredData]: filter is null, Please set filter or get all data without filter using -> DailyRecords.getData()");
+        if (data == null) load();
+        HashMap<String, DailyRecord> filteredData = new HashMap<>();
+        for (DailyRecord dailyRecord : data.values()) {
+            boolean isFiltered = true;
+            for (String column : filter.keySet()) {
+                if (!dailyRecord.getData().get(column).equals(filter.get(column))) {
+                    isFiltered = false;
+                    break;
+                }
+            }
+            if (isFiltered) filteredData.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
+        }
+        filter = null;
+        return filteredData;
+    }
 }

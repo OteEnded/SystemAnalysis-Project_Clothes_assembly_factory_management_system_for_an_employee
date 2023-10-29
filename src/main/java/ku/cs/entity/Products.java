@@ -128,4 +128,37 @@ public class Products {
         data.remove(getJoinedPrimaryKeys(product));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
     }
+
+    public static HashMap<String, Object> filter;
+    public static void addFilter(String column, Object value) {
+        if (filter == null) filter = new HashMap<>();
+        filter.put(column, value);
+    }
+    public static void setFilter(HashMap<String, Object> filter) {
+        Products.filter = filter;
+    }
+    public static HashMap<String, Object> getFilter() {
+        return filter;
+    }
+    public static HashMap<String, Product> getFilteredData(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return getFilteredData();
+    }
+    public static HashMap<String, Product> getFilteredData() throws SQLException {
+        if (filter == null) throw new RuntimeException("Product[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Products.getData()");
+        if (data == null) load();
+        HashMap<String, Product> filteredData = new HashMap<>();
+        for (Product product: getData().values()) {
+            boolean isFiltered = true;
+            for (String column: filter.keySet()) {
+                if(!product.getData().get(column).equals(filter.get(column))) {
+                    isFiltered = false;
+                    break;
+                }
+            }
+            if (isFiltered) filteredData.put(product.getId(), product);
+        }
+        filter = null;
+        return filteredData;
+    }
 }

@@ -121,4 +121,39 @@ public class MaterialUsages {
         data.remove(getJoinedPrimaryKeys(materialUsage));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, materialUsage)));
     }
+
+    public static HashMap<String, Object> filter;
+    public static void addFilter(String column, Object value) {
+        if (filter == null) filter = new HashMap<>();
+        filter.put(column, value);
+    }
+    public static void setFilter(HashMap<String, Object> filter) {
+        MaterialUsages.filter = filter;
+    }
+    public static HashMap<String, Object> getFilter() {
+        return filter;
+    }
+
+    public static HashMap<String, MaterialUsage> getFilteredData(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return getFilteredData();
+    }
+
+    public static HashMap<String, MaterialUsage> getFilteredData() throws SQLException {
+        if (filter == null) throw new RuntimeException("MaterialUsages[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> MaterialUsages.getData()");
+        if (data == null) load();
+        HashMap<String, MaterialUsage> filteredData = new HashMap<>();
+        for (MaterialUsage materialUsage : data.values()) {
+            boolean isFiltered = true;
+            for (String column : filter.keySet()) {
+                if (!materialUsage.getData().get(column).equals(filter.get(column))) {
+                    isFiltered = false;
+                    break;
+                }
+            }
+            if (isFiltered) filteredData.put(getJoinedPrimaryKeys(materialUsage), materialUsage);
+        }
+        filter = null;
+        return filteredData;
+    }
 }

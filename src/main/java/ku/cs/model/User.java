@@ -81,7 +81,7 @@ public class User implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        Users.load();
+//        if(Users.getData() == null) Users.load();
         boolean cannotLoad;
         try {
             cannotLoad = Users.isNew(primaryKeys);

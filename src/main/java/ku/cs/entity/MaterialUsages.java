@@ -57,11 +57,9 @@ public class MaterialUsages {
     }
 
     private static HashMap<String, MaterialUsage> data;
-    static {
-        data = new HashMap<>();
-    }
 
-    public static HashMap<String, MaterialUsage> getData() {
+    public static HashMap<String, MaterialUsage> getData() throws SQLException{
+        if(data == null) load();
         return data;
     }
 
@@ -89,7 +87,8 @@ public class MaterialUsages {
         return sqlRow.getJoinedPrimaryKeys();
     }
 
-    public static void addData(MaterialUsage materialUsage) {
+    public static void addData(MaterialUsage materialUsage) throws SQLException{
+        if (data == null) load();
         ProjectUtility.debug("MaterialUsages[addData]: adding materialUsage->", materialUsage);
         data.put(getJoinedPrimaryKeys(materialUsage), materialUsage);
         ProjectUtility.debug("Product[addData]: added materialUsage with primaryKeys ->", getJoinedPrimaryKeys(materialUsage), "=", materialUsage);

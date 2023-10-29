@@ -47,11 +47,9 @@ public class DailyRecords {
     }
 
     private static HashMap<String, DailyRecord> data;
-    static {
-        data = new HashMap<>();
-    }
 
-    public static HashMap<String, DailyRecord> getData() {
+    public static HashMap<String, DailyRecord> getData() throws SQLException{
+        if (data == null) load();
         return data;
     }
 
@@ -78,7 +76,8 @@ public class DailyRecords {
         return sqlRow.getJoinedPrimaryKeys();
     }
 
-    public static void addData(DailyRecord dailyRecord) {
+    public static void addData(DailyRecord dailyRecord) throws SQLException{
+        if (data == null) load();
         ProjectUtility.debug("DailyRecords[addData]: adding dailyRecord ->", dailyRecord);
         data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
         ProjectUtility.debug("DailyRecords[addData]: added dailyRecord with primaryKeys ->", getJoinedPrimaryKeys(dailyRecord), "=", dailyRecord);

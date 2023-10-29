@@ -5,9 +5,7 @@ import ku.cs.utility.EntityUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Product implements Row {
 
@@ -80,7 +78,7 @@ public class Product implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        Products.load();
+//        if(Products.getData() == null) Products.load();
         boolean cannotLoad;
         try {
             cannotLoad = Products.isNew(primaryKeys);

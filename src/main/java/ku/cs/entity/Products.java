@@ -47,11 +47,9 @@ public class Products {
     }
 
     private static HashMap<String, Product> data;
-    static {
-        data = new HashMap<>();
-    }
 
-    public static HashMap<String, Product> getData() {
+    public static HashMap<String, Product> getData() throws SQLException{
+        if(data == null) load();
         return data;
     }
 
@@ -89,8 +87,8 @@ public class Products {
     }
 
     public static void addData(Product product) throws SQLException {
-        ProjectUtility.debug("Products[addData]: adding product ->", product);
         if (data == null) load();
+        ProjectUtility.debug("Products[addData]: adding product ->", product);
         if (product.getId() == null) product.setId(getNewId());
         data.put(getJoinedPrimaryKeys(product), product);
         ProjectUtility.debug("Products[addData]: added product with primaryKeys ->", getJoinedPrimaryKeys(product), "=", product);

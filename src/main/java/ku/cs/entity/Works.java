@@ -126,11 +126,9 @@ public class Works {
     }
 
     private static HashMap<String, Work> data;
-    static {
-        data = new HashMap<>();
-    }
 
-    public static HashMap<String, Work> getData() {
+    public static HashMap<String, Work> getData() throws SQLException{
+        if(data == null) load();
         return data;
     }
 
@@ -167,8 +165,8 @@ public class Works {
     }
 
     public static void addData(Work work) throws SQLException {
+        if (data == null) load();
         ProjectUtility.debug("Works[addData]: adding work ->", work);
-        if (data == null) data = new HashMap<>();
         if (work.getId() == null) work.setId(getNewId());
         data.put(getJoinedPrimaryKeys(work), work);
         ProjectUtility.debug("Works[addData]: added work with primaryKeys ->", getJoinedPrimaryKeys(work), "=", work);

@@ -125,4 +125,37 @@ public class Materials {
         data.remove(getJoinedPrimaryKeys(material));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
     }
+
+    public static HashMap<String, Object> filter;
+    public static void addFilter(String column, Object value) {
+        if (filter == null) filter = new HashMap<>();
+        filter.put(column, value);
+    }
+    public static void setFilter(HashMap<String, Object> filter) {
+        Materials.filter = filter;
+    }
+    public static HashMap<String, Object> getFilter() {
+        return filter;
+    }
+    public static HashMap<String, Material> getFilteredData(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return getFilteredData();
+    }
+    public static HashMap<String, Material> getFilteredData() throws SQLException{
+        if (filter == null) throw new RuntimeException("Materials[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Materials.getData()");
+        if (data == null) load();
+        HashMap<String, Material> filteredData = new HashMap<>();
+        for (Material material: getData().values()) {
+            boolean isFiltered = true;
+            for (String column: filter.keySet()) {
+                if(!material.getData().get(column).equals(filter.get(column))) {
+                    isFiltered = false;
+                    break;
+                }
+            }
+            if (isFiltered) filteredData.put(material.getId(), material);
+        }
+        filter = null;
+        return filteredData;
+    }
 }

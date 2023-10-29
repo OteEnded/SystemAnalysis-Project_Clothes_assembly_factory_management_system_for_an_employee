@@ -18,13 +18,13 @@ public class MaterialUsage implements Row {
 
     }
 
-    public MaterialUsage(String material_id, String work_id, int amount){
-        this(material_id, work_id, amount, 1);
+    public MaterialUsage(String material_id, String product_id, int amount){
+        this(material_id, product_id, amount, 1);
     }
 
-    public MaterialUsage(String material_id, String work_id, int amount, int yield){
+    public MaterialUsage(String material_id, String product_id, int amount, int yield){
         data.put("material_id", material_id);
-        data.put("work_id", work_id);
+        data.put("product_id", product_id);
         data.put("amount", amount);
         data.put("yield", yield);
     }
@@ -95,16 +95,16 @@ public class MaterialUsage implements Row {
         data.put("yield", yield);
     }
 
-    public void load(int material_id, int work_id) throws SQLException {
-        load(EntityUtility.idFormatter(Materials.getSqlTable(), material_id) , EntityUtility.idFormatter(Works.getSqlTable(), work_id));
+    public void load(int material_id, int product_id) throws SQLException {
+        load(EntityUtility.idFormatter(Materials.getSqlTable(), material_id) , EntityUtility.idFormatter(Products.getSqlTable(), product_id));
     }
 
-    public void load(Material material, Work work) throws SQLException {
-        load(material.getId(), work.getId());
+    public void load(Material material, Product product) throws SQLException {
+        load(material.getId(), product.getId());
     }
 
-    public void load(String material_id, String work_id) throws SQLException {
-        load(String.join("|", material_id, work_id));
+    public void load(String material_id, String product_id) throws SQLException {
+        load(String.join("|", material_id, product_id));
     }
 
     @Override

@@ -224,7 +224,7 @@ public class Works {
         return getFilteredData();
     }
     public static HashMap<String, Work> getFilteredData() throws SQLException {
-        if (filter == null) throw new RuntimeException("Works[getFilteredData]: filter is null. Please set filter first or get all data without filter using -> Works.getdata()");
+        if (filter == null) throw new RuntimeException("Works[getFilteredData]: filter is null. Please set filter first or get all data without filter using -> Works.getData()");
         if (data == null) load();
         HashMap<String, Work> filteredData = new HashMap<>();
         for (Work work: getData().values()) {

@@ -1,9 +1,6 @@
 package ku.cs.entity;
 
-import ku.cs.model.SQLColumn;
-import ku.cs.model.SQLRow;
-import ku.cs.model.SQLTable;
-import ku.cs.model.User;
+import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
@@ -129,4 +126,39 @@ public class Users {
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, user)));
     }
 
+    public static HashMap<String, Object> filter;
+    public static void addFilter(String column, Object value) {
+        if (filter == null) filter = new HashMap<>();
+        filter.put(column, value);
+    }
+    public static void setFilter(HashMap<String, Object> filter) {
+        Users.filter = filter;
+    }
+
+    public static HashMap<String, Object> getFilter() {
+        return filter;
+    }
+
+    public static HashMap<String, User> getFilteredData(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return getFilteredData();
+    }
+
+    public static HashMap<String, User> getFilteredData() throws SQLException {
+        if (filter == null) throw new RuntimeException("Users[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Users.getData()");
+        if (data == null) load();
+        HashMap<String, User> filteredData = new HashMap<>();
+        for (User user: getData().values()) {
+            boolean isFiltered = true;
+            for (String column: filter.keySet()) {
+                if(!user.getData().get(column).equals(filter.get(column))) {
+                    isFiltered = false;
+                    break;
+                }
+            }
+            if (isFiltered) filteredData.put(user.getId(), user);
+        }
+        filter = null;
+        return filteredData;
+    }
 }

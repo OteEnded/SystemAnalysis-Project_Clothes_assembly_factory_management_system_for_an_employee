@@ -127,8 +127,8 @@ public class Works {
 
     private static HashMap<String, Work> data;
 
-    public static HashMap<String, Work> getData() {
-        //        if(data == null) load();
+    public static HashMap<String, Work> getData() throws SQLException{
+        if(data == null) load();
         return data;
     }
 

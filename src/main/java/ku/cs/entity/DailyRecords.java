@@ -48,8 +48,8 @@ public class DailyRecords {
 
     private static HashMap<String, DailyRecord> data;
 
-    public static HashMap<String, DailyRecord> getData() {
-        // if (data == null) load();
+    public static HashMap<String, DailyRecord> getData() throws SQLException{
+        if (data == null) load();
         return data;
     }
 

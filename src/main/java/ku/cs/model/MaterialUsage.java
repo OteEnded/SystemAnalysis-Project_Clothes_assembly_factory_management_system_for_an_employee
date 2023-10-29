@@ -3,7 +3,6 @@ package ku.cs.model;
 import ku.cs.entity.MaterialUsages;
 import ku.cs.entity.Materials;
 import ku.cs.entity.Products;
-import ku.cs.entity.Works;
 import ku.cs.utility.EntityUtility;
 
 import java.sql.SQLException;
@@ -109,7 +108,7 @@ public class MaterialUsage implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        if(MaterialUsages.getData() == null) MaterialUsages.load();
+//        if(MaterialUsages.getData() == null) MaterialUsages.load();
         boolean cannotLoad;
         try {
             cannotLoad = MaterialUsages.isNew(primaryKeys);

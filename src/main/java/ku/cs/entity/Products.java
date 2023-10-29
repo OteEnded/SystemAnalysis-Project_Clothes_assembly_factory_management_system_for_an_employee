@@ -49,7 +49,7 @@ public class Products {
     private static HashMap<String, Product> data;
 
     public static HashMap<String, Product> getData() throws SQLException{
-//        if(data == null) load();
+        if(data == null) load();
         return data;
     }
 

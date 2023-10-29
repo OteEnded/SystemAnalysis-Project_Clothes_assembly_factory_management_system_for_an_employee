@@ -46,8 +46,8 @@ public class Materials {
 
     private static HashMap<String, Material> data;
 
-    public static HashMap<String, Material> getData() {
-        // if(data == null) load();
+    public static HashMap<String, Material> getData() throws SQLException{
+        if(data == null) load();
         return data;
     }
 

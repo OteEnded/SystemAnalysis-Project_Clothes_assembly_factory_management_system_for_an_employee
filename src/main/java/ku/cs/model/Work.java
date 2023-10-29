@@ -136,7 +136,7 @@ public class Work implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        if(Works.getData() == null) Works.load();
+//        if(Works.getData() == null) Works.load();
         boolean cannotLoad;
         try {
             cannotLoad = Works.isNew(primaryKeys);

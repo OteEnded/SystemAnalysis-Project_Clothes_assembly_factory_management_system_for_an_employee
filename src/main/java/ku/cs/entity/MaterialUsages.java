@@ -58,8 +58,8 @@ public class MaterialUsages {
 
     private static HashMap<String, MaterialUsage> data;
 
-    public static HashMap<String, MaterialUsage> getData() {
-        // if(data == null) load();
+    public static HashMap<String, MaterialUsage> getData() throws SQLException{
+        if(data == null) load();
         return data;
     }
 

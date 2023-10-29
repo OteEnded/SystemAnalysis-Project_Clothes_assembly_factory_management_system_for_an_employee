@@ -9,25 +9,33 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.github.saacsos.FXRouter;
-import ku.cs.controller.Work;
+import ku.cs.model.Work;
+import ku.cs.tableview.WorkWrapper;
+import ku.cs.entity.Products;
+import ku.cs.entity.Works;
+import ku.cs.model.Product;
 
 
 public class WorkInProgressWorkController {
 
     @FXML
-    private TableView<Work> tableView;
-    @FXML private TableColumn<Work, String> type;
-    @FXML private TableColumn<Work, String> product;
-    @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
-    @FXML private TableColumn<Work, Integer> capacity;
+    private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> product;
+    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
+    @FXML private TableColumn<WorkWrapper, Integer> capacity;
 
     @FXML private Label workDetail;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         product.setCellValueFactory(new PropertyValueFactory<>("product"));
@@ -35,10 +43,8 @@ public class WorkInProgressWorkController {
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
 
-        ObservableList<Work> works = FXCollections.observableArrayList();
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        tableView.setItems(works);
+        tableView.setItems(fetchData());
+
         handleSelectedRow();
     }
 
@@ -50,7 +56,7 @@ public class WorkInProgressWorkController {
         );
     }
 
-    private void showSelectedRow(Work newValue) {
+    private void showSelectedRow(WorkWrapper newValue) {
         workDetail.setText(newValue.toString());
     }
 
@@ -107,6 +113,28 @@ public class WorkInProgressWorkController {
             System.err.println("ไปหน้า checked-work ไม่ได้");
             e.printStackTrace();
         }
+    }
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+        Works.load();
+        Products.load();
+        HashMap<String, Work> works = Works.getData();
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            Product product = work.getProduct();
+            WorkWrapper workWrapper = new WorkWrapper(
+                    work.getId(),
+                    work.getWorkType(),
+                    product.getName(),
+                    work.getGoalAmount(),
+                    work.getDeadline(),
+                    work.getStatus(),
+                    work.getProgressAmount(),
+                    work.getNote()
+            );
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 
 }

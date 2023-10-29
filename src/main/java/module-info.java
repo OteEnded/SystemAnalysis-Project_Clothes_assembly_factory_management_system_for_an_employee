@@ -10,8 +10,6 @@ module cs.ku {
     exports ku.cs;
 
     //บรรทัดนี้ เพื่อให้เข้าถึง class controller ที่อยู่ใน ku.cs.controller ได้
-    exports ku.cs.controller;
-    opens ku.cs.controller to javafx.fxml;
     exports ku.cs.entity;
     opens ku.cs.entity to java.base;
     exports ku.cs.service;
@@ -30,5 +28,7 @@ module cs.ku {
     opens ku.cs.controller.employer.work to javafx.fxml;
     exports ku.cs.controller.employee;
     opens ku.cs.controller.employee to javafx.fxml;
+    exports ku.cs.tableview;
+    opens ku.cs.tableview to javafx.fxml;
 
 }

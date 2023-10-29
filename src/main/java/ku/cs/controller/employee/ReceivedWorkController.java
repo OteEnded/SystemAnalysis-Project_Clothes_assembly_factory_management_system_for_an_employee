@@ -10,25 +10,27 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Pair;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+
 import com.github.saacsos.FXRouter;
-import ku.cs.controller.Work;
+import ku.cs.tableview.WorkWrapper;
 
 public class ReceivedWorkController {
 
-    @FXML private TableView<Work> tableView;
-    @FXML private TableColumn<Work, String> type;
-    @FXML private TableColumn<Work, String> product;
-    @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
-    @FXML private TableColumn<Work, String> status;
+    @FXML private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> product;
+    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
+    @FXML private TableColumn<WorkWrapper, String> status;
 
     @FXML private Button acceptBtn;
     @FXML private Button putWorkRateBtn;
     @FXML private Label workDetail;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
         acceptBtn.setVisible(false);
         putWorkRateBtn.setVisible(false);
@@ -39,10 +41,10 @@ public class ReceivedWorkController {
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        ObservableList<Work> works = FXCollections.observableArrayList();
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
+
         tableView.setItems(works);
+
         handleSelectedRow();
     }
 
@@ -54,7 +56,7 @@ public class ReceivedWorkController {
         );
     }
 
-    private void showSelectedRow(Work newValue) {
+    private void showSelectedRow(WorkWrapper newValue) {
         workDetail.setText(newValue.toString());
         if(newValue.getStatus().equals("ทันตามกำหนด")) {
             acceptBtn.setVisible(true);
@@ -130,4 +132,5 @@ public class ReceivedWorkController {
             e.printStackTrace();
         }
     }
+
 }

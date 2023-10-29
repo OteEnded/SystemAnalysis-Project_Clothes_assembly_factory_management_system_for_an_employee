@@ -9,19 +9,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-import ku.cs.controller.Work;
+import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
 public class WaitForReceivePageController {
 
-    @FXML private TableView<Work> tableView;
-    @FXML private TableColumn<Work, String> type;
-    @FXML private TableColumn<Work, String> product;
-    @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
+    @FXML private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> product;
+    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
 
     // work detail
     @FXML private AnchorPane detailPane;
@@ -44,10 +43,7 @@ public class WaitForReceivePageController {
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
 
-        ObservableList<Work> works = FXCollections.observableArrayList();
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        tableView.setItems(works);
+//        tableView.setItems(works);
         handleSelectedRow();
     }
 
@@ -59,7 +55,7 @@ public class WaitForReceivePageController {
         );
     }
 
-    private void showSelectedRow(Work newValue) {
+    private void showSelectedRow(WorkWrapper newValue) {
         detailPane.setVisible(true);
         workTypeLabel.setText(newValue.getType());
         productLabel.setText(newValue.getProduct());

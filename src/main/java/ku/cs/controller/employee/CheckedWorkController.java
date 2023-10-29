@@ -2,25 +2,21 @@ package ku.cs.controller.employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Pair;
-import ku.cs.controller.Work;
+import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
 public class CheckedWorkController {
     @FXML
-    private TableView<Work> tableView;
-    @FXML private TableColumn<Work, String> type;
-    @FXML private TableColumn<Work, String> product;
-    @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
-    @FXML private TableColumn<Work, String> status;
+    private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> product;
+    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> status;
     @FXML private Label workDetail;
 
     @FXML
@@ -31,10 +27,10 @@ public class CheckedWorkController {
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        ObservableList<Work> works = FXCollections.observableArrayList();
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        tableView.setItems(works);
+//        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
+//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+//        tableView.setItems(works);
         handleSelectedRow();
     }
 
@@ -46,7 +42,7 @@ public class CheckedWorkController {
         );
     }
 
-    private void showSelectedRow(Work newValue) {
+    private void showSelectedRow(WorkWrapper newValue) {
         workDetail.setText(newValue.toString());
     }
 

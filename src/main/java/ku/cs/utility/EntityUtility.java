@@ -1,5 +1,6 @@
 package ku.cs.utility;
 
+import ku.cs.model.Product;
 import ku.cs.model.SQLColumn;
 import ku.cs.model.SQLTable;
 

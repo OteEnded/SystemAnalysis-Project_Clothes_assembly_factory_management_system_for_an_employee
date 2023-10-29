@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
@@ -54,5 +55,12 @@
                 <Font name="System Bold Italic" size="32.0" />
             </font>
         </Text>
+      <Text fill="#213555" layoutX="308.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="รายการวัตถุดิบทั้งหมด">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <ListView fx:id="materialListview" layoutX="300.0" layoutY="190.0" prefHeight="372.0" prefWidth="885.0" />
+      <Button layoutX="300.0" layoutY="585.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มวัตถุดิบ" />
     </children>
 </AnchorPane>

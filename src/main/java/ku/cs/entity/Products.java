@@ -46,7 +46,7 @@ public class Products {
         return sqlTable;
     }
 
-    private static HashMap<String, Product> data = null;
+    private static HashMap<String, Product> data;
     static {
         data = new HashMap<>();
     }
@@ -64,24 +64,24 @@ public class Products {
     }
 
     // load data from database
-    public static HashMap<String, Product> load(boolean updateProducts) throws SQLException {
+    public static HashMap<String, Product> load(boolean updateBuffer) throws SQLException {
         HashMap<String, Product> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Product(sqlRow.getValuesMap()));
         }
-        if (updateProducts) data = dataFromDB;
+        if (updateBuffer) data = dataFromDB;
         return dataFromDB;
     }
 
-    public String getJoinedPrimaryKeys(Product product) {
+    public static String getJoinedPrimaryKeys(Product product) {
         SQLRow sqlRow = new SQLRow(sqlTable, product);
         return sqlRow.getJoinedPrimaryKeys();
     }
 
     public static String getNewId() throws SQLException {
         if (data == null) load();
-        if (data.size() == 0) return EntityUtility.idFormatter(sqlTable, 1);
+        if (data.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
         ArrayList<String> oldId = new ArrayList<>(getData().keySet());
         Collections.sort(oldId);
         int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));
@@ -92,31 +92,28 @@ public class Products {
         ProjectUtility.debug("Products[addData]: adding product ->", product);
         if (data == null) load();
         if (product.getId() == null) product.setId(getNewId());
-        data.put(product.getId(), product);
-        ProjectUtility.debug("Products[addData]: added product with id ->", product.getId(), "=", product);
+        data.put(getJoinedPrimaryKeys(product), product);
+        ProjectUtility.debug("Products[addData]: added product with primaryKeys ->", getJoinedPrimaryKeys(product), "=", product);
     }
 
     public static boolean isNew(Product product) throws SQLException {
         return isNew(product.getId());
     }
 
-    public static boolean isNew(String id) throws SQLException {
-        load();
-        if (data == null) return true;
-        return !data.containsKey(id);
+    public static boolean isNew(String primaryKeys) throws SQLException {
+        if (data == null) load();
+        if (data.isEmpty()) return true;
+        return !data.containsKey(primaryKeys);
     }
 
     public static int save(Product product) throws SQLException, ParseException {
         ProjectUtility.debug("Products[save]: saving product ->", product);
-
         if (isNew(product)) {
             addData(product);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, product)));
         }
-        else {
-            data.put(product.getId(), product);
-            return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, product)));
-        }
+        data.put(getJoinedPrimaryKeys(product), product);
+        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, product)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
@@ -127,12 +124,8 @@ public class Products {
 
     public static int delete(Product product) throws SQLException, ParseException {
         ProjectUtility.debug("Products[delete]: deleting product ->", product);
-        if (isNew(product)) throw new RuntimeException("Products[delete]: Can not delete product that is not in database");
-        data.remove(product.getId());
+        if (isNew(product)) throw new RuntimeException("Products[delete]: Can't delete product that is not in database");
+        data.remove(getJoinedPrimaryKeys(product));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
     }
-
-
-
-
 }

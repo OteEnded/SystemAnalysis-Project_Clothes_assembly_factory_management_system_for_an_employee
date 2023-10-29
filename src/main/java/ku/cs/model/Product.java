@@ -46,6 +46,7 @@ public class Product implements Row {
     }
 
     public void setId(String product_id) {
+        if (!EntityUtility.isIdValid(Products.getSqlTable(), product_id)) throw new RuntimeException("Product[setId]: Invalid product_id -> " + product_id);
         data.put("product_id", product_id);
     }
 
@@ -73,23 +74,23 @@ public class Product implements Row {
         data.put("progress_rate", progress_rate);
     }
 
-    @Override
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Products.getSqlTable(), id));
     }
 
     @Override
-    public void load(String id) throws SQLException {
+    public void load(String primaryKeys) throws SQLException {
         Products.load();
-        boolean isProductNew;
+        boolean cannotLoad;
         try {
-            isProductNew = Products.isNew(id);
+            cannotLoad = Products.isNew(primaryKeys);
         }
         catch (RuntimeException e) {
-            isProductNew = true;
+            cannotLoad = true;
         }
-        if (isProductNew) throw new RuntimeException("Product[load]: Can't find product with product_id: " + id);
-        setData(Products.getData().get(id).getData());
+        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Products.getSqlTable(), primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Product[load]: Can't load product with primaryKeys -> " + primaryKeys);
+        setData(Products.getData().get(primaryKeys).getData());
     }
 
     @Override

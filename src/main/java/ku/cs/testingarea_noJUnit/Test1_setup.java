@@ -14,7 +14,7 @@ public class Test1_setup {
     public static void main(String[] args) throws SQLException, IllegalAccessException, ParseException {
 
 
-//        DBMigration.migrate(true);
+        DBMigration.migrate();
 ////        DataSourceDB.dropTableAll();
 //
 ////        ProjectUtility.debug(DataSourceDB.load("Users"));

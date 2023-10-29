@@ -47,6 +47,7 @@ public class User implements Row {
     }
 
     public void setId(String id) {
+        if (!EntityUtility.isIdValid(Users.getSqlTable(), id)) throw new RuntimeException("User[setId]: Invalid id -> " + id);
         data.put("id", id);
     }
 
@@ -74,23 +75,23 @@ public class User implements Row {
         data.put("sign_up_date", signUpDate);
     }
 
-    @Override
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Users.getSqlTable(), id));
     }
 
     @Override
-    public void load(String id) throws SQLException {
+    public void load(String primaryKeys) throws SQLException {
         Users.load();
-        boolean isUserNew;
+        boolean cannotLoad;
         try {
-            isUserNew = Users.isNew(id);
+            cannotLoad = Users.isNew(primaryKeys);
         }
         catch (RuntimeException e){
-            isUserNew = true;
+            cannotLoad = true;
         }
-        if (isUserNew) throw new RuntimeException("User[load]: Can't find user with user_id: " + id);
-        setData(Users.getData().get(id).getData());
+        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Users.getSqlTable(), primaryKeys);
+        if (cannotLoad) throw new RuntimeException("User[load]: Can't load user with primaryKeys: " + primaryKeys);
+        setData(Users.getData().get(primaryKeys).getData());
     }
 
     @Override

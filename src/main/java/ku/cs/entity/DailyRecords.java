@@ -1,7 +1,16 @@
 package ku.cs.entity;
 
+import ku.cs.model.DailyRecord;
 import ku.cs.model.SQLColumn;
+import ku.cs.model.SQLRow;
 import ku.cs.model.SQLTable;
+import ku.cs.service.DataSourceDB;
+import ku.cs.utility.ProjectUtility;
+
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
 
 public class DailyRecords {
 
@@ -35,5 +44,70 @@ public class DailyRecords {
 
     public static SQLTable getSqlTable() {
         return sqlTable;
+    }
+
+    private static HashMap<String, DailyRecord> data;
+    static {
+        data = new HashMap<>();
+    }
+
+    public static HashMap<String, DailyRecord> getData() {
+        return data;
+    }
+
+    public static void setData(HashMap<String, DailyRecord> data) {
+        DailyRecords.data = data;
+    }
+
+    public static HashMap<String, DailyRecord> load() throws SQLException {
+        return load(true);
+    }
+
+    public static HashMap<String, DailyRecord> load(boolean updateBuffer) throws SQLException {
+        HashMap<String, DailyRecord> dataFromDB = new HashMap<>();
+        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        for (SQLRow sqlRow : sqlRows) {
+            dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new DailyRecord(sqlRow.getValuesMap()));
+        }
+        if (updateBuffer) data = dataFromDB;
+        return dataFromDB;
+    }
+
+    public static String getJoinedPrimaryKeys(DailyRecord dailyRecord) {
+        SQLRow sqlRow = new SQLRow(sqlTable, dailyRecord);
+        return sqlRow.getJoinedPrimaryKeys();
+    }
+
+    public static void addData(DailyRecord dailyRecord) {
+        ProjectUtility.debug("DailyRecords[addData]: adding dailyRecord ->", dailyRecord);
+        data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
+        ProjectUtility.debug("DailyRecords[addData]: added dailyRecord with primaryKeys ->", getJoinedPrimaryKeys(dailyRecord), "=", dailyRecord);
+    }
+
+    public static boolean isNew(DailyRecord dailyRecord) throws SQLException {
+        return isNew(getJoinedPrimaryKeys(dailyRecord));
+    }
+
+    public static boolean isNew(String primaryKeys) throws SQLException {
+        if (data == null) load();
+        if (data.isEmpty()) return true;
+        return !data.containsKey(primaryKeys);
+    }
+
+    public static int save(DailyRecord dailyRecord) throws SQLException, ParseException {
+        ProjectUtility.debug("DailyRecords[save]: saving dailyRecord ->", dailyRecord);
+        if(isNew(dailyRecord)) {
+            addData(dailyRecord);
+            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, dailyRecord)));
+        }
+        data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
+        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, dailyRecord)));
+    }
+
+    public static int delete(DailyRecord dailyRecord) throws SQLException, ParseException {
+        ProjectUtility.debug("DailyRecords[delete]: deleting dailyRecord ->", dailyRecord);
+        if (isNew(dailyRecord)) throw new RuntimeException("DailyRecords[delete]: Can't delete dailyRecord that is not in database");
+        data.remove(getJoinedPrimaryKeys(dailyRecord));
+        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, dailyRecord)));
     }
 }

@@ -1,1 +1,2 @@
 todo
+* กรองข้อมูลได้ จาก entity buffer

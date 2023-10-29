@@ -31,7 +31,7 @@ public class ProjectApplication extends Application {
 //        user.load("Ote");
 //        FXRouter.goTo("change-forgotten-password", user);
 
-        FXRouter.goTo("received-work");
+        FXRouter.goTo("order");
     }
 
     private static void configRoute() {

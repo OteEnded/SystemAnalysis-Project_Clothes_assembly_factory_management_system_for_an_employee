@@ -1,4 +1,4 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import javafx.scene.control.TextField;
 import org.w3c.dom.Text;

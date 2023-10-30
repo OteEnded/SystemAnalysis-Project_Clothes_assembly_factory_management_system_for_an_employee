@@ -1,38 +1,45 @@
-package ku.cs.controller;
+package ku.cs.controller.employee;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
-public class CheckedWorkController {
+import com.github.saacsos.FXRouter;
+import ku.cs.tableview.WorkWrapper;
+
+
+public class WaitingForMaterialWorkController {
+
     @FXML
-    private TableView<Work> tableView;
-    @FXML private TableColumn<Work, String> type;
-    @FXML private TableColumn<Work, String> product;
-    @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
-    @FXML private TableColumn<Work, String> status;
+    private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> product;
+    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
+
     @FXML private Label workDetail;
+    @FXML private Button submitReceivedMaterialBtn;
 
     @FXML
     void initialize() {
 
+        submitReceivedMaterialBtn.setVisible(false);
+
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         product.setCellValueFactory(new PropertyValueFactory<>("product"));
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
 
-        ObservableList<Work> works = FXCollections.observableArrayList();
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
+
         tableView.setItems(works);
         handleSelectedRow();
     }
@@ -45,14 +52,15 @@ public class CheckedWorkController {
         );
     }
 
-    private void showSelectedRow(Work newValue) {
+    private void showSelectedRow(WorkWrapper newValue) {
         workDetail.setText(newValue.toString());
+        submitReceivedMaterialBtn.setVisible(true);
     }
 
     /* Navbar Btn */
     @FXML private void handleReceivedWorkBtn() throws IOException {
         try {
-            com.github.saacsos.FXRouter.goTo("received-work");
+            FXRouter.goTo("received-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า received-work ไม่ได้");
             e.printStackTrace();
@@ -61,7 +69,7 @@ public class CheckedWorkController {
 
     @FXML private void handleWaitingForMaterialWorkBtn() throws IOException {
         try {
-            com.github.saacsos.FXRouter.goTo("waiting-for-material-work");
+            FXRouter.goTo("waiting-for-material-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า waiting-for-material-work ไม่ได้");
             e.printStackTrace();
@@ -70,7 +78,7 @@ public class CheckedWorkController {
 
     @FXML private void handleWorkInProgressWorkBtn() throws IOException {
         try {
-            com.github.saacsos.FXRouter.goTo("work-in-progress-work");
+            FXRouter.goTo("work-in-progress-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า work-in-progress-work ไม่ได้");
             e.printStackTrace();
@@ -79,7 +87,7 @@ public class CheckedWorkController {
 
     @FXML private void handleFinishedWorkBtn() throws IOException {
         try {
-            com.github.saacsos.FXRouter.goTo("finished-work");
+            FXRouter.goTo("finished-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า finished-work ไม่ได้");
             e.printStackTrace();
@@ -88,7 +96,7 @@ public class CheckedWorkController {
 
     @FXML private void handleWaitingForCheckWorkBtn() throws IOException {
         try {
-            com.github.saacsos.FXRouter.goTo("waiting-for-check-work");
+            FXRouter.goTo("waiting-for-check-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า waiting-for-check-work ไม่ได้");
             e.printStackTrace();
@@ -97,10 +105,11 @@ public class CheckedWorkController {
 
     @FXML private void handleCheckedWorkBtn() throws IOException {
         try {
-            com.github.saacsos.FXRouter.goTo("checked-work");
+            FXRouter.goTo("checked-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า checked-work ไม่ได้");
             e.printStackTrace();
         }
     }
+
 }

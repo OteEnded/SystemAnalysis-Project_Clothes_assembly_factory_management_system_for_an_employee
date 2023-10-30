@@ -7,18 +7,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ku.cs.controller.Work;
+import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
 
 public class AbnormalWorkPageController {
 
-    @FXML private TableView<Work> tableView;
-    @FXML private TableColumn<Work, String> type;
-    @FXML private TableColumn<Work, String> product;
-    @FXML private TableColumn<Work, Integer> quantity;
-    @FXML private TableColumn<Work, LocalDate> deadline;
+    @FXML private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> product;
+    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
 
     // work detail
     @FXML private Label workTypeLabel;
@@ -34,10 +34,10 @@ public class AbnormalWorkPageController {
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
 
-        ObservableList<Work> works = FXCollections.observableArrayList();
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        works.add(new Work("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-        tableView.setItems(works);
+//        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
+//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
+//        tableView.setItems(works);
         //handleSelectedRow();
     }
 //

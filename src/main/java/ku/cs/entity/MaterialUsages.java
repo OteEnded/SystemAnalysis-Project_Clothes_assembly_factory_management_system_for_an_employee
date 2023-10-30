@@ -1,10 +1,8 @@
 package ku.cs.entity;
 
-import ku.cs.model.MaterialUsage;
-import ku.cs.model.SQLColumn;
-import ku.cs.model.SQLRow;
-import ku.cs.model.SQLTable;
+import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
+import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -117,8 +115,18 @@ public class MaterialUsages {
         return !data.containsKey(primaryKeys);
     }
 
+    public static boolean isMaterialUsageValid(MaterialUsage materialUsage) {
+        return verifyMaterialUsage(materialUsage).size() == 0;
+    }
+
+    public static List<String> verifyMaterialUsage(MaterialUsage materialUsage) {
+        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, materialUsage));
+        return error;
+    }
+
     public static int save(MaterialUsage materialUsage) throws SQLException, ParseException {
         ProjectUtility.debug("MaterialUsages[save]: saving materialUsage: " + materialUsage.getData());
+        if (!isMaterialUsageValid(materialUsage)) throw new RuntimeException("MaterialUsages[save]: materialUsage is not valid -> " + verifyMaterialUsage(materialUsage));
         if (isNew(materialUsage)) {
             addData(materialUsage);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, materialUsage)));

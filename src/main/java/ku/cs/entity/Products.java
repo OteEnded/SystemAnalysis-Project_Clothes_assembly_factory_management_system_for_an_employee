@@ -113,8 +113,18 @@ public class Products {
         return !data.containsKey(primaryKeys);
     }
 
+    public static boolean isProductValid(Product product) {
+        return verifyProduct(product).size() == 0;
+    }
+
+    public static List<String> verifyProduct(Product product) {
+        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, product));
+        return error;
+    }
+
     public static int save(Product product) throws SQLException, ParseException {
         ProjectUtility.debug("Products[save]: saving product ->", product);
+        if(!isProductValid(product)) throw new RuntimeException("Products[save]: product's data is not valid ->" + verifyProduct(product));
         if (isNew(product)) {
             addData(product);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, product)));

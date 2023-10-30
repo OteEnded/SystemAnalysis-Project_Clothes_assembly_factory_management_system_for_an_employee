@@ -110,8 +110,18 @@ public class Materials {
         return !data.containsKey(primaryKeys);
     }
 
+    public static boolean isMaterialValid(Material material) {
+        return verifyMaterial(material).size() == 0;
+    }
+
+    public static List<String> verifyMaterial(Material material) {
+        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, material));
+        return error;
+    }
+
     public static int save(Material material) throws SQLException, ParseException {
         ProjectUtility.debug("Materials[save]: saving material ->", material);
+        if (!isMaterialValid(material)) throw new RuntimeException("Materials[save]: material's data is not valid ->" + verifyMaterial(material));
         if (isNew(material)) {
             addData(material);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, material)));

@@ -1,5 +1,8 @@
 package ku.cs.model;
 
+import ku.cs.utility.ProjectUtility;
+
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +26,29 @@ public class SQLColumn {
     static {
         typeMap.put(String.class, "varchar(255)");
         typeMap.put(Integer.class, "int");
+        typeMap.put(int.class, "int");
         typeMap.put(Long.class, "bigint");
+        typeMap.put(long.class, "bigint");
         typeMap.put(Float.class, "float");
+        typeMap.put(float.class, "float");
         typeMap.put(Double.class, "double");
+        typeMap.put(double.class, "double");
         typeMap.put(Boolean.class, "boolean");
-        typeMap.put(Timestamp.class, "date");
+        typeMap.put(boolean.class, "boolean");
+        typeMap.put(Date.class, "date");
+        typeMap.put(Timestamp.class, "Timestamp");
+    }
+
+    public static Map<String, Class<?>> classTypeMap = new HashMap<>();
+    static {
+        classTypeMap.put("varchar(255)", String.class);
+        classTypeMap.put("int", Integer.class);
+        classTypeMap.put("bigint", Long.class);
+        classTypeMap.put("float", Float.class);
+        classTypeMap.put("double", Double.class);
+        classTypeMap.put("boolean", Boolean.class);
+        classTypeMap.put("date", Date.class);
+        classTypeMap.put("Timestamp", Timestamp.class);
     }
 
     public String getName() {
@@ -57,6 +78,7 @@ public class SQLColumn {
 
     public void setType(String type) {
         this.type = type;
+        this.classType = classTypeMap.get(type);
     }
 
     public boolean isPrimaryKey() {

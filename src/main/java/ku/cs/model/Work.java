@@ -2,6 +2,7 @@ package ku.cs.model;
 
 import ku.cs.entity.Works;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.ProjectUtility;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -13,7 +14,9 @@ public class Work implements Row {
 
     private HashMap<String, Object> data = EntityUtility.getMap(Works.getSqlTable());
 
-    public Work(){}
+    public Work(){
+        setCreateDate(ProjectUtility.getDate());
+    }
 
     public Work(HashMap<String, Object> data){
         setData(data);

@@ -156,6 +156,19 @@ public class ProjectUtility {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
+    public static Object castStringToObject(String stringValue, Class<?> targetClass) {
+        if (targetClass == String.class) return stringValue;
+        if (targetClass == Integer.class || targetClass == int.class) return Integer.parseInt(stringValue);
+        if (targetClass == Long.class || targetClass == long.class) return Long.parseLong(stringValue);
+        if (targetClass == Float.class || targetClass == float.class) return Float.parseFloat(stringValue);
+        if (targetClass == Double.class || targetClass == double.class) return Double.parseDouble(stringValue);
+        if (targetClass == Boolean.class || targetClass == boolean.class) return Boolean.parseBoolean(stringValue);
+        if (targetClass == Date.class) return Date.valueOf(stringValue);
+        if (targetClass == Timestamp.class) return Timestamp.valueOf(stringValue);
+        throw new RuntimeException("ProjectUtility[castStringToObject]: Invalid targetClass -> " + targetClass);
+    }
+
+
     private static Stage stage;
     public static void setStage(Stage s){
         stage = s;

@@ -1,11 +1,13 @@
 package ku.cs.model;
 
+import ku.cs.entity.MaterialUsages;
 import ku.cs.entity.Products;
 import ku.cs.utility.EntityUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 
 public class Product implements Row {
 
@@ -71,6 +73,11 @@ public class Product implements Row {
     public void setProgressRate(double progress_rate) {
         data.put("progress_rate", progress_rate);
     }
+
+//    public List<MaterialUsage> getMaterialsUsed() throws SQLException {
+//        MaterialUsages.addFilter("product_id", getId());
+//        return MaterialUsages.getFilteredData();
+//    }
 
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Products.getSqlTable(), id));

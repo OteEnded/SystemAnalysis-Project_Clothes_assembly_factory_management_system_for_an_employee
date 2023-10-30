@@ -6,6 +6,7 @@ import ku.cs.utility.ProjectUtility;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,6 +89,10 @@ public class SQLTable {
     }
 
     private PreparedStatement typePutter(Object value, String type, int index, PreparedStatement preparedStatement) throws SQLException, ParseException {
+        if (value == null) {
+            preparedStatement.setNull(index, Types.NULL);
+            return preparedStatement;
+        }
         switch (type){
             case "int":
                 preparedStatement.setInt(index, (int) value);
@@ -189,6 +194,15 @@ public class SQLTable {
             j++;
         }
         return preparedStatement;
+    }
+
+    public SQLColumn getColumnByName(String name){
+        for (SQLColumn column: columns){
+            if (column.getName().equals(name)){
+                return column;
+            }
+        }
+        return null;
     }
 
     @Override

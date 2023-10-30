@@ -9,6 +9,8 @@ import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -61,6 +63,15 @@ public class MaterialUsages {
     public static HashMap<String, MaterialUsage> getData() throws SQLException{
         if(data == null) load();
         return data;
+    }
+
+    public static List<MaterialUsage> getDataAsList() throws SQLException{
+        if(data == null) load();
+        return toList(data);
+    }
+
+    public static List<MaterialUsage> toList(HashMap<String, MaterialUsage> data) {
+        return new ArrayList<>(data.values());
     }
 
     public static void setData(HashMap<String, MaterialUsage> data) {
@@ -139,6 +150,7 @@ public class MaterialUsages {
     }
 
     public static HashMap<String, MaterialUsage> getFilteredData() throws SQLException {
+        ProjectUtility.debug("MaterialUsages[getFilteredData]: getting data with filter ->", filter);
         if (filter == null) throw new RuntimeException("MaterialUsages[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> MaterialUsages.getData()");
         if (data == null) load();
         HashMap<String, MaterialUsage> filteredData = new HashMap<>();
@@ -154,5 +166,27 @@ public class MaterialUsages {
         }
         filter = null;
         return filteredData;
+    }
+
+    public static List<MaterialUsage> getSortedBy(String column) throws SQLException {
+        if (data == null) load();
+        return getSortedBy(column, data);
+    }
+
+    public static List<MaterialUsage> getSortedBy(String column, HashMap<String, MaterialUsage> data) throws SQLException {
+        ProjectUtility.debug("MaterialUsages[getSortedBy]: getting data sorted by ->", column);
+        if (data == null) throw new RuntimeException("MaterialUsages[getSortedBy]: data is null, Please set data first or get all data without filter using -> MaterialUsages.getData()");
+        List<String> sortedValues = new ArrayList<String>();
+        for (MaterialUsage materialUsage : data.values()) {
+            sortedValues.add(materialUsage.getData().get(column).toString());
+        }
+        Collections.sort(sortedValues);
+        ProjectUtility.debug("MaterialUsages[getSortedBy]: sorted target ->", sortedValues);
+        List<MaterialUsage> sortedMaterialUsages = new ArrayList<>();
+        for (String sortedValue : sortedValues) {
+            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+            sortedMaterialUsages.addAll(getFilteredData().values());
+        }
+        return sortedMaterialUsages;
     }
 }

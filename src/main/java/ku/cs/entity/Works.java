@@ -132,6 +132,15 @@ public class Works {
         return data;
     }
 
+    public static List<Work> getDataAsList() throws SQLException {
+        if(data == null) load();
+        return toList(data);
+    }
+
+    public static List<Work> toList(HashMap<String, Work> data) {
+        return new ArrayList<>(data.values());
+    }
+
     public static void setData(HashMap<String, Work> data) {
         Works.data = data;
     }
@@ -239,19 +248,25 @@ public class Works {
         return filteredData;
     }
 
-    public static ArrayList<Work> getSortedBy(String column) {
+    public static List<Work> getSortedBy(String column) throws SQLException {
+        if (data == null) load();
         return getSortedBy(column, data);
     }
 
-    public static ArrayList<Work> getSortedBy(String column, HashMap<String, Work> data) {
-        ArrayList<Work> sortedData = new ArrayList<>(data.values());
-        Collections.sort(sortedData, (o1, o2) -> {
-            try {
-                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
-            } catch (Exception e) {
-                return 0;
-            }
-        });
-        return sortedData;
+    public static List<Work> getSortedBy(String column, HashMap<String, Work> data) throws SQLException {
+        ProjectUtility.debug("Works[getSortedBy]: getting data sorted by ->", column);
+        if (data == null) throw new RuntimeException("Works[getSortedBy]: data is null. Please load data first or get all data without filter using -> Works.getData()");
+        List<String> sortedValues = new ArrayList<String>();
+        for (Work work : data.values()) {
+            sortedValues.add(work.getData().get(column).toString());
+        }
+        Collections.sort(sortedValues);
+        ProjectUtility.debug("Works[getSortedBy]: sorted target ->", sortedValues);
+        List<Work> sortedWorks = new ArrayList<>();
+        for (String sortedValue : sortedValues) {
+            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+            sortedWorks.addAll(getFilteredData().values());
+        }
+        return sortedWorks;
     }
 }

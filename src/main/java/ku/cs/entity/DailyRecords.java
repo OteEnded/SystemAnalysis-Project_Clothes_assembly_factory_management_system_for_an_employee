@@ -9,6 +9,8 @@ import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,6 +53,15 @@ public class DailyRecords {
     public static HashMap<String, DailyRecord> getData() throws SQLException{
         if (data == null) load();
         return data;
+    }
+
+    public static List<DailyRecord> getDataAsList() throws SQLException {
+        if (data == null) load();
+        return toList(data);
+    }
+
+    public static List<DailyRecord> toList(HashMap<String, DailyRecord> data) {
+        return new ArrayList<>(data.values());
     }
 
     public static void setData(HashMap<String, DailyRecord> data) {
@@ -141,5 +152,26 @@ public class DailyRecords {
         }
         filter = null;
         return filteredData;
+    }
+    public static List<DailyRecord> getSortedBy(String column) throws SQLException {
+        if (data == null) load();
+        return getSortedBy(column, data);
+    }
+
+    public static List<DailyRecord> getSortedBy(String column, HashMap<String, DailyRecord> data) throws SQLException {
+        ProjectUtility.debug("DailyRecords[getSortedBy]: getting data sorted by ->", column);
+        if (data == null) throw new RuntimeException("DailyRecords[getSortedBy]: data is null, Please set data or get all data without filter using -> DailyRecords.getData()");
+        List<String> sortedValues = new ArrayList<String>();
+        for (DailyRecord dailyRecord : data.values()) {
+            sortedValues.add(dailyRecord.getData().get(column).toString());
+        }
+        Collections.sort(sortedValues);
+        ProjectUtility.debug("DailyRecords[getSortedBy]: sorted target ->", sortedValues);
+        List<DailyRecord> sortedDailyRecords = new ArrayList<>();
+        for (String sortedValue : sortedValues) {
+            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+            sortedDailyRecords.addAll(getFilteredData().values());
+        }
+        return sortedDailyRecords;
     }
 }

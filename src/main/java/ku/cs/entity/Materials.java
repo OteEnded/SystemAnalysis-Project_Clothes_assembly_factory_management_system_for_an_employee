@@ -51,6 +51,15 @@ public class Materials {
         return data;
     }
 
+    public static List<Material> getDataAsList() throws SQLException {
+        if(data == null) load();
+        return toList(data);
+    }
+
+    public static List<Material> toList(HashMap<String, Material> data) {
+        return new ArrayList<>(data.values());
+    }
+
     public static void setData(HashMap<String, Material> data) {
         Materials.data = data;
     }
@@ -155,5 +164,27 @@ public class Materials {
         }
         filter = null;
         return filteredData;
+    }
+
+    public static List<Material> getSortedBy(String column) throws SQLException {
+        if (data == null) load();
+        return getSortedBy(column, data);
+    }
+
+    public static List<Material> getSortedBy(String column, HashMap<String, Material> data) throws SQLException {
+        ProjectUtility.debug("Materials[getSortedBy]: getting data sorted by ->", column);
+        if (data == null) throw new RuntimeException("Materials[getSortedBy]: data is null, Please load data first or get all data without filter using -> Materials.getData()");
+        List<String> sortedValues = new ArrayList<String>();
+        for (Material material : data.values()) {
+            sortedValues.add(material.getData().get(column).toString());
+        }
+        Collections.sort(sortedValues);
+        ProjectUtility.debug("Materials[getSortedBy]: sorted target ->", sortedValues);
+        List<Material> sortedMaterial = new ArrayList<>();
+        for (String sortedValue : sortedValues) {
+            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+            sortedMaterial.addAll(getFilteredData().values());
+        }
+        return sortedMaterial;
     }
 }

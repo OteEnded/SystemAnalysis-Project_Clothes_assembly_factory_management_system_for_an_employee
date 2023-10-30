@@ -53,6 +53,15 @@ public class Products {
         return data;
     }
 
+    public static List<Product> getDataAsList() throws SQLException {
+        if(data == null) load();
+        return toList(data);
+    }
+
+    public static List<Product> toList(HashMap<String, Product> data) {
+        return new ArrayList<>(data.values());
+    }
+
     public static void setData(HashMap<String, Product> data) {
         Products.data = data;
     }
@@ -158,5 +167,26 @@ public class Products {
         }
         filter = null;
         return filteredData;
+    }
+    public static List<Product> getSortedBy(String column) throws SQLException {
+        if (data == null) load();
+        return getSortedBy(column, data);
+    }
+
+    public static List<Product> getSortedBy(String column, HashMap<String, Product> data) throws SQLException {
+        ProjectUtility.debug("Products[getSortedBy]: getting data sorted by ->", column);
+        if (data == null) throw new RuntimeException("Products[getSortedBy]: data is null, Please load data first or get all data without filter using -> Products.getData()");
+        List<String> sortedValues = new ArrayList<String>();
+        for (Product product : data.values()) {
+            sortedValues.add(product.getData().get(column).toString());
+        }
+        Collections.sort(sortedValues);
+        ProjectUtility.debug("Products[getSortedBy]: sorted target ->", sortedValues);
+        List<Product> sortedProducts = new ArrayList<>();
+        for (String sortedValue : sortedValues) {
+            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+            sortedProducts.addAll(getFilteredData().values());
+        }
+        return sortedProducts;
     }
 }

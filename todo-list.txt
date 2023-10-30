@@ -1,8 +1,9 @@
 todo
 * กรองข้อมูลได้ จาก entity buffer [done-tested]
 * work auto set create date [done]
-* product get list of material usesage
-* product add material usesage
-* product remove material usesage
-* PU can get date from Date or string
-* sorting [done] -> ปลาย ฝาก
+* works check adding
+* product get list of material usage
+* product add material usage
+* product remove material usage
+* PU can get date from Date or string [done?]
+* sorting [done] -> ปลาย ฝาก [done]

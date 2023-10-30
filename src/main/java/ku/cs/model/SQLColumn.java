@@ -9,18 +9,18 @@ import java.util.Map;
 
 // อันนี้เป็นคราสที่ระบุคอลัมน์ของ SQLTable แต่ละคอลัมน์จะมีค่าต่างๆ ที่ระบุไว้ในนี้
 public class SQLColumn {
-    private String name = "";
-    private Class<?> classType = null;
-    private String type = "";
+    private String name;
+    private Class<?> classType;
+    private String type;
     private boolean isPrimaryKey = false;
     private boolean isForeignKey = false;
     private boolean isUnique = false;
     private boolean isNotNull = false;
-    private String defaultValue = "";
-    private String foreignKeyTable = "";
-    private String foreignKeyColumn = "";
-    private String onDelete = "";
-    private String onUpdate = "";
+    private Object defaultValue;
+    private String foreignKeyTable;
+    private String foreignKeyColumn;
+    private String onDelete;
+    private String onUpdate;
 
     public static Map<Class<?>, String> typeMap = new HashMap<>();
     static {
@@ -129,11 +129,15 @@ public class SQLColumn {
         isNotNull = notNull;
     }
 
-    public String getDefaultValue() {
+    public Object getDefaultValue() {
         return defaultValue;
     }
 
     public void setDefaultValue(String defaultValue) {
+        setDefaultValue(ProjectUtility.castStringToObject(defaultValue, classType));
+    }
+
+    public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -171,7 +175,11 @@ public class SQLColumn {
 
     public String getCreateColum(){
         String sql = name + " " + type + " ";
-        if (defaultValue != null && !defaultValue.equals("")) sql += "DEFAULT " + defaultValue + " ";
+        if (defaultValue != null) {
+            String formattedDefaultValue = defaultValue.toString();
+            if (classType.equals(String.class)) formattedDefaultValue = "'" + formattedDefaultValue + "'";
+            sql += "DEFAULT " + formattedDefaultValue + " ";
+        }
         if (isPrimaryKey) {
             sql += "PRIMARY KEY ";
             return sql;

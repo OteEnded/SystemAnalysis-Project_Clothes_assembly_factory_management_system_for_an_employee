@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -74,12 +75,23 @@ public class ProjectUtility {
     }
 
     public static Date getDate(){
-        return getDate(null);
+        return getDate(LocalDate.now());
     }
 
     public static Date getDate(String date){
-        if (date == null) return new Date(System.currentTimeMillis());
         return Date.valueOf(date);
+    }
+
+    public static Date getDate(int year, int month, int day){
+        return Date.valueOf(year + "-" + month + "-" + day);
+    }
+
+    public static Date getDate(String year, String month, String day){
+        return Date.valueOf(year + "-" + month + "-" + day);
+    }
+
+    public static Date getDate(LocalDate localDate){
+        return Date.valueOf(localDate);
     }
 
     public static void copyFile(String from, String to){

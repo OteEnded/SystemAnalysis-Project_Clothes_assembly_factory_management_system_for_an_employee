@@ -89,7 +89,7 @@ public class Works {
         sqlColumn = new SQLColumn();
         sqlColumn.setName("status");
         sqlColumn.setType("varchar(255)");
-        sqlColumn.setDefaultValue("'รอรับงาน'");
+        sqlColumn.setDefaultValue(Works.status_waitForAccept);
         sqlColumn.setNotNull();
         sqlTable.addColumObj(sqlColumn);
 
@@ -102,7 +102,7 @@ public class Works {
         sqlColumn = new SQLColumn();
         sqlColumn.setName("progress_amount");
         sqlColumn.setType("int");
-        sqlColumn.setDefaultValue("0");
+        sqlColumn.setDefaultValue(0);
         sqlColumn.setNotNull();
         sqlTable.addColumObj(sqlColumn);
 
@@ -174,8 +174,8 @@ public class Works {
     }
 
     public static void addData(Work work) throws SQLException {
-        if (data == null) load();
         ProjectUtility.debug("Works[addData]: adding work ->", work);
+        if (data == null) load();
         if (work.getId() == null) work.setId(getNewId());
         data.put(getJoinedPrimaryKeys(work), work);
         ProjectUtility.debug("Works[addData]: added work with primaryKeys ->", getJoinedPrimaryKeys(work), "=", work);
@@ -191,8 +191,19 @@ public class Works {
         return !data.containsKey(primaryKeys);
     }
 
+    public static boolean isWorkValid(Work work) {
+        return verifyWork(work).size() == 0;
+    }
+
+    public static List<String> verifyWork(Work work) {
+        List<String> error = new ArrayList<>(EntityUtility.verifyObjectByTable(sqlTable, work));
+        return error;
+    }
+
     public static int save(Work work) throws SQLException, ParseException {
         ProjectUtility.debug("Works[save]: saving work ->", work);
+
+        if (!isWorkValid(work)) throw new RuntimeException("Works[save]: work's data is not valid -> " + verifyWork(work));
         if (isNew(work)){
             addData(work);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));

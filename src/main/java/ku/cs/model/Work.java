@@ -100,6 +100,7 @@ public class Work implements Row {
     }
 
     public int getGoalAmount() {
+        if (data.get("goal_amount") == null) throw new RuntimeException("Work[getGoalAmount]: goal_amount is null");
         return (int) data.get("goal_amount");
     }
 
@@ -108,6 +109,7 @@ public class Work implements Row {
     }
 
     public int getProgressAmount() {
+        if (data.get("progress_amount") == null) throw new RuntimeException("Work[getProgressAmount]: progress_amount is null");
         return (int) data.get("progress_amount");
     }
 

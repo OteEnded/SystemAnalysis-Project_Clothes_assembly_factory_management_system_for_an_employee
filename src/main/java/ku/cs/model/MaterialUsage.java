@@ -4,6 +4,7 @@ import ku.cs.entity.MaterialUsages;
 import ku.cs.entity.Materials;
 import ku.cs.entity.Products;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -94,21 +95,20 @@ public class MaterialUsage implements Row {
         data.put("yield", yield);
     }
 
-    public void load(int material_id, int product_id) throws SQLException {
-        load(EntityUtility.idFormatter(Materials.getSqlTable(), material_id) , EntityUtility.idFormatter(Products.getSqlTable(), product_id));
+    public void load(int product_id, int material_id) throws SQLException {
+        load(EntityUtility.idFormatter(Products.getSqlTable(), product_id), EntityUtility.idFormatter(Materials.getSqlTable(), material_id));
     }
 
-    public void load(Material material, Product product) throws SQLException {
-        load(material.getId(), product.getId());
+    public void load(Product product, Material material) throws SQLException {
+        load(product.getId(), material.getId());
     }
 
-    public void load(String material_id, String product_id) throws SQLException {
-        load(String.join("|", material_id, product_id));
+    public void load(String product_id, String material_id) throws SQLException {
+        load(String.join("|", product_id, material_id));
     }
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-//        if(MaterialUsages.getData() == null) MaterialUsages.load();
         boolean cannotLoad;
         try {
             cannotLoad = MaterialUsages.isNew(primaryKeys);
@@ -133,7 +133,7 @@ public class MaterialUsage implements Row {
     @Override
     public HashMap<String, Object> getPrimaryKeys() {
         HashMap<String, Object> primaryKeys = new HashMap<>();
-        for (SQLColumn sqlColumn : Products.getSqlTable().getPrimaryKeys()) {
+        for (SQLColumn sqlColumn : MaterialUsages.getSqlTable().getPrimaryKeys()) {
             primaryKeys.put(sqlColumn.getName(), data.get(sqlColumn.getName()));
         }
         return primaryKeys;

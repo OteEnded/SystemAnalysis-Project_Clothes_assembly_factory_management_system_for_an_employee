@@ -15,7 +15,7 @@ import java.util.List;
 // อันนี้เอาไว้เก็บข้อมูลที่ดึงมากจาก sql เป็นแถวๆ และเอาไว้เก็บข้อมูลที่จะเอาไปเขียนลง sql
 public class SQLRow {
     private String tableName;
-    private HashMap<String, Object> primaryKey;
+    private HashMap<String, Object> primaryKeys;
     private List<String> columns;
     private List<Object> values;
     private HashMap<String, Object> valuesMap;
@@ -30,9 +30,9 @@ public class SQLRow {
     }
 
     //List
-    public SQLRow(String tableName, HashMap<String, Object> primaryKey, List<String> columns, List<Object> values) {
+    public SQLRow(String tableName, HashMap<String, Object> primaryKeys, List<String> columns, List<Object> values) {
         this.tableName = tableName;
-        this.primaryKey = primaryKey;
+        this.primaryKeys = primaryKeys;
         this.columns = columns;
         this.values = values;
         if (columns.size() != values.size()) {
@@ -47,9 +47,9 @@ public class SQLRow {
     }
 
     //HashMap
-    public SQLRow(String tableName, HashMap<String, Object> primaryKey, List<String> columns, HashMap<String, Object> valuesMap) {
+    public SQLRow(String tableName, HashMap<String, Object> primaryKeys, List<String> columns, HashMap<String, Object> valuesMap) {
         this.tableName = tableName;
-        this.primaryKey = primaryKey;
+        this.primaryKeys = primaryKeys;
         this.columns = columns;
         this.valuesMap = valuesMap;
         values = new ArrayList<>();
@@ -59,7 +59,7 @@ public class SQLRow {
     //SQLTable, RowInterface
     public SQLRow(SQLTable sqlTable , Row row) {
         this.tableName = sqlTable.getName();
-        this.primaryKey = row.getPrimaryKeys();
+        this.primaryKeys = row.getPrimaryKeys();
         List<String> columns = new ArrayList<>();
         for (SQLColumn sqlColumn: sqlTable.getColumns()) columns.add(sqlColumn.getName());
         this.columns = columns;
@@ -77,17 +77,18 @@ public class SQLRow {
     }
 
     public HashMap<String, Object> getPrimaryKeys() {
-        return primaryKey;
+        return primaryKeys;
     }
 
     public void setPrimaryKeys(HashMap<String, Object> primaryKeys) {
-        this.primaryKey = primaryKeys;
+        this.primaryKeys = primaryKeys;
     }
 
     public String getJoinedPrimaryKeys() {
+        ProjectUtility.debug("SQLRow[getJoinedPrimaryKeys]: getting joined primaryKeys of sqlRow ->", this);
         List<String> primaryKeyList = new ArrayList<>();
         for (String key : columns) {
-            if (primaryKey.containsKey(key)) primaryKeyList.add(valuesMap.get(key).toString());
+            if (primaryKeys.containsKey(key)) primaryKeyList.add(valuesMap.get(key).toString());
         }
         return String.join("|", primaryKeyList);
     }
@@ -192,7 +193,7 @@ public class SQLRow {
     @Override
     public String toString() {
         String msg_out = "Object-SQLRow[tableName]: " + tableName + " {"
-                + "\n\tprimaryKey: " + primaryKey
+                + "\n\tprimaryKey: " + primaryKeys
                 + "\n\t, valuesMap {";
         for (String key : valuesMap.keySet()) {
             msg_out += "\n\t\t" + key + ": " + valuesMap.get(key);

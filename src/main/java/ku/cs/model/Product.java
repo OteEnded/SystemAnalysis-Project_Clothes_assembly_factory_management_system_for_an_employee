@@ -13,19 +13,7 @@ public class Product implements Row {
 
     private HashMap<String, Object> data = EntityUtility.getMap(Products.getSqlTable());
 
-    public Product() {
-        this("null", 0);
-    }
-
-    public Product(String product_name, int size){
-        this(product_name, size, -1);
-    }
-
-    public Product(String product_name, int size, double progress_rate){
-        data.put("product_name", product_name);
-        data.put("size", size);
-        data.put("progress_rate", progress_rate);
-    }
+    public Product() {}
 
     public Product(HashMap<String, Object> data){
         setData(data);
@@ -74,10 +62,41 @@ public class Product implements Row {
         data.put("progress_rate", progress_rate);
     }
 
-//    public List<MaterialUsage> getMaterialsUsed() throws SQLException {
-//        MaterialUsages.addFilter("product_id", getId());
-//        return MaterialUsages.getFilteredData();
-//    }
+    public List<MaterialUsage> getMaterialsUsed() throws SQLException {
+        MaterialUsages.addFilter("product_id", getId());
+        return MaterialUsages.getSortedBy("material_id", MaterialUsages.getFilteredData());
+    }
+
+    public void saveMaterialUsed(Material material, int amount) throws SQLException, ParseException {
+        saveMaterialUsed(material.getId(), amount);
+    }
+
+    public void saveMaterialUsed(String material_id, int amount) throws SQLException, ParseException {
+        saveMaterialUsed(material_id, amount, 1);
+    }
+
+    public void saveMaterialUsed(Material material, int amount, int yield) throws SQLException, ParseException {
+        saveMaterialUsed(material.getId(), amount, yield);
+    }
+
+    public void saveMaterialUsed(String material_id, int amount, int yield) throws SQLException, ParseException {
+        MaterialUsage materialUsage = new MaterialUsage();
+        materialUsage.setProduct(this);
+        materialUsage.setMaterialId(material_id);
+        materialUsage.setAmount(amount);
+        materialUsage.setYield(yield);
+        materialUsage.save();
+    }
+
+    public void deleteMaterialUsed(Material material) throws SQLException, ParseException {
+        deleteMaterialUsed(material.getId());
+    }
+
+    public void deleteMaterialUsed(String material_id) throws SQLException, ParseException {
+        MaterialUsage materialUsage = new MaterialUsage();
+        materialUsage.load(getId(), material_id);
+        materialUsage.delete();
+    }
 
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Products.getSqlTable(), id));

@@ -17,6 +17,7 @@ public class Test5_works {
 //        product.load(1);
 //        ProjectUtility.debug(product.getData());
         Work work = new Work();
+        ProjectUtility.debug(work);
         ProjectUtility.debug(Works.verifyWork(work));
         work.save();
 //        work.setWorkType(Works.type_normal);

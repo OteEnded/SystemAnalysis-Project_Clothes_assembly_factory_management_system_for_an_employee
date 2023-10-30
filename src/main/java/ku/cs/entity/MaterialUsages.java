@@ -95,6 +95,7 @@ public class MaterialUsages {
 
     public static String getJoinedPrimaryKeys(MaterialUsage materialUsage) {
         SQLRow sqlRow = new SQLRow(sqlTable, materialUsage);
+        ProjectUtility.debug(sqlRow);
         return sqlRow.getJoinedPrimaryKeys();
     }
 
@@ -112,6 +113,7 @@ public class MaterialUsages {
     public static boolean isNew(String primaryKeys) throws SQLException {
         if (data == null) load();
         if (data.isEmpty()) return true;
+        ProjectUtility.debug(data);
         return !data.containsKey(primaryKeys);
     }
 
@@ -127,6 +129,7 @@ public class MaterialUsages {
 
     public static int delete(MaterialUsage materialUsage) throws SQLException, ParseException {
         ProjectUtility.debug("MaterialUsages[delete]: deleting materialUsage: " + materialUsage.getData());
+        ProjectUtility.debug(data);
         if (isNew(materialUsage)) throw new RuntimeException("MaterialUsages[delete]: Can't delete materialUsage that is not in database");
         data.remove(getJoinedPrimaryKeys(materialUsage));
         return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, materialUsage)));

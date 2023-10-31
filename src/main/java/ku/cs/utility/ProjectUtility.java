@@ -172,10 +172,6 @@ public class ProjectUtility {
         return isConnectAble;
     }
 
-    public static void loadDBBuffer() throws SQLException {
-        DBSeedAndLoad.load();
-    }
-
     public static String capitalize(String str) {
         if (str == null || str.isEmpty()) return str;
         if (str.length() == 1) return str.toUpperCase();

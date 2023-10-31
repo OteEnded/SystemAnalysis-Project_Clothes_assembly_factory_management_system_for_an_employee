@@ -8,14 +8,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.service.DBMigration;
+import ku.cs.service.DBSeedAndLoad;
 import ku.cs.utility.ProjectUtility;
 
 public class ProjectApplication extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException, SQLException {
+    public void start(Stage stage) throws IOException, SQLException, ParseException {
 
         if (!isScreenBigEnoughToShowStage()) return;
 
@@ -24,7 +27,9 @@ public class ProjectApplication extends Application {
         stage.getIcons().add(ProjectUtility.getProgramIcon());
 
         if (!ProjectUtility.connectDB()) return;
-        ProjectUtility.loadDBBuffer();
+//        DBMigration.migrate(true);
+//        DBSeedAndLoad.seed();
+        DBSeedAndLoad.quickLoad();
 
         FXRouter.bind(this, stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
         configRoute();

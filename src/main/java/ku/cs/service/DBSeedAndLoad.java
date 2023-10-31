@@ -12,13 +12,17 @@ import java.text.ParseException;
 
 public class DBSeedAndLoad {
 
+    public static void quickLoad() throws SQLException {
+        Products.load();
+        Works.load();
+    }
+
     public static void load() throws SQLException {
-        DailyRecords.load();
+        Products.load();
         Materials.load();
         MaterialUsages.load();
-        Products.load();
-        Users.load();
         Works.load();
+        DailyRecords.load();
     }
 
     public static void seed() throws SQLException, ParseException {

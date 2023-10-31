@@ -7,6 +7,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import com.github.saacsos.FXRouter;
 import ku.cs.utility.ProjectUtility;
@@ -14,7 +15,7 @@ import ku.cs.utility.ProjectUtility;
 public class ProjectApplication extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException, SQLException {
 
         if (!isScreenBigEnoughToShowStage()) return;
 
@@ -23,6 +24,7 @@ public class ProjectApplication extends Application {
         stage.getIcons().add(ProjectUtility.getProgramIcon());
 
         if (!ProjectUtility.connectDB()) return;
+        ProjectUtility.loadDBBuffer();
 
         FXRouter.bind(this, stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
         configRoute();

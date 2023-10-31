@@ -1,12 +1,8 @@
 package ku.cs.testingarea_noJUnit;
 
-import ku.cs.entity.Users;
-import ku.cs.model.SQLColumn;
-import ku.cs.model.User;
 import ku.cs.service.DBMigration;
-import ku.cs.service.DBSeeder;
+import ku.cs.service.DBSeedAndLoad;
 import ku.cs.service.DataSourceDB;
-import ku.cs.utility.JdbcConnector;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.*;
@@ -44,6 +40,6 @@ public class Test1_setup {
         ProjectUtility.debug(Date.valueOf(LocalDate.now()));
 
         DBMigration.migrate(true);
-        DBSeeder.seed();
+        DBSeedAndLoad.seed();
     }
 }

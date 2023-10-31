@@ -55,6 +55,7 @@ public class Product implements Row {
     }
 
     public double getProgressRate() {
+        if (data.get("progress_rate") == null) return -1;
         return (double) data.get("progress_rate");
     }
 

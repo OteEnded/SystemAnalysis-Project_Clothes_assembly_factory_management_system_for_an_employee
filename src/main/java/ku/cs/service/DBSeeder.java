@@ -1,10 +1,7 @@
 package ku.cs.service;
 
 import ku.cs.entity.*;
-import ku.cs.model.Material;
-import ku.cs.model.Product;
-import ku.cs.model.SQLTable;
-import ku.cs.model.Work;
+import ku.cs.model.*;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -17,26 +14,31 @@ public class DBSeeder {
         Product p1 = new Product();
         p1.setName("กระโปรง");
         p1.setSize(26);
+        p1.setProgressRate(4);
         p1.save();
 
         Product p2 = new Product();
         p2.setName("กระโปรง");
         p2.setSize(28);
+        p2.setProgressRate(8);
         p2.save();
 
         Product p3 = new Product();
         p3.setName("กางเกง");
         p3.setSize(28);
+        p3.setProgressRate(12);
         p3.save();
 
         Product p4 = new Product();
         p4.setName("กางเกง");
         p4.setSize(30);
+        p4.setProgressRate(16);
         p4.save();
 
         Product p5 = new Product();
         p5.setName("เสื้อ");
         p5.setSize(34);
+        p5.setProgressRate(20);
         p5.save();
 //      End Section: Products
 
@@ -101,19 +103,99 @@ public class DBSeeder {
 
 //      Section: Materials
         Material m1 = new Material();
-        m1.setName("cloth");
-        m1.setUnitName("meter");
+        m1.setName("ผ้าขาว");
+        m1.setUnitName("เมตร");
         m1.save();
 
         Material m2 = new Material();
-        m2.setName("button");
-        m2.setUnitName("piece");
+        m2.setName("ผ้าดำ");
+        m2.setUnitName("เมตร");
         m2.save();
 
         Material m3 = new Material();
-        m3.setName("thread");
-        m3.setUnitName("meter");
+        m3.setName("ด้ายขาว");
+        m3.setUnitName("ม้วน");
         m3.save();
+
+        Material m4 = new Material();
+        m4.setName("ด้ายดำ");
+        m4.setUnitName("ม้วน");
+        m4.save();
+
+        Material m5 = new Material();
+        m5.setName("กระดุม");
+        m5.setUnitName("เม็ด");
+        m5.save();
+
+        Material m6 = new Material();
+        m6.setName("ซิป");
+        m6.setUnitName("เมตร");
+        m6.save();
+
 //      End Section: Materials
+
+//      Section: DailyRecords
+        DailyRecord dr1 = new DailyRecord();
+        dr1.setForWork(w1);
+        dr1.setDate(ProjectUtility.getDate());
+        dr1.setAmount(2);
+        dr1.save();
+
+        DailyRecord dr2 = new DailyRecord();
+        dr2.setForWork(w2);
+        dr2.setDate(ProjectUtility.getDate());
+        dr2.setAmount(4);
+        dr2.save();
+
+        DailyRecord dr3 = new DailyRecord();
+        dr3.setForWork(w3);
+        dr3.setDate(ProjectUtility.getDate());
+        dr3.setAmount(6);
+        dr3.save();
+
+        DailyRecord dr4 = new DailyRecord();
+        dr4.setForWork(w4);
+        dr4.setDate(ProjectUtility.getDate());
+        dr4.setAmount(8);
+        dr4.save();
+
+        DailyRecord dr5 = new DailyRecord();
+        dr5.setForWork(w5);
+        dr5.setDate(ProjectUtility.getDate());
+        dr5.setAmount(10);
+        dr5.save();
+
+//      End Section: DailyRecords
+
+//      Section: MaterialUsages
+//      Disclaimer: This section will not use the MaterialUsage class.
+//      Instead, it will use the Product class to access and save MaterialUsages.
+        p1.saveMaterialUsed(m1, 10, 1);
+        p1.saveMaterialUsed(m3, 10, 1);
+        p1.saveMaterialUsed(m6, 10, 1);
+        p1.save();
+
+        p2.saveMaterialUsed(m2, 10, 1);
+        p2.saveMaterialUsed(m4, 10, 1);
+        p2.saveMaterialUsed(m6, 10, 1);
+        p2.save();
+
+        p3.saveMaterialUsed(m1, 10, 1);
+        p3.saveMaterialUsed(m3, 10, 1);
+        p3.saveMaterialUsed(m5, 10, 1);
+        p3.saveMaterialUsed(m6, 10, 1);
+        p3.save();
+
+        p4.saveMaterialUsed(m2, 10, 1);
+        p4.saveMaterialUsed(m4, 10, 1);
+        p4.saveMaterialUsed(m5, 10, 1);
+        p4.saveMaterialUsed(m6, 10, 1);
+        p4.save();
+
+        p5.saveMaterialUsed(m1, 10, 1);
+        p5.saveMaterialUsed(m3, 10, 1);
+        p5.saveMaterialUsed(m5, 10, 1);
+        p5.save();
+//      End Section: MaterialUsages
     }
 }

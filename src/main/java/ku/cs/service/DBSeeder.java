@@ -129,7 +129,7 @@ public class DBSeeder {
 
         Material m6 = new Material();
         m6.setName("ซิป");
-        m6.setUnitName("เมตร");
+        m6.setUnitName("เส้น");
         m6.save();
 
 //      End Section: Materials
@@ -171,30 +171,30 @@ public class DBSeeder {
 //      Disclaimer: This section will not use the MaterialUsage class.
 //      Instead, it will use the Product class to access and save MaterialUsages.
         p1.saveMaterialUsed(m1, 10, 1);
-        p1.saveMaterialUsed(m3, 10, 1);
-        p1.saveMaterialUsed(m6, 10, 1);
+        p1.saveMaterialUsed(m3, 1, 40);
+        p1.saveMaterialUsed(m6, 1, 1);
         p1.save();
 
         p2.saveMaterialUsed(m2, 10, 1);
-        p2.saveMaterialUsed(m4, 10, 1);
-        p2.saveMaterialUsed(m6, 10, 1);
+        p2.saveMaterialUsed(m4, 1, 40);
+        p2.saveMaterialUsed(m6, 1, 1);
         p2.save();
 
         p3.saveMaterialUsed(m1, 10, 1);
-        p3.saveMaterialUsed(m3, 10, 1);
+        p3.saveMaterialUsed(m3, 1, 40);
         p3.saveMaterialUsed(m5, 10, 1);
-        p3.saveMaterialUsed(m6, 10, 1);
+        p3.saveMaterialUsed(m6, 1, 1);
         p3.save();
 
         p4.saveMaterialUsed(m2, 10, 1);
-        p4.saveMaterialUsed(m4, 10, 1);
+        p4.saveMaterialUsed(m4, 1, 40);
         p4.saveMaterialUsed(m5, 10, 1);
-        p4.saveMaterialUsed(m6, 10, 1);
+        p4.saveMaterialUsed(m6, 1, 1);
         p4.save();
 
         p5.saveMaterialUsed(m1, 10, 1);
-        p5.saveMaterialUsed(m3, 10, 1);
-        p5.saveMaterialUsed(m5, 10, 1);
+        p5.saveMaterialUsed(m3, 1, 40);
+        p5.saveMaterialUsed(m5, 5, 1);
         p5.save();
 //      End Section: MaterialUsages
     }

@@ -41,6 +41,6 @@ public class Test1_setup {
 
 //        DBMigration.migrate(true);
 //        DBSeedAndLoad.seed();
-        DBSeedAndLoad.quickLoad();
+        DBSeedAndLoad.load();
     }
 }

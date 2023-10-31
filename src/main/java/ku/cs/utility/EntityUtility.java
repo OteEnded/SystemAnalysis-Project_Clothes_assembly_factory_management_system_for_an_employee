@@ -39,7 +39,7 @@ public class EntityUtility {
         return map;
     }
 
-    public static List<String> verifyObjectByTable(SQLTable sqlTable, Row row){
+    public static List<String> verifyRowByTable(SQLTable sqlTable, Row row){
         List<String> error = new ArrayList<>();
         for (SQLColumn column : sqlTable.getColumns()) {
             if (column.isNotNull() && row.getData().get(column.getName()) == null) {

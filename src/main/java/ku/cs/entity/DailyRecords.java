@@ -1,10 +1,8 @@
 package ku.cs.entity;
 
-import ku.cs.model.DailyRecord;
-import ku.cs.model.SQLColumn;
-import ku.cs.model.SQLRow;
-import ku.cs.model.SQLTable;
+import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
+import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -104,10 +102,40 @@ public class DailyRecords {
         return !data.containsKey(primaryKeys);
     }
 
+    public static boolean isDailyRecordValid(DailyRecord dailyRecord) {
+        return verifyDailyRecord(dailyRecord).size() == 0;
+    }
+
+    public static List<String> verifyDailyRecord(DailyRecord dailyRecord) {
+        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, dailyRecord));
+        return error;
+    }
+
     public static int save(DailyRecord dailyRecord) throws SQLException, ParseException {
         ProjectUtility.debug("DailyRecords[save]: saving dailyRecord ->", dailyRecord);
+        if(!isDailyRecordValid(dailyRecord)) throw new RuntimeException("DailyRecords[save]: dailyRecord is not valid ->" + verifyDailyRecord(dailyRecord));
         if(isNew(dailyRecord)) {
             addData(dailyRecord);
+            Product product = dailyRecord.getForWork().getProduct();
+            if (product.getProgressRate() == -1) {
+                product.setProgressRate(dailyRecord.getAmount());
+                product.save();
+            }
+            else {
+                Works.addFilter("product", product.getId());
+                List<Work> works = Works.toList(Works.getFilteredData());
+                List<DailyRecord> dailyRecords = new ArrayList<>();
+                for (Work work: works){
+                    DailyRecords.addFilter("for_work", work.getId());
+                    dailyRecords.addAll(DailyRecords.getFilteredData().values());
+                }
+                int totalAmount = 0;
+                for (DailyRecord dr: dailyRecords){
+                    totalAmount += dr.getAmount();
+                }
+                product.setProgressRate(totalAmount + product.getProgressRate() / dailyRecords.size() + 1);
+                product.save();
+            }
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, dailyRecord)));
         }
         data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);

@@ -109,9 +109,19 @@ public class Users {
         return !data.containsKey(id);
     }
 
+    public static boolean isUserValid(User user) {
+        return verifyUser(user).size() == 0;
+    }
+
+    public static List<String> verifyUser(User user) {
+        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, user));
+        return error;
+    }
+
     public static int save(User user) throws SQLException, ParseException {
         ProjectUtility.debug("Users[save]: saving user ->", user);
 
+        if (!isUserValid(user)) throw new RuntimeException("Users[save]: user's data is not valid ->" + verifyUser(user));
         if (isNew(user)){
             addData(user);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, user)));

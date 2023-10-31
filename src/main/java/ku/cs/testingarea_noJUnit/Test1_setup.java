@@ -1,12 +1,8 @@
 package ku.cs.testingarea_noJUnit;
 
-import ku.cs.entity.Users;
-import ku.cs.model.SQLColumn;
-import ku.cs.model.User;
 import ku.cs.service.DBMigration;
-import ku.cs.service.DBSeeder;
+import ku.cs.service.DBSeedAndLoad;
 import ku.cs.service.DataSourceDB;
-import ku.cs.utility.JdbcConnector;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.*;
@@ -17,7 +13,7 @@ public class Test1_setup {
     public static void main(String[] args) throws SQLException, IllegalAccessException, ParseException {
 
 
-        ProjectUtility.debug(DataSourceDB.query("show tables"));
+//        ProjectUtility.debug(DataSourceDB.query("show tables"));
 
 //        DBMigration.migrate();
 ////        DataSourceDB.dropTableAll();
@@ -39,11 +35,12 @@ public class Test1_setup {
 //
 //        Date date = new Date(System.currentTimeMillis());
 
-        ProjectUtility.debug(ProjectUtility.getDate("2021-01-01"));
+//        ProjectUtility.debug(ProjectUtility.getDate("2021-01-01"));
+//
+//        ProjectUtility.debug(Date.valueOf(LocalDate.now()));
 
-        ProjectUtility.debug(Date.valueOf(LocalDate.now()));
-
-        DBMigration.migrate(true);
-        DBSeeder.seed();
+//        DBMigration.migrate(true);
+//        DBSeedAndLoad.seed();
+        DBSeedAndLoad.quickLoad();
     }
 }

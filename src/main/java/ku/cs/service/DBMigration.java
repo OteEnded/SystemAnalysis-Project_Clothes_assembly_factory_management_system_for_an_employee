@@ -29,7 +29,7 @@ public class DBMigration {
 
         if (dropAll) {
             ProjectUtility.debug("DBMigration[migrate(dropAll)]: Dropping all tables...");
-            DataSourceDB.dropTableAll();
+            ProjectUtility.debug("DBMigration[migrate(dropAll)]: DROPPED ->", DataSourceDB.dropTableAll());
         }
 
         List<SQLRow> sqlRows = DataSourceDB.query("show tables");

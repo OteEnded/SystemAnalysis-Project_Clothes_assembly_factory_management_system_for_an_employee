@@ -5,6 +5,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import ku.cs.service.DBSeedAndLoad;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -92,6 +94,14 @@ public class ProjectUtility {
 
     public static Date getDate(LocalDate localDate){
         return Date.valueOf(localDate);
+    }
+
+    public static int differanceDate(Date date1, Date date2){
+        return differanceDate(date1.toLocalDate(), date2.toLocalDate());
+    }
+
+    public static int differanceDate(LocalDate date1, LocalDate date2){
+        return (int) (date1.toEpochDay() - date2.toEpochDay());
     }
 
     public static void copyFile(String from, String to){

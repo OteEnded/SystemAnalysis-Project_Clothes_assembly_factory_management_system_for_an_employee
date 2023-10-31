@@ -16,10 +16,10 @@ public class Test5_works {
 //        Product product = new Product();
 //        product.load(1);
 //        ProjectUtility.debug(product.getData());
-        Work work = new Work();
+//        Work work = new Work();
 //        ProjectUtility.debug(work);
 //        ProjectUtility.debug(Works.verifyWork(work));
-        work.save();
+//        work.save();
 //        work.setWorkType(Works.type_normal);
 //        work.setProduct(product);
 //        work.setDeadline(ProjectUtility.getDate());
@@ -28,5 +28,7 @@ public class Test5_works {
 //        work.setProgressAmount(0);
 //        work.setStatus(Works.status_waitForAccept);
 //        work.save();
+
+        ProjectUtility.debug(ProjectUtility.getDate("2023-10-30").toLocalDate().toEpochDay());
     }
 }

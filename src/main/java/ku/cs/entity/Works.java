@@ -200,7 +200,7 @@ public class Works {
     }
 
     public static List<String> verifyWork(Work work) {
-        List<String> error = new ArrayList<>(EntityUtility.verifyObjectByTable(sqlTable, work));
+        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, work));
         return error;
     }
 

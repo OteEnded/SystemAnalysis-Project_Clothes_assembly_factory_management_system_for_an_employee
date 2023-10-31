@@ -1,10 +1,38 @@
 package ku.cs.controller.employer.work;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import ku.cs.entity.Works;
+import ku.cs.model.Work;
+import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
 
 public class MaterialPreparationPageController {
+
+    @FXML private TableView<WorkWrapper> tableView;
+    @FXML private TableColumn<WorkWrapper, String> type;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
+    @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
+    @FXML
+    void initialize() throws SQLException {
+//        detailPane.setVisible(false);
+        // Bez code
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
+        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
+
+        tableView.setItems(fetchData());
+    }
 
     // MenuBar Handle
     @FXML
@@ -106,5 +134,19 @@ public class MaterialPreparationPageController {
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_waitForMaterial);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 }

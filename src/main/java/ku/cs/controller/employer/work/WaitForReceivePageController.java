@@ -9,41 +9,43 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import ku.cs.entity.Works;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class WaitForReceivePageController {
 
     @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
 
     // work detail
-    @FXML private AnchorPane detailPane;
-    @FXML private Label workTypeLabel;
-    @FXML private Label productLabel;
-    @FXML private Label deadlineLabel;
-    @FXML private Label amountLabel;
-    @FXML private ListView yieldListView;
-    @FXML private ListView materialListView;
-
-
+//    @FXML private AnchorPane detailPane;
+//    @FXML private Label workTypeLabel;
+//    @FXML private Label productLabel;
+//    @FXML private Label deadlineLabel;
+//    @FXML private Label amountLabel;
+//    @FXML private ListView yieldListView;
+//    @FXML private ListView materialListView;
 
 
     @FXML
-    void initialize() {
-        detailPane.setVisible(false);
+    void initialize() throws SQLException {
+//        detailPane.setVisible(false);
         // Bez code
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
 
-//        tableView.setItems(works);
+        tableView.setItems(fetchData());
         handleSelectedRow();
     }
 
@@ -163,5 +165,19 @@ public class WaitForReceivePageController {
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_waitForAccept);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 }

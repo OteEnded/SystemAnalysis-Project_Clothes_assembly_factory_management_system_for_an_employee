@@ -139,8 +139,9 @@ public class Work implements Row {
         return Works.estimate_onTime;
     }
 
-    public boolean isPass(){
-        return true;
+    public boolean isPass() throws SQLException {
+        Works.addFilter("repair_work", getId());
+        return Works.getFilteredData().isEmpty();
     }
 
     public void load(int id) throws SQLException {

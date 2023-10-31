@@ -17,16 +17,20 @@ import java.util.List;
 
 public class Works {
 
-    public static String type_normal = "งานธรรมดา";
-    public static String type_rush = "งานรีบ";
-    public static String type_repair = "งานแก้";
+    public static final String type_normal = "งานธรรมดา";
+    public static final String type_rush = "งานรีบ";
+    public static final String type_repair = "งานแก้";
 
-    public static String status_waitForAccept = "รอรับงาน";
-    public static String status_waitForMaterial = "รอวัตถุดิบ";
-    public static String status_working = "กำลังทำงาน";
-    public static String status_done = "ทำงานเสร็จ";
-    public static String status_sent = "ส่งงานแล้ว";
-    public static String status_checked = "ตรวจแล้ว";
+    public static final String status_waitForAccept = "รอรับงาน";
+    public static final String status_waitForMaterial = "รอวัตถุดิบ";
+    public static final String status_working = "กำลังทำงาน";
+    public static final String status_done = "ทำงานเสร็จ";
+    public static final String status_sent = "ส่งงานแล้ว";
+    public static final String status_checked = "ตรวจแล้ว";
+
+    public static final String estimate_onTime = "ทันเวลา";
+    public static final String estimate_late = "อาจไม่ทันเวลา";
+
     public static List<String> typeList = new ArrayList<>();
     static {
         typeList.add(type_normal);
@@ -192,7 +196,7 @@ public class Works {
     }
 
     public static boolean isWorkValid(Work work) {
-        return verifyWork(work).size() == 0;
+        return verifyWork(work).isEmpty();
     }
 
     public static List<String> verifyWork(Work work) {
@@ -204,6 +208,7 @@ public class Works {
         ProjectUtility.debug("Works[save]: saving work ->", work);
 
         if (!isWorkValid(work)) throw new RuntimeException("Works[save]: work's data is not valid -> " + verifyWork(work));
+
         if (isNew(work)){
             addData(work);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));

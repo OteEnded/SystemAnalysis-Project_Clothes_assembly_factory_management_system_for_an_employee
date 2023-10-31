@@ -45,7 +45,7 @@ public class JdbcConnector {
     }
 
     //disconnect
-    public static boolean disconnect(){
+    public static boolean realDisconnect(){
         try {
             // close connection
             if (connectionStack > 0) {
@@ -60,6 +60,17 @@ public class JdbcConnector {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean disconnectAll(){
+        while (db_connection != null) {
+            realDisconnect();
+        }
+        return true;
+    }
+
+    public static boolean disconnect(){
+        return true;
     }
 
 

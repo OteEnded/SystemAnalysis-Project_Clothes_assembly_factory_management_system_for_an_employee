@@ -14,8 +14,8 @@ module cs.ku {
     opens ku.cs.entity to java.base;
     exports ku.cs.service;
     opens ku.cs.service to javafx.fxml;
-    exports ku.cs.testingarea_noJUnit;
-    opens ku.cs.testingarea_noJUnit to javafx.fxml;
+    exports ku.cs.testingarea_codeexample;
+    opens ku.cs.testingarea_codeexample to javafx.fxml;
     exports ku.cs.utility;
     opens ku.cs.utility to javafx.fxml;
     exports ku.cs.model;

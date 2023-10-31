@@ -135,13 +135,20 @@ public class Work implements Row {
         return work;
     }
 
+    public String getEstimated() {
+        return Works.estimate_onTime;
+    }
+
+    public boolean isPass(){
+        return true;
+    }
+
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Works.getSqlTable(), id));
     }
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-//        if(Works.getData() == null) Works.load();
         boolean cannotLoad;
         try {
             cannotLoad = Works.isNew(primaryKeys);

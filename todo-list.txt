@@ -1,9 +1,13 @@
 todo
 * กรองข้อมูลได้ จาก entity buffer [done-tested]
-* check adding and verifier [done-poc]
 * work auto set create date [done-tested]
 * product get list of material usage [done-tested]
 * product add material usage [done-tested]
 * product remove material usage [done-tested]
 * PU can get date from Date or string [done-tested]
+* check adding and verifier [done]
 * sorting [done] -> ปลาย ฝาก [done]
+* DBSeeder -> ปลาย
+* DBSeeder to DBSeedAndLoad
+* custom popup service
+* work calendar management

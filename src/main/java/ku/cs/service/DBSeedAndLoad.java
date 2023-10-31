@@ -1,14 +1,26 @@
 package ku.cs.service;
 
 import ku.cs.entity.*;
+import ku.cs.model.Material;
+import ku.cs.model.Product;
+import ku.cs.model.Work;
 import ku.cs.model.*;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 
-public class DBSeeder {
+public class DBSeedAndLoad {
+
+    public static void load() throws SQLException {
+        DailyRecords.load();
+        Materials.load();
+        MaterialUsages.load();
+        Products.load();
+        Users.load();
+        Works.load();
+    }
+
     public static void seed() throws SQLException, ParseException {
 //      Section: Products
         Product p1 = new Product();

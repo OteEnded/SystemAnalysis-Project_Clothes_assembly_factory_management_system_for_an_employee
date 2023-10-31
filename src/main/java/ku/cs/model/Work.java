@@ -1,5 +1,6 @@
 package ku.cs.model;
 
+import ku.cs.entity.DailyRecords;
 import ku.cs.entity.Works;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
@@ -7,6 +8,7 @@ import ku.cs.utility.ProjectUtility;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -135,8 +137,18 @@ public class Work implements Row {
         return work;
     }
 
-    public String getEstimated() {
-        return Works.estimate_onTime;
+    // not done
+    public String getEstimated() throws SQLException {
+
+        int todo = getGoalAmount() - getProgressAmount();
+
+        int workDay = ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
+
+        int remainingDay = (int) Math.ceil(todo / getProduct().getProgressRate());
+
+        if (workDay > remainingDay) return Works.estimate_onTime;
+
+        return Works.estimate_late;
     }
 
     public boolean isPass() throws SQLException {

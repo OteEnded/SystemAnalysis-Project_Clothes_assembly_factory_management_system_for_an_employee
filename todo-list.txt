@@ -8,6 +8,7 @@ todo
 * check adding and verifier [done]
 * sorting [done] -> ปลาย ฝาก [done]
 * DBSeeder -> ปลาย
-* DBSeeder to DBSeedAndLoad
-* custom popup service
+* DBSeeder to DBSeedAndLoad [done-test]
 * work calendar management
+**
+* custom popup service

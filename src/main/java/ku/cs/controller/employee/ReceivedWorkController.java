@@ -12,18 +12,22 @@ import javafx.util.Pair;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.entity.Works;
+import ku.cs.model.Product;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 public class ReceivedWorkController {
 
     @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product_name;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
-    @FXML private TableColumn<WorkWrapper, String> status;
+    @FXML private TableColumn<WorkWrapper, String> ;
 
     @FXML private Button acceptBtn;
     @FXML private Button putWorkRateBtn;
@@ -41,9 +45,7 @@ public class ReceivedWorkController {
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         status.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
-
-        tableView.setItems(works);
+        tableView.setItems(fetchData());
 
         handleSelectedRow();
     }
@@ -131,6 +133,21 @@ public class ReceivedWorkController {
             System.err.println("ไปหน้า checked-work ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_waitForAccept);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            Product product = work.getProduct();
+
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 
 }

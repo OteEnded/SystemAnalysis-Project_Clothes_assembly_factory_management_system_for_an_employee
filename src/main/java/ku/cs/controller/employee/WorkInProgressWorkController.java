@@ -20,6 +20,7 @@ import ku.cs.tableview.WorkWrapper;
 import ku.cs.entity.Products;
 import ku.cs.entity.Works;
 import ku.cs.model.Product;
+import ku.cs.utility.ProjectUtility;
 
 
 public class WorkInProgressWorkController {
@@ -115,9 +116,10 @@ public class WorkInProgressWorkController {
         }
     }
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
-        Works.load();
-        Products.load();
-        HashMap<String, Work> works = Works.getData();
+
+        Works.addFilter("status", Works.status_working);
+        HashMap<String, Work> works = Works.getFilteredData();
+
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(String workId : works.keySet()) {
             Work work = works.get(workId);

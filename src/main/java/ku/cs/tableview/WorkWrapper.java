@@ -1,31 +1,31 @@
 package ku.cs.tableview;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.StringJoiner;
 
-/* for test only */
+/* for tableView only */
 
 public class WorkWrapper {
+
+    //work
     private String id;
     private String type;
-    private String product;
-    private int quantity;
-    private Date deadline;
+    private LocalDate deadline;
     private String status;
-    private int capacity;
+    private int goal_amount;
+    private int progress_amount;
     private String note;
+    private String repair_work;
 
-    public WorkWrapper(String id, String type, String product, int quantity, Date deadline, String status, int capacity, String note) {
-        this.id = id;
-        this.type = type;
-        this.product = product;
-        this.quantity = quantity;
-        this.deadline = deadline;
-        this.status = status;
-        this.capacity = capacity;
-        this.note = note;
-    }
+    //product
+    private String product_name;
+    private int product_size;
+    private int product_progress_rate;
+
+    //for display
+
+    //from model
+    private boolean isPass;
+
 
     public String getId() {
         return id;
@@ -43,27 +43,11 @@ public class WorkWrapper {
         this.type = type;
     }
 
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Date getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 
@@ -75,12 +59,20 @@ public class WorkWrapper {
         this.status = status;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getGoal_amount() {
+        return goal_amount;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setGoal_amount(int goal_amount) {
+        this.goal_amount = goal_amount;
+    }
+
+    public int getProgress_amount() {
+        return progress_amount;
+    }
+
+    public void setProgress_amount(int progress_amount) {
+        this.progress_amount = progress_amount;
     }
 
     public String getNote() {
@@ -89,5 +81,45 @@ public class WorkWrapper {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getRepair_work() {
+        return repair_work;
+    }
+
+    public void setRepair_work(String repair_work) {
+        this.repair_work = repair_work;
+    }
+
+    public String getProduct_name() {
+        return product_name;
+    }
+
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
+    }
+
+    public int getProduct_size() {
+        return product_size;
+    }
+
+    public void setProduct_size(int product_size) {
+        this.product_size = product_size;
+    }
+
+    public int getProduct_progress_rate() {
+        return product_progress_rate;
+    }
+
+    public void setProduct_progress_rate(int product_progress_rate) {
+        this.product_progress_rate = product_progress_rate;
+    }
+
+    public String getDisplay_product() {
+        return display_product;
+    }
+
+    public String getChecked_work_status() {
+        return checked_work_status;
     }
 }

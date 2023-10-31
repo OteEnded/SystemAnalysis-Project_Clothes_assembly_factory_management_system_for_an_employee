@@ -46,9 +46,9 @@
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="296.0" layoutY="183.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="570.0" scaleShape="false">
         <columns>
           <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="87.199951171875" resizable="false" sortable="false" text="ประเภทงาน" />
-          <TableColumn fx:id="product" editable="false" minWidth="-Infinity" prefWidth="240.0" resizable="false" sortable="false" text="สินค้า" />
-            <TableColumn fx:id="quantity" editable="false" minWidth="-Infinity" prefWidth="107.199951171875" resizable="false" sortable="false" text="จำนวน(ตัว)" />
-            <TableColumn fx:id="status" editable="false" maxWidth="231.99997558593748" minWidth="-Infinity" prefWidth="119.20001220703125" resizable="false" sortable="false" text="ผ่าน/ไม่ผ่าน" />
+          <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="240.0" resizable="false" sortable="false" text="สินค้า" />
+            <TableColumn fx:id="goal_amount" editable="false" minWidth="-Infinity" prefWidth="107.199951171875" resizable="false" sortable="false" text="จำนวน(ตัว)" />
+            <TableColumn fx:id="isPass" editable="false" maxWidth="231.99997558593748" minWidth="-Infinity" prefWidth="119.20001220703125" resizable="false" sortable="false" text="ผ่าน/ไม่ผ่าน" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -9,31 +9,31 @@ import javafx.scene.control.TableView;
 
 import com.github.saacsos.FXRouter;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ku.cs.entity.Works;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class WaitingForCheckWorkController {
-    @FXML
-    private TableView<WorkWrapper> tableView;
+
+    @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
 
     @FXML private Label workDetail;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-
-//        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        tableView.setItems(works);
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
+        tableView.setItems(fetchData());
         handleSelectedRow();
     }
 
@@ -103,4 +103,19 @@ public class WaitingForCheckWorkController {
             e.printStackTrace();
         }
     }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_sent);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
+    }
+
 }

@@ -46,8 +46,8 @@
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="296.0" layoutY="183.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="570.0" scaleShape="false">
         <columns>
           <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="87.199951171875" resizable="false" sortable="false" text="ประเภทงาน" />
-          <TableColumn fx:id="product" editable="false" minWidth="-Infinity" prefWidth="226.0" resizable="false" sortable="false" text="สินค้า" />
-            <TableColumn fx:id="quantity" editable="false" minWidth="-Infinity" prefWidth="114.0" resizable="false" sortable="false" text="จำนวน(ตัว)" />
+          <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="226.0" resizable="false" sortable="false" text="สินค้า" />
+            <TableColumn fx:id="goal_amount" editable="false" minWidth="-Infinity" prefWidth="114.0" resizable="false" sortable="false" text="จำนวน(ตัว)" />
             <TableColumn fx:id="deadline" editable="false" maxWidth="231.99997558593748" minWidth="-Infinity" prefWidth="127.0" resizable="false" sortable="false" text="กำหนดส่ง" />
         </columns>
          <columnResizePolicy>
@@ -60,7 +60,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Button fx:id="submitReceivedMaterialBtn" layoutX="1080.0" layoutY="560.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="บันทึกรับวัตถุดิบ" />
+      <Button fx:id="submitReceivedMaterialBtn" layoutX="1080.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleSubmitReceivedMaterialBtn" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="บันทึกรับวัตถุดิบ" />
       <VBox layoutX="42.0" layoutY="188.0" prefHeight="334.0" prefWidth="165.0" spacing="5.0">
          <children>
             <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleReceivedWorkBtn" prefHeight="33.0" prefWidth="179.0" text="จัดการงาน">

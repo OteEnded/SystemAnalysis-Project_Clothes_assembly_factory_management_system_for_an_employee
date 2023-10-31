@@ -56,11 +56,11 @@ public class WaitForReceivePageController {
     }
 
     private void showSelectedRow(WorkWrapper newValue) {
-        detailPane.setVisible(true);
-        workTypeLabel.setText(newValue.getType());
-        productLabel.setText(newValue.getProduct());
-        deadlineLabel.setText(newValue.getDeadline().toString());
-        amountLabel.setText(String.valueOf(newValue.getQuantity()));
+//        detailPane.setVisible(true);
+//        workTypeLabel.setText(newValue.getType());
+//        productLabel.setText(newValue.getProduct());
+//        deadlineLabel.setText(newValue.getDeadline().toString());
+//        amountLabel.setText(String.valueOf(newValue.getQuantity()));
     }
 
 

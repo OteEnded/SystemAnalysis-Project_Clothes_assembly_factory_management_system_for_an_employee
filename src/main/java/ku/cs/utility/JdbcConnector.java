@@ -9,8 +9,8 @@ import java.util.List;
 public class JdbcConnector {
 
 //    private static final String db_URL = "jdbc:mysql://mowcodeserver.eastus.cloudapp.azure.com:3306/sa_longname";
-    private static final String db_URL = "jdbc:mysql://mowcodeserver.eastus.cloudapp.azure.com:3306/sa_testing";
-//    private static final String db_URL = "jdbc:mysql://localhost:3306/sa_testing";
+//    private static final String db_URL = "jdbc:mysql://mowcodeserver.eastus.cloudapp.azure.com:3306/sa_testing";
+    private static final String db_URL = "jdbc:mysql://localhost:3306/sa_testing";
     private static final String db_username = "root";
     private static final String db_password = "";
     private static Connection db_connection = null;

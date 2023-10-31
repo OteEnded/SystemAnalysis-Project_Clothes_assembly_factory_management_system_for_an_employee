@@ -10,44 +10,61 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.entity.Works;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 
 public class WaitingForMaterialWorkController {
 
-    @FXML
-    private TableView<WorkWrapper> tableView;
+    @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
 
     @FXML private Label workDetail;
     @FXML private Button submitReceivedMaterialBtn;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
         submitReceivedMaterialBtn.setVisible(false);
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
 
-        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
-
-        tableView.setItems(works);
+        tableView.setItems(fetchData());
         handleSelectedRow();
     }
+
+    @FXML private void handleSubmitReceivedMaterialBtn() throws SQLException, ParseException {
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+        System.out.println(work);
+
+        work.setStatus(Works.status_working);
+        Works.save(work);
+
+        tableView.setItems(fetchData());
+        tableView.refresh();
+    }
+
 
     private void handleSelectedRow() {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    showSelectedRow(newValue);
+                    if(newValue != null) {
+                        showSelectedRow(newValue);
+                    }
                 }
         );
     }
@@ -110,6 +127,20 @@ public class WaitingForMaterialWorkController {
             System.err.println("ไปหน้า checked-work ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_waitForMaterial);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 
 }

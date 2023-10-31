@@ -5,32 +5,33 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import ku.cs.entity.Works;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class CheckedWorkController {
-    @FXML
-    private TableView<WorkWrapper> tableView;
+
+    @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
-    @FXML private TableColumn<WorkWrapper, String> status;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
+    @FXML private TableColumn<WorkWrapper, String> isPass;
     @FXML private Label workDetail;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
+        isPass.setCellValueFactory(new PropertyValueFactory<>("isPass"));
+        tableView.setItems(fetchData());
 
-//        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        tableView.setItems(works);
         handleSelectedRow();
     }
 
@@ -99,5 +100,19 @@ public class CheckedWorkController {
             System.err.println("ไปหน้า checked-work ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_checked);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 }

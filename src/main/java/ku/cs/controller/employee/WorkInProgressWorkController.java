@@ -25,13 +25,12 @@ import ku.cs.utility.ProjectUtility;
 
 public class WorkInProgressWorkController {
 
-    @FXML
-    private TableView<WorkWrapper> tableView;
+    @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
-    @FXML private TableColumn<WorkWrapper, Integer> capacity;
+    @FXML private TableColumn<WorkWrapper, Integer> progress_amount;
 
     @FXML private Label workDetail;
 
@@ -39,10 +38,10 @@ public class WorkInProgressWorkController {
     void initialize() throws SQLException {
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-        capacity.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+        progress_amount.setCellValueFactory(new PropertyValueFactory<>("progress_amount"));
 
         tableView.setItems(fetchData());
 
@@ -123,17 +122,7 @@ public class WorkInProgressWorkController {
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(String workId : works.keySet()) {
             Work work = works.get(workId);
-            Product product = work.getProduct();
-            WorkWrapper workWrapper = new WorkWrapper(
-                    work.getId(),
-                    work.getWorkType(),
-                    product.getName(),
-                    work.getGoalAmount(),
-                    work.getDeadline(),
-                    work.getStatus(),
-                    work.getProgressAmount(),
-                    work.getNote()
-            );
+            WorkWrapper workWrapper = new WorkWrapper(work);
             workWrappers.add(workWrapper);
         }
         return workWrappers;

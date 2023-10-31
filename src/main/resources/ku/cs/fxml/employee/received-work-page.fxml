@@ -130,10 +130,10 @@
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="296.0" layoutY="183.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="570.0" scaleShape="false">
         <columns>
           <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="87.199951171875" resizable="false" sortable="false" text="ประเภทงาน" />
-          <TableColumn fx:id="product" editable="false" minWidth="-Infinity" prefWidth="166.4000244140625" resizable="false" sortable="false" text="สินค้า" />
-            <TableColumn fx:id="quantity" editable="false" minWidth="-Infinity" prefWidth="82.4000244140625" resizable="false" sortable="false" text="จำนวน(ตัว)" />
+          <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="166.4000244140625" resizable="false" sortable="false" text="สินค้า" />
+            <TableColumn fx:id="goal_amount" editable="false" minWidth="-Infinity" prefWidth="82.4000244140625" resizable="false" sortable="false" text="จำนวน(ตัว)" />
             <TableColumn fx:id="deadline" editable="false" maxWidth="170.4000244140625" minWidth="-Infinity" prefWidth="75.99993896484375" resizable="false" sortable="false" text="กำหนดส่ง" />
-            <TableColumn fx:id="status" editable="false" maxWidth="152.79998779296875" minWidth="-Infinity" prefWidth="140.7999267578125" resizable="false" sortable="false" text="การประเมินงาน" />
+            <TableColumn fx:id="estimate" editable="false" maxWidth="152.79998779296875" minWidth="-Infinity" prefWidth="140.7999267578125" resizable="false" sortable="false" text="การประเมินงาน" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -145,7 +145,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-      <Button fx:id="acceptBtn" layoutX="1080.0" layoutY="560.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="รับงาน" />
+      <Button fx:id="acceptBtn" layoutX="1080.0" layoutY="560.0" mnemonicParsing="false" onAction="#handleAcceptWorkBtn" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="รับงาน" />
       <Button fx:id="putWorkRateBtn" layoutX="1080.0" layoutY="560.0" mnemonicParsing="false" onAction="#handlePutWorkRateBtn" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="กรอกอัตราการทำงาน" visible="false" />
    </children>
 </AnchorPane>

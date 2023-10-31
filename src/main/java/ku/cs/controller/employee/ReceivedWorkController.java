@@ -11,6 +11,7 @@ import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -24,10 +25,10 @@ public class ReceivedWorkController {
 
     @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> display_product_name;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
     @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
-    @FXML private TableColumn<WorkWrapper, String> ;
+    @FXML private TableColumn<WorkWrapper, String> estimate;
 
     @FXML private Button acceptBtn;
     @FXML private Button putWorkRateBtn;
@@ -40,30 +41,40 @@ public class ReceivedWorkController {
         putWorkRateBtn.setVisible(false);
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        estimate.setCellValueFactory(new PropertyValueFactory<>("estimate"));
 
         tableView.setItems(fetchData());
-
         handleSelectedRow();
     }
 
     private void handleSelectedRow() {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    showSelectedRow(newValue);
+                    if(newValue != null) {
+                        showSelectedRow(newValue);
+                    }
                 }
         );
+    }
+    @FXML
+    private void handleAcceptWorkBtn() throws SQLException, ParseException {
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+        work.setStatus(Works.status_waitForMaterial);
+        Works.save(work);
+        tableView.setItems(fetchData());
+        tableView.refresh();
     }
 
     private void showSelectedRow(WorkWrapper newValue) {
         workDetail.setText(newValue.toString());
-        if(newValue.getStatus().equals("ทันตามกำหนด")) {
+        if(newValue.getEstimate().equals("ทันเวลา")) {
             acceptBtn.setVisible(true);
             putWorkRateBtn.setVisible(false);
-        } else if (newValue.getStatus().equals("ไม่พบอัตราการทำงาน")) {
+        } else if (newValue.getEstimate().equals("ไม่พบอัตราการทำงาน")) {
             acceptBtn.setVisible(false);
             putWorkRateBtn.setVisible(true);
         }
@@ -143,8 +154,7 @@ public class ReceivedWorkController {
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(String workId : works.keySet()) {
             Work work = works.get(workId);
-            Product product = work.getProduct();
-
+            WorkWrapper workWrapper = new WorkWrapper(work);
             workWrappers.add(workWrapper);
         }
         return workWrappers;

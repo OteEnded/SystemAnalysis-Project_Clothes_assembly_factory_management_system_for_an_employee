@@ -10,34 +10,34 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.entity.Works;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 public class FinishedWorkController {
 
-    @FXML
-    private TableView<WorkWrapper> tableView;
+    @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
 
     @FXML private Button sendWorkBtn;
     @FXML private Label workDetail;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
         sendWorkBtn.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-
-//        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        tableView.setItems(works);
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
+        tableView.setItems(fetchData());
         handleSelectedRow();
     }
 
@@ -52,6 +52,15 @@ public class FinishedWorkController {
     private void showSelectedRow(WorkWrapper newValue) {
         workDetail.setText(newValue.toString());
         sendWorkBtn.setVisible(true);
+    }
+
+    @FXML private void handleSendWorkBtn() throws SQLException, ParseException {
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+        work.setStatus(Works.status_sent);
+        Works.save(work);
+        tableView.setItems(fetchData());
+        tableView.refresh();
     }
 
     /* Navbar Btn */
@@ -107,6 +116,20 @@ public class FinishedWorkController {
             System.err.println("ไปหน้า checked-work ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_done);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
     }
 
 }

@@ -171,6 +171,10 @@ public class DailyRecords {
         for (DailyRecord dailyRecord : data.values()) {
             boolean isFiltered = true;
             for (String column : filter.keySet()) {
+                if (dailyRecord.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if (!dailyRecord.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;

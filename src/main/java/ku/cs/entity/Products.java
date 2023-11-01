@@ -168,6 +168,10 @@ public class Products {
         for (Product product: getData().values()) {
             boolean isFiltered = true;
             for (String column: filter.keySet()) {
+                if (product.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if(!product.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;

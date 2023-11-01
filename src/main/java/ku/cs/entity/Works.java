@@ -250,6 +250,10 @@ public class Works {
         for (Work work: getData().values()) {
             boolean isFiltered = true;
             for (String column: filter.keySet()) {
+                if (work.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if (!work.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;

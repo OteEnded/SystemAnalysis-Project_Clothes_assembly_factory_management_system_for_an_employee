@@ -168,6 +168,10 @@ public class Users {
         for (User user: getData().values()) {
             boolean isFiltered = true;
             for (String column: filter.keySet()) {
+                if (user.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if(!user.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;

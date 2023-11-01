@@ -7,10 +7,7 @@ import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Works {
 
@@ -294,5 +291,14 @@ public class Works {
             }
         });
         return works;
+    }
+
+    public static HashMap<String, Work> getAbnormalWorks() throws SQLException {
+        if (data == null) load();
+        HashMap<String, Work> abnormalWorks = new HashMap<>();
+        for (Work work: getData().values()) {
+            if (Objects.equals(work.getEstimated(), Works.estimate_late)) abnormalWorks.put(work.getId(), work);
+        }
+        return abnormalWorks;
     }
 }

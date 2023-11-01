@@ -1,9 +1,6 @@
 package ku.cs.entity;
 
-import ku.cs.model.SQLColumn;
-import ku.cs.model.SQLRow;
-import ku.cs.model.SQLTable;
-import ku.cs.model.Work;
+import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
@@ -270,19 +267,28 @@ public class Works {
     }
 
     public static List<Work> getSortedBy(String column, HashMap<String, Work> data) throws SQLException {
-        ProjectUtility.debug("Works[getSortedBy]: getting data sorted by ->", column);
-        if (data == null) throw new RuntimeException("Works[getSortedBy]: data is null. Please load data first or get all data without filter using -> Works.getData()");
-        List<String> sortedValues = new ArrayList<String>();
-        for (Work work : data.values()) {
-            sortedValues.add(work.getData().get(column).toString());
-        }
-        Collections.sort(sortedValues);
-        ProjectUtility.debug("Works[getSortedBy]: sorted target ->", sortedValues);
-        List<Work> sortedWorks = new ArrayList<>();
-        for (String sortedValue : sortedValues) {
-            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-            sortedWorks.addAll(getFilteredData().values());
-        }
-        return sortedWorks;
+//        ProjectUtility.debug("Works[getSortedBy]: getting data sorted by ->", column);
+//        if (data == null) throw new RuntimeException("Works[getSortedBy]: data is null. Please load data first or get all data without filter using -> Works.getData()");
+//        List<String> sortedValues = new ArrayList<String>();
+//        for (Work work : data.values()) {
+//            sortedValues.add(work.getData().get(column).toString());
+//        }
+//        Collections.sort(sortedValues);
+//        ProjectUtility.debug("Works[getSortedBy]: sorted target ->", sortedValues);
+//        List<Work> sortedWorks = new ArrayList<>();
+//        for (String sortedValue : sortedValues) {
+//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+//            sortedWorks.addAll(getFilteredData().values());
+//        }
+//        return sortedWorks;
+        List<Work> works = toList(data);
+        works.sort((o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (RuntimeException e) {
+                return 0;
+            }
+        });
+        return works;
     }
 }

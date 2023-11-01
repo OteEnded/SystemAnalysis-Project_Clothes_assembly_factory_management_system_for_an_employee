@@ -187,19 +187,28 @@ public class DailyRecords {
     }
 
     public static List<DailyRecord> getSortedBy(String column, HashMap<String, DailyRecord> data) throws SQLException {
-        ProjectUtility.debug("DailyRecords[getSortedBy]: getting data sorted by ->", column);
-        if (data == null) throw new RuntimeException("DailyRecords[getSortedBy]: data is null, Please set data or get all data without filter using -> DailyRecords.getData()");
-        List<String> sortedValues = new ArrayList<String>();
-        for (DailyRecord dailyRecord : data.values()) {
-            sortedValues.add(dailyRecord.getData().get(column).toString());
-        }
-        Collections.sort(sortedValues);
-        ProjectUtility.debug("DailyRecords[getSortedBy]: sorted target ->", sortedValues);
-        List<DailyRecord> sortedDailyRecords = new ArrayList<>();
-        for (String sortedValue : sortedValues) {
-            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-            sortedDailyRecords.addAll(getFilteredData().values());
-        }
-        return sortedDailyRecords;
+//        ProjectUtility.debug("DailyRecords[getSortedBy]: getting data sorted by ->", column);
+//        if (data == null) throw new RuntimeException("DailyRecords[getSortedBy]: data is null, Please set data or get all data without filter using -> DailyRecords.getData()");
+//        List<String> sortedValues = new ArrayList<String>();
+//        for (DailyRecord dailyRecord : data.values()) {
+//            sortedValues.add(dailyRecord.getData().get(column).toString());
+//        }
+//        Collections.sort(sortedValues);
+//        ProjectUtility.debug("DailyRecords[getSortedBy]: sorted target ->", sortedValues);
+//        List<DailyRecord> sortedDailyRecords = new ArrayList<>();
+//        for (String sortedValue : sortedValues) {
+//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+//            sortedDailyRecords.addAll(getFilteredData().values());
+//        }
+//        return sortedDailyRecords;
+        List<DailyRecord> dailyRecords = toList(data);
+        dailyRecords.sort((o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (RuntimeException e) {
+                return 0;
+            }
+        });
+        return dailyRecords;
     }
 }

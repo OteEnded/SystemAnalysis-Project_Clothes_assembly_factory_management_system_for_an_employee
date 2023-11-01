@@ -28,31 +28,31 @@ public class DBSeedAndLoad {
     public static void seed() throws SQLException, ParseException {
 //      Section: Products
         Product p1 = new Product();
-        p1.setName("กระโปรง");
+        p1.setName("กระโปรงขาว");
         p1.setSize(26);
         p1.setProgressRate(4);
         p1.save();
 
         Product p2 = new Product();
-        p2.setName("กระโปรง");
+        p2.setName("กระโปรงดำ");
         p2.setSize(28);
         p2.setProgressRate(8);
         p2.save();
 
         Product p3 = new Product();
-        p3.setName("กางเกง");
+        p3.setName("กางเกงขาว");
         p3.setSize(28);
         p3.setProgressRate(12);
         p3.save();
 
         Product p4 = new Product();
-        p4.setName("กางเกง");
+        p4.setName("กางเกงดำ");
         p4.setSize(30);
         p4.setProgressRate(16);
         p4.save();
 
         Product p5 = new Product();
-        p5.setName("เสื้อ");
+        p5.setName("เสื้อขาว");
         p5.setSize(34);
         p5.setProgressRate(20);
         p5.save();

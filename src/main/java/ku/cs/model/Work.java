@@ -154,8 +154,9 @@ public class Work implements Row {
     }
 
     public boolean isPass() throws SQLException {
-//        Works.addFilter("repair_work", getId());
-        return true; // Works.getFilteredData().isEmpty();
+        Works.addFilter("repair_work", getId());
+//        ProjectUtility.debug(repairWorks);
+        return Works.getFilteredData().isEmpty();
     }
 
     public void load(int id) throws SQLException {

@@ -1,9 +1,6 @@
 package ku.cs.entity;
 
-import ku.cs.model.SQLColumn;
-import ku.cs.model.SQLRow;
-import ku.cs.model.SQLTable;
-import ku.cs.model.Material;
+import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
@@ -165,6 +162,10 @@ public class Materials {
         for (Material material: getData().values()) {
             boolean isFiltered = true;
             for (String column: filter.keySet()) {
+                if (material.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if(!material.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;
@@ -182,19 +183,28 @@ public class Materials {
     }
 
     public static List<Material> getSortedBy(String column, HashMap<String, Material> data) throws SQLException {
-        ProjectUtility.debug("Materials[getSortedBy]: getting data sorted by ->", column);
-        if (data == null) throw new RuntimeException("Materials[getSortedBy]: data is null, Please load data first or get all data without filter using -> Materials.getData()");
-        List<String> sortedValues = new ArrayList<String>();
-        for (Material material : data.values()) {
-            sortedValues.add(material.getData().get(column).toString());
-        }
-        Collections.sort(sortedValues);
-        ProjectUtility.debug("Materials[getSortedBy]: sorted target ->", sortedValues);
-        List<Material> sortedMaterial = new ArrayList<>();
-        for (String sortedValue : sortedValues) {
-            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-            sortedMaterial.addAll(getFilteredData().values());
-        }
-        return sortedMaterial;
+//        ProjectUtility.debug("Materials[getSortedBy]: getting data sorted by ->", column);
+//        if (data == null) throw new RuntimeException("Materials[getSortedBy]: data is null, Please load data first or get all data without filter using -> Materials.getData()");
+//        List<String> sortedValues = new ArrayList<String>();
+//        for (Material material : data.values()) {
+//            sortedValues.add(material.getData().get(column).toString());
+//        }
+//        Collections.sort(sortedValues);
+//        ProjectUtility.debug("Materials[getSortedBy]: sorted target ->", sortedValues);
+//        List<Material> sortedMaterial = new ArrayList<>();
+//        for (String sortedValue : sortedValues) {
+//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+//            sortedMaterial.addAll(getFilteredData().values());
+//        }
+//        return sortedMaterial;
+        List<Material> materials = toList(data);
+        materials.sort((o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (RuntimeException e) {
+                return 0;
+            }
+        });
+        return materials;
     }
 }

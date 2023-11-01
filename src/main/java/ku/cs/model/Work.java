@@ -17,6 +17,7 @@ public class Work implements Row {
     private HashMap<String, Object> data = EntityUtility.getMap(Works.getSqlTable());
 
     public Work(){
+        setProgressAmount(0);
         setCreateDate(ProjectUtility.getDate());
     }
 

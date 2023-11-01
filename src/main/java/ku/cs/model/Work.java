@@ -17,6 +17,7 @@ public class Work implements Row {
     private HashMap<String, Object> data = EntityUtility.getMap(Works.getSqlTable());
 
     public Work(){
+        setProgressAmount(0);
         setCreateDate(ProjectUtility.getDate());
     }
 
@@ -132,6 +133,7 @@ public class Work implements Row {
     }
 
     public Work getRepairWork() throws SQLException {
+        if (data.get("repair_work") == null) throw new RuntimeException("Work[getRepairWork]: repair_work is null");
         Work work = new Work();
         work.load((String) data.get("repair_work"));
         return work;

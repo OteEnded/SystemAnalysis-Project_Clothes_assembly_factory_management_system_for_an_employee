@@ -5,8 +5,11 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import ku.cs.entity.Materials;
+import ku.cs.model.Material;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class AddProductPageController {
 
@@ -20,9 +23,11 @@ public class AddProductPageController {
     @FXML private Text unitText;
 
 
-    @FXML void initialize() {
+    @FXML void initialize() throws SQLException {
         // จำลองข้อมูลใน combo box
-        materialNameComboBox.getItems().addAll("ผ้าไหม", "ผ้าฝ้าย");
+        for (Material materials : Materials.getDataAsList()){
+            materialNameComboBox.getItems().addAll(materials.getName());
+        }
         unitText.setText("");
         yieldTextField.setText("1");
     }

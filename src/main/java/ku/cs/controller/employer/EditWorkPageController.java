@@ -1,11 +1,15 @@
 package ku.cs.controller.employer;
 
-import com.github.saacsos.FXRouter;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import ku.cs.entity.Materials;
 import ku.cs.entity.Products;
 import ku.cs.entity.Works;
+import ku.cs.model.Material;
+import ku.cs.model.MaterialUsage;
 import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.utility.ProjectUtility;
@@ -14,12 +18,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.HashMap;
 
-public class OrderWorkPageController {
+public class EditWorkPageController {
+
     @FXML private Text headerText;
     @FXML private ComboBox<String> workTypeComboBox;
-    @FXML private ComboBox<String> productComboBox;
+    @FXML private Label productLabel;
     @FXML private TextField amountTextField;
     @FXML private DatePicker deadlineDatePicker;
     @FXML private TextArea noteTextArea;
@@ -28,37 +33,22 @@ public class OrderWorkPageController {
 
     @FXML
     void initialize() throws SQLException {
-        if (com.github.saacsos.FXRouter.getData() != null){
-            initForRepairWork();
+        if (com.github.saacsos.FXRouter.getData() != null) {
+            Work work = (Work) com.github.saacsos.FXRouter.getData();
+            workTypeComboBox.getItems().clear();
+            workTypeComboBox.getItems().addAll(Works.type_normal, Works.type_rush);
+            workTypeComboBox.getSelectionModel().select(work.getWorkType());
+
+            Product product = work.getProduct();
+            productLabel.setText(product.getName()+ " " + product.getSize() + " นิ้ว");
+
+            amountTextField.setText(String.valueOf(work.getGoalAmount()));
+            noteTextArea.setText(work.getNote());
         }
-        else initForAddWork();
 
 
     }
 
-    void initForAddWork() throws SQLException {
-        headerText.setText("เพิ่มงาน");
-        workTypeComboBox.getItems().clear();
-        workTypeComboBox.getItems().addAll(Works.type_normal, Works.type_rush);
-        workTypeComboBox.getSelectionModel().select(Works.type_normal);
-        for (Product product : Products.getDataAsList()){
-            productComboBox.getItems().addAll(product.getName() + " "
-                    + product.getSize() + " นิ้ว");
-        }
-        promptLabel.setText("");
-    }
-
-    void initForRepairWork() throws SQLException {
-        headerText.setText("เพิ่มงานแก้");
-        workTypeComboBox.getItems().clear();
-        workTypeComboBox.getItems().addAll(Works.type_repair);
-        workTypeComboBox.getSelectionModel().select(Works.type_repair);
-        if (FXRouter.getData() != null){
-            Product product = ((Work)FXRouter.getData()).getProduct();
-            productComboBox.getSelectionModel().select(product.getName() + " "
-                    + product.getSize() + " นิ้ว");
-        }
-    }
 
     @FXML
     public void handleSubmitButton() throws SQLException, ParseException {
@@ -78,16 +68,11 @@ public class OrderWorkPageController {
     }
 
     private boolean addWork() throws SQLException, ParseException {
-        Work work = new Work();
-        work.setStatus(Works.status_waitForAccept);
+        Work work = (Work) com.github.saacsos.FXRouter.getData();
         work.setWorkType(workTypeComboBox.getValue());
-        work.setProduct(handleProductStringToProductObject());
         work.setGoalAmount(Integer.parseInt(amountTextField.getText()));
         work.setDeadline(ProjectUtility.getDate(deadlineDatePicker.getValue()));
         work.setNote(noteTextArea.getText());
-        if (com.github.saacsos.FXRouter.getData() != null){
-            work.setRepairWork((Work) FXRouter.getData());
-        }
 
         if (work.getProduct().getProgressRate() != -1){
             if (work.getEstimated().equals(Works.estimate_late)){
@@ -99,16 +84,6 @@ public class OrderWorkPageController {
         return true;
     }
 
-    private Product handleProductStringToProductObject(){
-        String[] values = productComboBox.getValue().split(" ");
-        Products.addFilter("product_name", values[0]);
-        Products.addFilter("size", Integer.parseInt(values[1]));
-        try {
-            return Products.toList(Products.getFilteredData()).get(0);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private boolean validate(){
         if (amountTextField.getText().isEmpty()){
@@ -172,5 +147,6 @@ public class OrderWorkPageController {
             e.printStackTrace();
         }
     }
+
 
 }

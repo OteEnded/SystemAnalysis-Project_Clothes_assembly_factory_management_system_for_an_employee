@@ -35,7 +35,7 @@ public class WorkWrapper {
         this.repair_work = work.isPass() ? getRepair_work() : null;
         this.estimate = work.getEstimated();
         Product product = work.getProduct();
-        this.display_product = product.getName() + " ขนาด " + product.getSize() + "นิ้ว";
+        this.display_product = product.getName() + " ขนาด " + product.getSize() + " นิ้ว";
         this.isPass = work.isPass() ? "ผ่าน" : "ไม่ผ่าน";
     }
 

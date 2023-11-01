@@ -69,7 +69,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="45.0" layoutY="59.0" text="วัตถุดิบที่ใช้ต่อ 1 ชิ้น " textFill="#213555">
+            <Label layoutX="45.0" layoutY="59.0" text="วัตถุดิบที่ใช้ต่อสินค้า 1 ชิ้น" textFill="#213555">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

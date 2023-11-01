@@ -54,7 +54,7 @@
                 </Button>
             </children>
         </VBox>
-        <Text fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="เพิ่มสินค้า">
+        <Text fx:id="headerListView" fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="เพิ่มสินค้า">
             <font>
                 <Font name="System Bold Italic" size="32.0" />
             </font>
@@ -70,8 +70,8 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Text>
-      <TextField layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" styleClass="input-border" />
-      <TextField layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" styleClass="input-border" />
+      <TextField fx:id="productTextField" layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" styleClass="input-border" />
+      <TextField fx:id="sizeTextField" layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" styleClass="input-border" />
       <Text fill="#213555" layoutX="764.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="นิ้ว">
          <font>
             <Font size="16.0" />
@@ -100,7 +100,7 @@
                   <HBox prefHeight="40.0" prefWidth="343.0" spacing="10.0">
                      <children>
                         <ComboBox fx:id="materialNameComboBox" onAction="#handleComboBoxSelected" prefHeight="32.0" prefWidth="180.0" styleClass="input-border" />
-                        <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" textFill="#213555" />
+                        <Button mnemonicParsing="false" onAction="#handleAddMaterialButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" textFill="#213555" />
                      </children>
                   </HBox>
                   <HBox prefHeight="55.0" prefWidth="234.0" spacing="10.0">

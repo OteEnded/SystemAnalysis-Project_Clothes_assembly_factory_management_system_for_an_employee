@@ -29,7 +29,7 @@ public class ProjectApplication extends Application {
         if (!ProjectUtility.connectDB()) return;
 //        DBMigration.migrate(true);
 //        DBSeedAndLoad.seed();
-        DBSeedAndLoad.quickLoad();
+        DBSeedAndLoad.load();
 
         FXRouter.bind(this, stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
         configRoute();

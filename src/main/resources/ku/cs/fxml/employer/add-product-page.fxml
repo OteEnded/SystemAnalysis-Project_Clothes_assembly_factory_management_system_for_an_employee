@@ -54,7 +54,7 @@
                 </Button>
             </children>
         </VBox>
-        <Text fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="เพิ่มสินค้า">
+        <Text fx:id="headerListView" fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="เพิ่มสินค้า">
             <font>
                 <Font name="System Bold Italic" size="32.0" />
             </font>
@@ -70,8 +70,8 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Text>
-      <TextField layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" styleClass="input-border" />
-      <TextField layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" styleClass="input-border" />
+      <TextField fx:id="productTextField" layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" styleClass="input-border" />
+      <TextField fx:id="sizeTextField" layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" styleClass="input-border" />
       <Text fill="#213555" layoutX="764.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="นิ้ว">
          <font>
             <Font size="16.0" />

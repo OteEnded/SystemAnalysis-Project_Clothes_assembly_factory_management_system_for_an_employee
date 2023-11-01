@@ -11,6 +11,7 @@ import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -36,10 +37,12 @@ public class OrderWorkPageController {
     }
 
     @FXML
-    public void handleSubmitButton() throws IOException{
+    public void handleSubmitButton() throws SQLException, ParseException {
         if (validate()) {
             promptLabel.setText("");
-            addWork();
+            if (!addWork()){
+                // pop up
+            }
 
             try {
                 com.github.saacsos.FXRouter.goTo("wait-for-receive");
@@ -50,14 +53,22 @@ public class OrderWorkPageController {
         }
     }
 
-    private void addWork(){
+    private boolean addWork() throws SQLException, ParseException {
         Work work = new Work();
+        work.setStatus(Works.status_waitForAccept);
         work.setWorkType(workTypeComboBox.getValue());
         work.setProduct(handleProductStringToProductObject());
         work.setGoalAmount(Integer.parseInt(amountTextField.getText()));
         work.setDeadline(ProjectUtility.getDate(deadlineDatePicker.getValue()));
         work.setNote(noteTextArea.getText());
-        System.out.println(work);
+
+        if (work.getProduct().getProgressRate() != -1){
+            if (work.getEstimated().equals(Works.estimate_late)){
+                return false;
+            }
+        }
+        work.save();
+        return true;
     }
 
     private Product handleProductStringToProductObject(){

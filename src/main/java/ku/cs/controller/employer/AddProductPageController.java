@@ -69,10 +69,11 @@ public class AddProductPageController {
     public HBox createMaterialList(String name, int amount){
         HBox box = new HBox();
         box.setPadding(new Insets(10, 10, 10, 10));
+        box.setSpacing(10);
         Label label = new Label();
         label.setText(name + "(" + amount + " " + "ชิ้น)");
         Button btn = new Button();
-        btn.setOnMouseClicked(e -> removeMaterialList(name));
+        btn.setOnAction(e -> removeMaterialList(name));
         btn.setText("นำออกจากรายการ");
         btn.getStyleClass().add("white-red-btn");
         box.getChildren().add(label);
@@ -82,8 +83,9 @@ public class AddProductPageController {
     }
 
     public void removeMaterialList(String name) {
+        System.out.println("delete " + name);
         for(HBox box : materialListView.getItems()){
-            String matName = ((Label) box.getChildren().get(0)).getText().split(" ")[0];
+            String matName =  ((Label) box.getChildren().get(0)).getText().split("\\(")[0];
             if(matName.equals(name)){
                 materialListView.getItems().remove(box);
             }
@@ -133,7 +135,7 @@ public class AddProductPageController {
     @FXML
     public void handleOrderWorkButton() throws IOException{
         try {
-            com.github.saacsos.FXRouter.goTo("order");
+            com.github.saacsos.FXRouter.goTo("order",null);
         } catch (Exception e){
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();

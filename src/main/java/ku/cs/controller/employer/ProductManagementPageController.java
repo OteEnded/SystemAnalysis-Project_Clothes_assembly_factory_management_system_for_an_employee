@@ -103,7 +103,7 @@ public class ProductManagementPageController {
     @FXML
     public void handleOrderWorkButton() throws IOException{
         try {
-            com.github.saacsos.FXRouter.goTo("order");
+            com.github.saacsos.FXRouter.goTo("order",null);
         } catch (Exception e){
             System.err.println("ไปหน้า order ไม่ได้");
             e.printStackTrace();

@@ -100,7 +100,7 @@
                   <HBox prefHeight="40.0" prefWidth="343.0" spacing="10.0">
                      <children>
                         <ComboBox fx:id="materialNameComboBox" onAction="#handleComboBoxSelected" prefHeight="32.0" prefWidth="180.0" styleClass="input-border" />
-                        <Button mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" textFill="#213555" />
+                        <Button mnemonicParsing="false" onAction="#handleAddMaterialButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" textFill="#213555" />
                      </children>
                   </HBox>
                   <HBox prefHeight="55.0" prefWidth="234.0" spacing="10.0">

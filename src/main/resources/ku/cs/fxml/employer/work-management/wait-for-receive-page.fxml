@@ -18,7 +18,7 @@
         <Rectangle arcHeight="5.0" fill="#213555" height="720.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="256.0" />
         <VBox layoutX="62.0" prefHeight="720.0" prefWidth="194.0" spacing="20.0">
             <children>
-                <AnchorPane prefHeight="149.0" prefWidth="256.0">
+                <AnchorPane fx:id="detailPane" prefHeight="149.0" prefWidth="256.0">
                     <children>
                         <Text fill="WHITE" layoutX="33.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="โรงงาน">
                             <font>
@@ -96,8 +96,8 @@
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="305.0" layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="469.0" scaleShape="false">
          <columns>
             <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="ประเภทงาน" />
-            <TableColumn fx:id="product" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="สินค้า" />
-            <TableColumn fx:id="quantity" editable="false" minWidth="-Infinity" prefWidth="102.0" resizable="false" sortable="false" text="จำนวน(ตัว)" />
+            <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="สินค้า" />
+            <TableColumn fx:id="goal_amount" editable="false" minWidth="-Infinity" prefWidth="102.0" resizable="false" sortable="false" text="จำนวน(ตัว)" />
             <TableColumn fx:id="deadline" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="กำหนดส่ง" />
          </columns>
          <columnResizePolicy>

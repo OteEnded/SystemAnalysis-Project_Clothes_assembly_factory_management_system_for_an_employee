@@ -47,7 +47,7 @@ public class AbnormalWorkPageController {
         display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
         goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-//        estimate.setCellValueFactory(new PropertyValueFactory<>("estimate"));
+        estimate.setCellValueFactory(new PropertyValueFactory<>("estimate"));
         tableView.setItems(fetchData());
         handleSelectedRow();
     }
@@ -72,8 +72,7 @@ public class AbnormalWorkPageController {
 
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 
-        Works.addFilter("status", Works.status_waitForAccept);
-        HashMap<String, Work> works = Works.getFilteredData();
+        HashMap<String, Work> works = Works.getAbnormalWorks();
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(String workId : works.keySet()) {

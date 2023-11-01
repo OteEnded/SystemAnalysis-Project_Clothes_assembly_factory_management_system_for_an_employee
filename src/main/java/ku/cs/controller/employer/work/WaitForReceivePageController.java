@@ -9,8 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import ku.cs.entity.MaterialUsages;
-import ku.cs.entity.Materials;
+import javafx.scene.text.Text;
 import ku.cs.entity.Products;
 import ku.cs.entity.Works;
 import ku.cs.model.Material;
@@ -38,8 +37,10 @@ public class WaitForReceivePageController {
     @FXML private Label productLabel;
     @FXML private Label deadlineLabel;
     @FXML private Label amountLabel;
-    @FXML private ListView yieldListView;
-    @FXML private ListView materialListView;
+
+    @FXML private Text noteText;
+    @FXML private ListView<String> yieldListView;
+    @FXML private ListView<String> materialListView;
 
     @FXML
     void initialize() throws SQLException {
@@ -74,18 +75,21 @@ public class WaitForReceivePageController {
         productLabel.setText(newValue.getDisplay_product());
         deadlineLabel.setText(newValue.getDeadline().toString());
         amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
-        showYieldListView(newValue.getDisplay_product());
+        showListView(newValue.getDisplay_product());
+        noteText.setText(newValue.getNote());
+
     }
 
-    private void showYieldListView(String value) throws SQLException {
+    private void showListView(String value) throws SQLException {
         Product product = handleProductStringToProductObject(value);
-
         for (MaterialUsage materialUsage : product.getMaterialsUsed()){
             Material material = materialUsage.getMaterial();
+            material.getName();
             yieldListView.getItems().add(material.getName() + " " + materialUsage.getAmount() + " " + materialUsage.getMaterial().getUnitName());
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmount() + " " + materialUsage.getMaterial().getUnitName());
         }
     }
-
+    
     private Product handleProductStringToProductObject(String value){
         String[] values = value.split(" ");
         Products.addFilter("product_name", values[0]);

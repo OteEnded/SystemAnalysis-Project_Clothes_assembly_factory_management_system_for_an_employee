@@ -1,22 +1,55 @@
 package ku.cs.controller.employer;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 import ku.cs.entity.Materials;
+import ku.cs.entity.Products;
 import ku.cs.model.Product;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class ProductManagementPageController {
-    @FXML private ListView<Product> productListView;
-    @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> productListView;
+    @FXML private AnchorPane productDetailPane;
     @FXML private Label productLabel;
+    @FXML private ListView<String> materialListView;
 
     @FXML
     void initialize(){
-        
+        productDetailPane.setVisible(false);
+        try {
+            showListView();
+        } catch (SQLException e) {
+            System.err.println("แสดง Listview ไม่ได้");
+            e.printStackTrace();
+        }
+        handleSelectedListView();
     }
+
+    private void showListView() throws SQLException {
+        for (Product product: Products.getDataAsList()) {
+            productListView.getItems().addAll(product.getName() + " "
+                    + product.getSize() + " นิ้ว");
+        }
+    }
+
+    private void handleSelectedListView(){
+        productListView.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                        productDetailPane.setVisible(true);
+                        productLabel.setText("สินค้าจ้า");
+                    }
+                });
+
+    }
+
 
     @FXML
     public void handleAddProductButton(){

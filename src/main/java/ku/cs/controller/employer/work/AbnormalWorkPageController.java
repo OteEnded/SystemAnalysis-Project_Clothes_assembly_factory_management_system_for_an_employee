@@ -9,7 +9,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import ku.cs.entity.Products;
 import ku.cs.entity.Works;
+import ku.cs.model.Material;
+import ku.cs.model.MaterialUsage;
+import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
@@ -27,14 +32,16 @@ public class AbnormalWorkPageController {
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
     @FXML private TableColumn<WorkWrapper, String> estimate;
 
-    // work detail
+
     @FXML private AnchorPane detailPane;
     @FXML private Label workTypeLabel;
     @FXML private Label productLabel;
     @FXML private Label deadlineLabel;
     @FXML private Label amountLabel;
-    @FXML private ListView yieldListView;
-    @FXML private ListView materialListView;
+
+    @FXML private Text noteText;
+    @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> total_materialListView;
 
 
 
@@ -56,18 +63,50 @@ public class AbnormalWorkPageController {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if(newValue != null) {
-                        showSelectedRow(newValue);
+                        try {
+                            showSelectedRow(newValue);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
         );
     }
 
-    private void showSelectedRow(WorkWrapper newValue) {
+    private void showSelectedRow(WorkWrapper newValue) throws SQLException {
         detailPane.setVisible(true);
         workTypeLabel.setText(newValue.getType());
         productLabel.setText(newValue.getDisplay_product());
         deadlineLabel.setText(newValue.getDeadline().toString());
         amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
+        showListView(newValue.getDisplay_product());
+        noteText.setText(newValue.getNote());
+
+    }
+
+    private void showListView(String value) throws SQLException {
+        materialListView.getItems().clear();
+        total_materialListView.getItems().clear();
+        Product product = handleProductStringToProductObject(value);
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+        for (MaterialUsage materialUsage : product.getMaterialsUsed()){
+            Material material = materialUsage.getMaterial();
+            material.getName();
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
+            total_materialListView.getItems().add(material.getName() + " " + materialUsage.getExpectedMaterialUsedByWork(work) + " " + materialUsage.getMaterial().getUnitName());
+        }
+    }
+
+    private Product handleProductStringToProductObject(String value){
+        String[] values = value.split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[2]));
+        try {
+            return Products.toList(Products.getFilteredData()).get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private ObservableList<WorkWrapper> fetchData() throws SQLException {

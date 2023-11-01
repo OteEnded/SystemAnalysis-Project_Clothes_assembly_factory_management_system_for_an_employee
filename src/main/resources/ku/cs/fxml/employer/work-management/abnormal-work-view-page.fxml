@@ -108,6 +108,7 @@
       <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="400.0" layoutX="813.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
       <AnchorPane fx:id="detailPane" layoutX="813.0" layoutY="166.0" prefHeight="489.0" prefWidth="409.0">
          <children>
+            <Button layoutX="273.0" layoutY="414.0" mnemonicParsing="false" onAction="#handleEditWorkButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="แก้ไชรายละเอียดงาน" />
             <VBox layoutX="27.0" layoutY="28.0" prefHeight="313.0" prefWidth="354.0">
                <children>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -138,7 +139,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox prefHeight="29.0" prefWidth="354.0">
+                  <HBox fx:id="detailAnchorPane1" prefHeight="29.0" prefWidth="354.0">
                      <children>
                         <Label text="กำหนดส่ง :" textFill="#213555">
                            <font>
@@ -182,7 +183,7 @@
                   </HBox>
                   <AnchorPane prefHeight="75.0" prefWidth="354.0">
                      <children>
-                        <ListView layoutX="7.0" layoutY="5.0" prefHeight="58.0" prefWidth="200.0" />
+                        <ListView fx:id="materialListView" layoutX="7.0" layoutY="5.0" prefHeight="58.0" prefWidth="343.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -201,7 +202,7 @@
                   </HBox>
                   <AnchorPane prefHeight="75.0" prefWidth="354.0">
                      <children>
-                        <ListView layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="200.0" />
+                        <ListView fx:id="total_materialListView" layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="343.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -225,16 +226,11 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="60.0" prefWidth="354.0" text="noteLabel" textFill="#213555">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
+                        <Text fx:id="noteText" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="noteText" />
                      </children>
                   </HBox>
                </children>
             </VBox>
-            <Button layoutX="273.0" layoutY="414.0" mnemonicParsing="false" onAction="#handleEditWorkButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="แก้ไชรายละเอียดงาน" />
          </children>
       </AnchorPane>
       <Text fill="#213555" layoutX="813.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="รายการสินค้าทั้งหมด">

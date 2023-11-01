@@ -138,7 +138,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox prefHeight="29.0" prefWidth="354.0">
+                  <HBox fx:id="detailAnchorPane" prefHeight="29.0" prefWidth="354.0">
                      <children>
                         <Label text="กำหนดส่ง :" textFill="#213555">
                            <font>
@@ -182,7 +182,7 @@
                   </HBox>
                   <AnchorPane prefHeight="75.0" prefWidth="354.0">
                      <children>
-                        <ListView layoutX="7.0" layoutY="5.0" prefHeight="58.0" prefWidth="200.0" />
+                        <ListView fx:id="materialListView" layoutX="7.0" layoutY="5.0" prefHeight="58.0" prefWidth="343.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -201,7 +201,7 @@
                   </HBox>
                   <AnchorPane prefHeight="75.0" prefWidth="354.0">
                      <children>
-                        <ListView layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="200.0" />
+                        <ListView fx:id="total_materialListView" layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="343.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -225,11 +225,7 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="60.0" prefWidth="354.0" text="noteLabel" textFill="#213555">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
+                        <Text fx:id="noteText" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="noteText" />
                      </children>
                   </HBox>
                </children>

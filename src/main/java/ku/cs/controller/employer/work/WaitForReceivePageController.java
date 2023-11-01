@@ -39,8 +39,8 @@ public class WaitForReceivePageController {
     @FXML private Label amountLabel;
 
     @FXML private Text noteText;
-    @FXML private ListView<String> yieldListView;
     @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> total_materialListView;
 
     @FXML
     void initialize() throws SQLException {
@@ -49,8 +49,7 @@ public class WaitForReceivePageController {
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
         goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
-        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"))
-        ;
+        deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         tableView.setItems(fetchData());
         handleSelectedRow();
     }
@@ -81,15 +80,22 @@ public class WaitForReceivePageController {
     }
 
     private void showListView(String value) throws SQLException {
+        materialListView.getItems().clear();
+        total_materialListView.getItems().clear();
+        // เรียกข้อมูล
         Product product = handleProductStringToProductObject(value);
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+
+        // เพิ่มช้อมูลเข้าลิสต์
         for (MaterialUsage materialUsage : product.getMaterialsUsed()){
             Material material = materialUsage.getMaterial();
             material.getName();
-            yieldListView.getItems().add(material.getName() + " " + materialUsage.getAmount() + " " + materialUsage.getMaterial().getUnitName());
-            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmount() + " " + materialUsage.getMaterial().getUnitName());
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
+            total_materialListView.getItems().add(material.getName() + " " + materialUsage.getExpectedMaterialUsedByWork(work) + " " + materialUsage.getMaterial().getUnitName());
         }
     }
-    
+
     private Product handleProductStringToProductObject(String value){
         String[] values = value.split(" ");
         Products.addFilter("product_name", values[0]);
@@ -113,7 +119,10 @@ public class WaitForReceivePageController {
             workWrappers.add(workWrapper);
         }
         return workWrappers;
+    }
 
+    @FXML private void handleDeleteWorkButton(){
+        // pop up
     }
 
 

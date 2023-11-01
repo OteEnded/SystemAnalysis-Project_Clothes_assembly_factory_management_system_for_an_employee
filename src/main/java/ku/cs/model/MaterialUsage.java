@@ -95,6 +95,14 @@ public class MaterialUsage implements Row {
         data.put("yield", yield);
     }
 
+    public double getAmountPerYield() {
+        return getAmount() / (double) getYield();
+    }
+
+    public int getExpectedMaterialUsedByWork(Work work) {
+        return (int) Math.ceil(getAmountPerYield() * work.getGoalAmount());
+    }
+
     public void load(int product_id, int material_id) throws SQLException {
         load(EntityUtility.idFormatter(Products.getSqlTable(), product_id), EntityUtility.idFormatter(Materials.getSqlTable(), material_id));
     }

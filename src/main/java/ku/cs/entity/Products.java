@@ -1,5 +1,6 @@
 package ku.cs.entity;
 
+import javafx.scene.paint.Material;
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
@@ -77,7 +78,8 @@ public class Products {
         try {
             PopUpUtility.popUp("loading", "Products (สินค้า)");
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Products[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         HashMap<String, Product> dataFromDB = new HashMap<>();
@@ -90,7 +92,8 @@ public class Products {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Products[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         return dataFromDB;
@@ -158,7 +161,10 @@ public class Products {
         ProjectUtility.debug("Products[delete]: deleting product ->", product);
         if (isNew(product)) throw new RuntimeException("Products[delete]: Can't delete product that is not in database");
         data.remove(getJoinedPrimaryKeys(product));
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
+        int affectedRow = DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
+        Works.load();
+        MaterialUsages.load();
+        return affectedRow;
     }
 
     public static HashMap<String, Object> filter;

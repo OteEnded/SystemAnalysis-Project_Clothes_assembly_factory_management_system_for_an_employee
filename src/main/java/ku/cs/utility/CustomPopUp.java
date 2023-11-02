@@ -23,7 +23,7 @@ public class CustomPopUp {
 
     private static HashMap<String, Boolean> isPositiveClosing = new HashMap<>();
     static {
-        isPositiveClosing.put(PopUpUtility.closeWith_confirm, false);
+        isPositiveClosing.put(PopUpUtility.closeWith_confirm, true);
         isPositiveClosing.put(PopUpUtility.closeWith_exit, false);
         isPositiveClosing.put(PopUpUtility.closeWith_cancel, false);
         isPositiveClosing.put(PopUpUtility.closeWith_ok, true);
@@ -39,6 +39,11 @@ public class CustomPopUp {
         this.key = key;
         this.path = path;
         this.windowTitle = windowTitle;
+    }
+
+    public CustomPopUp(String key, String path) {
+        this.key = key;
+        this.path = path;
     }
 
     public void setKey(String key){
@@ -91,6 +96,13 @@ public class CustomPopUp {
     }
 
     public void popUp(Object passingData) throws IOException {
+
+        if (passingData instanceof HashMap) {
+            HashMap<String, Object> passingDataHashMap = (HashMap<String, Object>) passingData;
+            if (passingDataHashMap.containsKey("windowTitle")) windowTitle = (String) passingDataHashMap.get("windowTitle");
+            if (passingDataHashMap.containsKey("passingData")) passingData = passingDataHashMap.get("passingData");
+        }
+
         this.passingData = passingData;
         popUp();
     }
@@ -101,12 +113,27 @@ public class CustomPopUp {
         PopUpUtility.addPoppingUp(this);
 
         FXMLLoader loader = new FXMLLoader(PopUpUtility.class.getResource(path));
-        ProjectUtility.debug("CustomPopUp[popUp]: loader ->", loader);
-        Parent dialog = loader.load();
+        Parent dialog;
+        try{
+            dialog = loader.load();
+        }
+        catch (Exception e){
+            ProjectUtility.debug("#### CustomPopUp[popUp]: error loading popUp ->", key);
+            ProjectUtility.debug("#### CustomPopUp[popUp]: please check if the path or fxml file is correct ->", path);
+            throw new RuntimeException(e);
+        }
+        if (dialog == null) throw new RuntimeException("CustomPopUp[popUp]: dialog is null");
 
         dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         if (key.equals("loading")) windowTitle = "กำลังโหลด..." + passingData;
+
+        if (passingData != null && passingData instanceof HashMap) {
+            HashMap<String, Object> passingDataMap = (HashMap<String, Object>) passingData;
+            if (passingDataMap.containsKey("headerLabel")) windowTitle = ((String) passingDataMap.get("windowsTitle"));
+        }
+
+        if (windowTitle == null) windowTitle = "โปรดทราบ...";
         dialogStage.setTitle(windowTitle);
         dialogStage.setScene(new Scene(dialog));
 

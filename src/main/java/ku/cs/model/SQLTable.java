@@ -64,8 +64,8 @@ public class SQLTable {
         else{
             for (SQLColumn colum : primaryKeys) {
                 sql += colum.getCreateColum();
-                sql = sql.substring(0, sql.length() - 12);
-                sql += " NOT NULL, ";
+                sql = sql.substring(0, sql.length() - 12) + ", ";
+//                sql += " NOT NULL, ";
             }
         }
         for (SQLColumn colum : columns) {

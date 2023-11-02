@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 import com.github.saacsos.FXRouter;
-import ku.cs.controller.employer.dialogs.DeleteProductDialogController;
 import ku.cs.service.DBSeedAndLoad;
 import ku.cs.utility.CustomPopUp;
 import ku.cs.utility.PopUpUtility;
@@ -41,6 +40,8 @@ public class ProjectApplication extends Application {
 
         FXRouter.goTo("order");
 
+//        PopUpUtility.getPopUp("delete-confirmation").getPassingData();
+
 //        PopUpUtility.popUp("delete-product", "Hello");
 //        PopUpUtility.popUp("save-material");
 //        PopUpUtility.popUp("loading", "testing");
@@ -48,13 +49,13 @@ public class ProjectApplication extends Application {
 
     }
 
-    private static void configPopUpRoute() {
+    public static void configPopUpRoute() {
         String packageStr = "/ku/cs/fxml/";
-        PopUpUtility.addPopUp(new CustomPopUp("delete-product", packageStr + "employer/dialogs/delete-product-dialog.fxml", "ลบสินค้า"));
+        PopUpUtility.addPopUp(new CustomPopUp("delete-confirmation", packageStr + "employer/dialogs/delete-confirmation-dialog.fxml"));
         PopUpUtility.addPopUp(new CustomPopUp("save-material", packageStr + "employer/dialogs/save-material-dialog.fxml", "เพิ่ม-แก้ใขวัตถุดิบ"));
         PopUpUtility.addPopUp(new CustomPopUp("loading", packageStr + "loading-dialog.fxml", "กำลังโหลด..."));
 
-        //        ProjectUtility.debug("PopUpUtility: " + PopUpUtility.getPopUps());
+        // ProjectUtility.debug("PopUpUtility: " + PopUpUtility.getPopUps());
     }
 
     private static void configRoute() {

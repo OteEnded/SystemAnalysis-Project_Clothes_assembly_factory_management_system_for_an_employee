@@ -71,7 +71,8 @@ public class Materials {
         try {
             PopUpUtility.popUp("loading", "Materials (วัตถุดิบ)");
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Materials[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         HashMap<String, Material> dataFromDB = new HashMap<>();
@@ -84,7 +85,8 @@ public class Materials {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Materials[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         return dataFromDB;
@@ -152,7 +154,9 @@ public class Materials {
         ProjectUtility.debug("Materials[delete]: deleting material ->", material);
         if (isNew(material)) throw new RuntimeException("Materials[delete]: Can not delete material that is not in database");
         data.remove(getJoinedPrimaryKeys(material));
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
+        int affectedRow =  DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
+        MaterialUsages.load();
+        return affectedRow;
     }
 
     public static HashMap<String, Object> filter;

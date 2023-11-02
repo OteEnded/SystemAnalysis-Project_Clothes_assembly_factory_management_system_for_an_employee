@@ -17,6 +17,8 @@ public class CustomPopUp {
     private String closeBy;
     private Object passingData;
 
+    private Stage dialogStage;
+
     private boolean positiveClosing = true;
 
     private static HashMap<String, Boolean> isPositiveClosing = new HashMap<>();
@@ -27,6 +29,7 @@ public class CustomPopUp {
         isPositiveClosing.put(PopUpUtility.closeWith_ok, true);
         isPositiveClosing.put(PopUpUtility.closeWith_yes, true);
         isPositiveClosing.put(PopUpUtility.closeWith_no, false);
+        isPositiveClosing.put(PopUpUtility.closeWith_close, true);
     }
 
     public CustomPopUp(){
@@ -79,6 +82,8 @@ public class CustomPopUp {
         return passingData;
     }
 
+/*    public void*/
+
     public void popUp(Object passingData) throws IOException {
         this.passingData = passingData;
         popUp();
@@ -98,18 +103,27 @@ public class CustomPopUp {
         ProjectUtility.debug("CustomPopUp[popUp]: loader ->", loader);
         Parent dialog = loader.load();
 
-        Stage dialogStage = new Stage();
+        dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
+        if (key.equals("loading")) windowTitle += (String) passingData;
         dialogStage.setTitle(windowTitle);
         dialogStage.setScene(new Scene(dialog));
 
-        dialogStage.showAndWait();
+        if (key.equals("loading")) dialogStage.show();
+        else dialogStage.showAndWait();
 
         if (closeBy == null) closeBy = PopUpUtility.closeWith_exit;
 
         positiveClosing = isPositiveClosing.get(closeBy);
         PopUpUtility.removePoppingUp(this);
         ProjectUtility.debug("CustomPopUp[popUp]: closed popUp ->", key, "->", closeBy);
+    }
+
+    public void close(){
+        ProjectUtility.debug("CustomPopUp[close]: closing popUp ->", key);
+        dialogStage.close();
+        if (closeBy == null) closeBy = PopUpUtility.closeWith_close;
+        ProjectUtility.debug("CustomPopUp[close]: closed popUp ->", key);
     }
 
 

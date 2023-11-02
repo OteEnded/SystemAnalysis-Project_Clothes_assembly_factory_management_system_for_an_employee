@@ -2,7 +2,7 @@ package ku.cs.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import ku.cs.utility.CustomPopUp;
 import ku.cs.utility.PopUpUtility;
@@ -14,13 +14,13 @@ public class LoadingDialogController {
     static final CustomPopUp customPopUp = PopUpUtility.getPopUp("loading");
 
     @FXML
-    private TextField textField;
+    private Label loadingEntityLabel;
 
     @FXML
-    private Button okButton;
+    private Button closeButton;
 
     @FXML void initialize() {
-        ProjectUtility.debug(customPopUp.getPassingData());
+        loadingEntityLabel.setText((String) customPopUp.getPassingData());
     }
 
     public void setPopupStage(Stage popupStage) {
@@ -32,16 +32,16 @@ public class LoadingDialogController {
     }
 
     @FXML
-    public void onOKButtonClick() {
+    public void onCloseButtonClick() {
         // Get the input data from the dialog
 //        String userInput = textField.getText(); // Example data retrieval
 
         // Perform some processing with the input
 
-        customPopUp.setCloseBy(PopUpUtility.closeWith_ok);
+        customPopUp.setCloseBy(PopUpUtility.closeWith_close);
 
         // Close the dialog
-        Stage stage = (Stage) okButton.getScene().getWindow();
+        Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
 

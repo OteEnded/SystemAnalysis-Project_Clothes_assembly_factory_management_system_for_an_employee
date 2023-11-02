@@ -8,6 +8,7 @@ import ku.cs.entity.Products;
 import ku.cs.entity.Works;
 import ku.cs.model.Product;
 import ku.cs.model.Work;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
@@ -61,7 +62,10 @@ public class OrderWorkPageController {
     }
 
     @FXML
-    public void handleSubmitButton() throws SQLException, ParseException {
+    public void handleSubmitButton() throws SQLException, ParseException, IOException {
+
+//        PopUpUtility.popUp("loading", "กำลังบันทึกข้อมูล...");
+
         if (validate()) {
             promptLabel.setText("");
             if (!addWork()){

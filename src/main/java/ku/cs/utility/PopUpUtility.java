@@ -7,12 +7,13 @@ import java.util.List;
 
 public class PopUpUtility {
 
-    public static final String closeWith_confirm = "closeWith_confirm";
     public static final String closeWith_exit = "closeWith_exit";
+    public static final String closeWith_confirm = "closeWith_confirm";
     public static final String closeWith_cancel = "closeWith_cancel";
     public static final String closeWith_ok = "closeWith_ok";
     public static final String closeWith_yes = "closeWith_yes";
     public static final String closeWith_no = "closeWith_no";
+    public static final String closeWith_close = "closeWith_close";
 
     private static final HashMap<String, CustomPopUp> popUps = new HashMap<>();
 
@@ -55,13 +56,18 @@ public class PopUpUtility {
     }
 
     public static void popUp(CustomPopUp customPopUp) throws IOException {
-
         popUps.get(customPopUp.getKey()).popUp();
     }
 
     public static void popUp(CustomPopUp customPopUp, Object passData) throws IOException {
-
         popUps.get(customPopUp.getKey()).popUp(passData);
+    }
 
+    public static void close(String key) {
+        close(popUps.get(key));
+    }
+
+    public static void close(CustomPopUp customPopUp) {
+        customPopUp.close();
     }
 }

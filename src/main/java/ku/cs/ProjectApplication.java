@@ -22,6 +22,11 @@ public class ProjectApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, SQLException, ParseException {
 
+        FXRouter.bind(ProjectUtility.getApplicationReference(), stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
+        configRoute();
+
+        configPopUpRoute();
+
         if (!isScreenBigEnoughToShowStage()) return;
 
         ProjectUtility.setMainStage(stage);
@@ -34,16 +39,12 @@ public class ProjectApplication extends Application {
 //        DBSeedAndLoad.seed();
         DBSeedAndLoad.quickLoad();
 
-        FXRouter.bind(ProjectUtility.getApplicationReference(), stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
-        configRoute();
-
-        configPopUpRoute();
-
         FXRouter.goTo("order");
 
 //        PopUpUtility.popUp("delete-product", "Hello");
 //        PopUpUtility.popUp("save-material");
-//        PopUpUtility.popUp("loading");
+//        PopUpUtility.popUp("loading", "testing");
+//        PopUpUtility.close("loading");
 
     }
 

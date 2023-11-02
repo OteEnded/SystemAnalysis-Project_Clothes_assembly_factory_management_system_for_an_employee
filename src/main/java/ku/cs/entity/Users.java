@@ -3,6 +3,7 @@ package ku.cs.entity;
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -67,12 +68,25 @@ public class Users {
 
     // load data from database
     public static HashMap<String, User> load(boolean updateUsers) throws SQLException {
+
+        try {
+            PopUpUtility.popUp("loading", "Users (ผู้ใช้งาน)");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         HashMap<String, User> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new User(sqlRow.getValuesMap()));
         }
         if (updateUsers) data = dataFromDB;
+
+        try {
+            PopUpUtility.close("loading");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         return dataFromDB;
     }
 

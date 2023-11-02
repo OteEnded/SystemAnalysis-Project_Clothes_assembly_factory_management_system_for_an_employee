@@ -34,7 +34,7 @@
 }
 
 .menu-bar-selected {
-    -fx-text-fill: #F3B413;
+    -fx-text-fill: #fff44b;
 }
 
 .table-view .column-header {

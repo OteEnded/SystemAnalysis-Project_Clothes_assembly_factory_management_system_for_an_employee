@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import ku.cs.entity.Materials;
 import ku.cs.model.Material;
+import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,7 +33,13 @@ public class MaterialManagementPageController {
         Button deleteBtn = new Button();
         deleteBtn.setText("ลบวัตถุดิบ");
         deleteBtn.getStyleClass().add("white-red-btn");
-        deleteBtn.setOnAction(e -> handleDeleteMaterialButton(name));
+        deleteBtn.setOnAction(e -> {
+            try {
+                handleDeleteMaterialButton(name);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         Button editBtn = new Button();
         editBtn.setText("แก้ไขวัตถุดิบ");
@@ -46,12 +53,17 @@ public class MaterialManagementPageController {
         return box;
     }
 
-    private void handleDeleteMaterialButton(String name){
-        System.out.println("delete " + name);
+    private void handleDeleteMaterialButton(String name) throws SQLException {
+        ProjectUtility.debug("MaterialManagementPageController[handleDeleteMaterialButton]: trying to delete material ->", getMaterialFromStringName(name));
     }
 
     private void handleEditMaterialButton(String name){
         System.out.println("edit " + name);
+    }
+
+    private Material getMaterialFromStringName(String name) throws SQLException {
+        Materials.addFilter("material_name", name);
+        return Materials.toList(Materials.getFilteredData()).get(0);
     }
 
     // MenuBar Handle

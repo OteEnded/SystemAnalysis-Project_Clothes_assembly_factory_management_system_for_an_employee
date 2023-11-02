@@ -82,17 +82,18 @@ public class CustomPopUp {
         return passingData;
     }
 
-/*    public void*/
-
-    public void popUp(Object passingData) throws IOException {
-        this.passingData = passingData;
-        popUp();
+    public void clearPassingData(){
+        passingData = null;
     }
 
     public boolean isPositiveClosing() {
         return positiveClosing;
     }
 
+    public void popUp(Object passingData) throws IOException {
+        this.passingData = passingData;
+        popUp();
+    }
 
     public void popUp() throws IOException {
         ProjectUtility.debug("CustomPopUp[popUp]: popping up popUp ->", key);
@@ -105,7 +106,7 @@ public class CustomPopUp {
 
         dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
-        if (key.equals("loading")) windowTitle += (String) passingData;
+        if (key.equals("loading")) windowTitle = "กำลังโหลด..." + passingData;
         dialogStage.setTitle(windowTitle);
         dialogStage.setScene(new Scene(dialog));
 
@@ -120,7 +121,12 @@ public class CustomPopUp {
     }
 
     public void close(){
+        close(key.equals("loading"));
+    }
+
+    public void close(boolean clearPassingData){
         ProjectUtility.debug("CustomPopUp[close]: closing popUp ->", key);
+        if (clearPassingData) clearPassingData();
         dialogStage.close();
         if (closeBy == null) closeBy = PopUpUtility.closeWith_close;
         ProjectUtility.debug("CustomPopUp[close]: closed popUp ->", key);

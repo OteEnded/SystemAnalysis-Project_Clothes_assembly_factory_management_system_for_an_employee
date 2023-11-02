@@ -88,7 +88,7 @@ public class Products {
         if (updateBuffer) data = dataFromDB;
 
         try {
-            PopUpUtility.close("loading");
+            PopUpUtility.close("loading", true);
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -47,9 +47,6 @@ public class PopUpUtility {
         poppingUpList.remove(customPopUp);
     }
 
-    public static void popUp(String key, Object passData) throws IOException {
-        popUp(getPopUp(key), passData);
-    }
 
     public static void popUp(String key) throws IOException {
         popUp(getPopUp(key));
@@ -57,6 +54,10 @@ public class PopUpUtility {
 
     public static void popUp(CustomPopUp customPopUp) throws IOException {
         popUps.get(customPopUp.getKey()).popUp();
+    }
+
+    public static void popUp(String key, Object passData) throws IOException {
+        popUp(getPopUp(key), passData);
     }
 
     public static void popUp(CustomPopUp customPopUp, Object passData) throws IOException {
@@ -69,5 +70,13 @@ public class PopUpUtility {
 
     public static void close(CustomPopUp customPopUp) {
         customPopUp.close();
+    }
+
+    public static void close(String key, boolean clearPassingData) {
+        close(popUps.get(key), clearPassingData);
+    }
+
+    public static void close(CustomPopUp customPopUp, boolean clearPassingData) {
+        customPopUp.close(clearPassingData);
     }
 }

@@ -37,7 +37,7 @@ public class ProjectApplication extends Application {
         if (!ProjectUtility.connectDB()) return;
 //        DBMigration.migrate(true);
 //        DBSeedAndLoad.seed();
-        DBSeedAndLoad.load();
+        DBSeedAndLoad.quickLoad();
 
         FXRouter.goTo("order");
 

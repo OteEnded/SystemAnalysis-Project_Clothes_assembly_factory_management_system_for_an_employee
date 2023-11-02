@@ -33,6 +33,10 @@
     -fx-underline: true;
 }
 
+.menu-bar-selected {
+    -fx-text-fill: #F3B413;
+}
+
 .table-view .column-header {
     -fx-background-color: #213555;
     -fx-pref-height: 48px;

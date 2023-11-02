@@ -25,7 +25,6 @@
                                 <Font name="System Bold Italic" size="16.0" />
                             </font>
                         </Text>
-                        <Button layoutX="-11.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="25.0" prefWidth="127.0" styleClass="menu-bar" text="ออกจากระบบ" />
                     </children>
                 </AnchorPane>
                 <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="สั่งงาน">
@@ -49,7 +48,7 @@
                     </font>
                     <styleClass>
                         <String fx:value="menu-bar" />
-                        <String fx:value="bold-text" />
+                        <String fx:value="menu-bar-selected" />
                     </styleClass>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#handleWaitForReceiveButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="• งานที่รอลูกจ้างรับ">
@@ -63,7 +62,7 @@
                     </font>
                <styleClass>
                   <String fx:value="menu-bar" />
-                  <String fx:value="bold-text" />
+                  <String fx:value="menu-bar-selected" />
                </styleClass>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#handleMaterialPreparationButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="• งานที่ต้องส่งวัตถุดิบ">
@@ -233,7 +232,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <Text fill="#213555" layoutX="813.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="รายการสินค้าทั้งหมด">
+      <Text fill="#213555" layoutX="813.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="ข้อมูลงานที่เลือก">
          <font>
             <Font name="System Bold Italic" size="20.0" />
          </font>

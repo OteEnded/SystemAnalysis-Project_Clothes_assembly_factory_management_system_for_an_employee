@@ -5,7 +5,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import ku.cs.service.DBSeedAndLoad;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -191,12 +189,20 @@ public class ProjectUtility {
     }
 
 
-    private static Stage stage;
-    public static void setStage(Stage s){
-        stage = s;
+    private static Stage mainStage;
+    public static void setMainStage(Stage s){
+        mainStage = s;
     }
-    public static Stage getStage(){
-        return stage;
+    public static Stage getMainStage(){
+        return mainStage;
+    }
+
+    private static Object applicationReference;
+    public static void setApplicationReference(Object ar){
+        applicationReference = ar;
+    }
+    public static Object getApplicationReference(){
+        return applicationReference;
     }
 
 }

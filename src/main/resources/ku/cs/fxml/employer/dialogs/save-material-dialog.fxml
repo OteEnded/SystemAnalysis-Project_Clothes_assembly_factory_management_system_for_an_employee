@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="300" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.fxml.employer.dialogs.AddMaterialDialogController">
+<AnchorPane prefHeight="300" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employer.dialogs.SaveMaterialDialogController">
    <children>
       <Label layoutX="67.0" layoutY="64.0" styleClass="bold-text" text="เพิ่มวัตถุดิบ" textFill="#172b4d">
          <font>

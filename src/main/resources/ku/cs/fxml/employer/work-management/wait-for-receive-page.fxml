@@ -107,7 +107,7 @@
       <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="400.0" layoutX="813.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
       <AnchorPane fx:id="detailPane" layoutX="813.0" layoutY="166.0" prefHeight="496.0" prefWidth="409.0">
          <children>
-            <Button layoutX="257.0" layoutY="416.0" mnemonicParsing="false" onAction="#handleCheckedPassButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-red-btn" text="ลบงาน" />
+            <Button layoutX="257.0" layoutY="416.0" mnemonicParsing="false" onAction="#handleDeleteWorkButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-red-btn" text="ลบงาน" />
             <VBox layoutX="27.0" layoutY="28.0" prefHeight="313.0" prefWidth="354.0">
                <children>
                   <HBox prefHeight="29.0" prefWidth="354.0">

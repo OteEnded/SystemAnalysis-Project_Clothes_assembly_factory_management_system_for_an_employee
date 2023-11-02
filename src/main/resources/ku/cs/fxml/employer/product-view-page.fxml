@@ -82,7 +82,7 @@
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Text>
-      <Button layoutX="987.0" layoutY="398.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
+      <Button layoutX="987.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleEditProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
       <Button layoutX="1110.0" layoutY="397.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
       <Button layoutX="301.0" layoutY="575.0" mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มสินค้า" />
       <ListView fx:id="productListView" layoutX="300.0" layoutY="137.0" prefHeight="418.0" prefWidth="469.0" />

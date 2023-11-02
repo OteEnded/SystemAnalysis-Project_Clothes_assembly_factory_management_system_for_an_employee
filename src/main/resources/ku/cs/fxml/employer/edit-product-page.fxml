@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employer.EditProductPageController">
+    <children>
+        <Rectangle arcHeight="5.0" fill="#213555" height="720.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="256.0" />
+        <VBox layoutX="62.0" prefHeight="720.0" prefWidth="194.0" spacing="20.0">
+            <children>
+                <AnchorPane prefHeight="149.0" prefWidth="256.0">
+                    <children>
+                        <Text fill="WHITE" layoutX="33.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="โรงงาน">
+                            <font>
+                                <Font name="System Bold Italic" size="16.0" />
+                            </font>
+                        </Text>
+                    </children>
+                </AnchorPane>
+                <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="สั่งงาน">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#handleProductManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" text="รายการสินค้า">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                    <styleClass>
+                        <String fx:value="menu-bar" />
+                        <String fx:value="bold-text" />
+                    </styleClass>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#handleMaterialManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="จัดการวัตถุดิบ">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#handleWorkManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="งานที่สั่ง">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Button>
+            </children>
+        </VBox>
+        <Text fx:id="headerListView" fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="แก้ไขสินค้า">
+            <font>
+                <Font name="System Bold Italic" size="32.0" />
+            </font>
+        </Text>
+        <Button layoutX="303.0" layoutY="580.0" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="บันทึก" />
+        <Text fill="#213555" layoutX="305.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="รูปแบบสินค้า">
+            <font>
+                <Font name="System Bold Italic" size="20.0" />
+            </font>
+        </Text>
+        <Text fill="#213555" layoutX="574.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ขนาด">
+            <font>
+                <Font name="System Bold Italic" size="20.0" />
+            </font>
+        </Text>
+        <TextField fx:id="productTextField" layoutX="305.0" layoutY="167.0" prefHeight="36.0" prefWidth="219.0" styleClass="input-border" />
+        <TextField fx:id="sizeTextField" layoutX="574.0" layoutY="166.0" prefHeight="36.0" prefWidth="177.0" styleClass="input-border" />
+        <Text fill="#213555" layoutX="764.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="นิ้ว">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Text fill="#213555" layoutX="305.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="วัตถุดิบที่ใช้">
+            <font>
+                <Font name="System Bold Italic" size="20.0" />
+            </font>
+        </Text>
+        <Text fill="#213555" layoutX="306.0" layoutY="275.0" strokeType="OUTSIDE" strokeWidth="0.0" text="กรอกข้อมูลวัตถุดิบด้านซ้ายมือเพื่อใส่ในรายการวัตถุดิบด้านขวามือ">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="268.0" layoutX="303.0" layoutY="301.0" stroke="#213555" strokeType="INSIDE" width="325.0" />
+        <AnchorPane layoutX="305.0" layoutY="301.0" prefHeight="268.0" prefWidth="265.0">
+            <children>
+                <VBox layoutX="16.0" layoutY="15.0" prefHeight="253.0" prefWidth="343.0" spacing="5.0">
+                    <children>
+                        <Label text="ชื่อวัตถุดิบ" textFill="#213555">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <HBox prefHeight="40.0" prefWidth="343.0" spacing="10.0">
+                            <children>
+                                <ComboBox fx:id="materialNameComboBox" onAction="#handleComboBoxSelected" prefHeight="32.0" prefWidth="180.0" styleClass="input-border" />
+                                <Button mnemonicParsing="false" onAction="#handleAddMaterialButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="เพิ่มวัตถุดิบใหม่" textFill="#213555" />
+                            </children>
+                        </HBox>
+                        <HBox prefHeight="55.0" prefWidth="234.0" spacing="10.0">
+                            <children>
+                                <VBox prefHeight="64.0" prefWidth="127.0">
+                                    <children>
+                                        <Label text="จำนวน" textFill="#213555">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <TextField fx:id="amountTextField" prefHeight="36.0" prefWidth="129.0" styleClass="input-border" />
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="100.0" prefWidth="135.0" spacing="5.0">
+                                    <children>
+                                        <Label text="หน่วย" textFill="#213555">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Text fx:id="unitText" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="unitText">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Text>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <Label text="ต่อ สินค้า" textFill="#213555">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <HBox prefHeight="47.0" prefWidth="343.0" spacing="10.0">
+                            <children>
+                                <TextField fx:id="yieldTextField" prefHeight="36.0" prefWidth="108.0" styleClass="input-border" />
+                                <Text fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="ตัว">
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Text>
+                            </children>
+                        </HBox>
+                        <Button mnemonicParsing="false" onAction="#handleAddMaterialToProductButton" prefHeight="34.0" prefWidth="148.0" styleClass="white-btn" text="เพิ่มในรายการวัตถุดิบ -&gt;" textFill="#213555" />
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+        <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="674.0" layoutY="322.0" stroke="#213555" strokeType="INSIDE" width="420.0" />
+        <AnchorPane layoutX="674.0" layoutY="322.0" prefHeight="219.0" prefWidth="265.0">
+            <children>
+                <VBox layoutX="16.0" layoutY="15.0" prefHeight="189.0" prefWidth="381.0" spacing="5.0">
+                    <children>
+                        <Label styleClass="bold-text" text="รายการวัตถุดิบ" textFill="#213555">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <ListView fx:id="materialListView" prefHeight="166.0" prefWidth="405.0" />
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>

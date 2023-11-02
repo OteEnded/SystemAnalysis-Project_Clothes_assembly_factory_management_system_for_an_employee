@@ -73,12 +73,11 @@ public class ProductManagementPageController {
     private void showMaterialListView(Product product) throws SQLException {
         materialListView.getItems().clear();
         List<MaterialUsage> materialUsages = product.getMaterialsUsed();
-        ProjectUtility.debug(materialUsages);
+        ProjectUtility.debug("ProductManagementPageController[showMaterialListView]: selected listView ->", product);
         for (MaterialUsage materialUsage : materialUsages) {
-            materialListView.getItems().add(materialUsage.getMaterial().getName());
+            materialListView.getItems().add(materialUsage.getMaterial().getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
         }
     }
-
 
     @FXML
     public void handleAddProductButton(){
@@ -86,6 +85,18 @@ public class ProductManagementPageController {
             com.github.saacsos.FXRouter.goTo("add-product");
         } catch (Exception e){
             System.err.println("ไปหน้า add product ไม่ได้");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleEditProductButton(){
+        try {
+            Product product = handleProductStringToProductObject(productListView.getSelectionModel().getSelectedItem());
+            com.github.saacsos.FXRouter.goTo("edit-product", product);
+
+        } catch (Exception e){
+            System.err.println("ไปหน้า edit product ไม่ได้");
             e.printStackTrace();
         }
     }

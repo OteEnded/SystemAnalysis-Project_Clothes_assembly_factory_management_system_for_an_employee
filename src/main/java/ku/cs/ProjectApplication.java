@@ -32,7 +32,7 @@ public class ProjectApplication extends Application {
         if (!ProjectUtility.connectDB()) return;
 //        DBMigration.migrate(true);
 //        DBSeedAndLoad.seed();
-        DBSeedAndLoad.quickLoad();
+        DBSeedAndLoad.load();
 
         FXRouter.bind(ProjectUtility.getApplicationReference(), stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
         configRoute();
@@ -58,9 +58,6 @@ public class ProjectApplication extends Application {
 
     private static void configRoute() {
         String packageStr = "ku/cs/fxml/";
-
-        FXRouter.when("delete-product", packageStr + "employer/dialogs/delete-product-dialog.fxml");
-
         FXRouter.when("home", packageStr + "home-page.fxml");
         FXRouter.when("order", packageStr + "employer/order-page.fxml");
         FXRouter.when("product-manage", packageStr + "employer/product-view-page.fxml");
@@ -72,6 +69,8 @@ public class ProjectApplication extends Application {
         FXRouter.when("work-in-progress", packageStr + "employer/work-management/work-in-progress-view-page.fxml");
         FXRouter.when("review-work", packageStr + "employer/work-management/review-work-page.fxml");
         FXRouter.when("complete-work", packageStr + "employer/work-management/complete-work-view-page.fxml");
+        FXRouter.when("edit-work", packageStr + "employer/edit-work-page.fxml");
+        FXRouter.when("edit-product",packageStr + "employer/edit-product-page.fxml");
 
         FXRouter.when("received-work", packageStr + "employee/received-work-page.fxml");
         FXRouter.when("waiting-for-material-work", packageStr + "employee/waiting-for-material-work-page.fxml");

@@ -23,6 +23,5 @@ public class Example2_Product {
         HashMap<String, Product> filteredProducts = new HashMap<>();
         Products.addFilter("name", "test");
 
-
     }
 }

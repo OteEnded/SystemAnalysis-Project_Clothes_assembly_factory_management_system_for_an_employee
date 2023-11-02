@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AddProductPageController {
+public class EditProductPageController {
 
     @FXML private ListView<HBox> materialListView;
 
@@ -37,11 +37,15 @@ public class AddProductPageController {
 
 
     @FXML void initialize() throws SQLException {
+        Product product = (Product) com.github.saacsos.FXRouter.getData();
+        productTextField.setText(product.getName());
+        sizeTextField.setText(String.valueOf(product.getSize()));
         for (Material materials : Materials.getDataAsList()){
             materialNameComboBox.getItems().addAll(materials.getName());
         }
         unitText.setText("");
         yieldTextField.setText("1");
+        initMaterialList(product);
     }
 
     @FXML public void handleComboBoxSelected(){
@@ -55,16 +59,8 @@ public class AddProductPageController {
         Materials.addFilter("material_name", materialNameComboBox.getValue());
         HashMap<String, Object> filter = Materials.getFilter();
         try {
-            ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: getting materials filter by material_name ->", materialNameComboBox.getValue());
-            Materials.getFilteredData();
-            if (Materials.getFilteredData().isEmpty()) ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: cannot fine material with filter by material_name ->", materialNameComboBox.getValue());
-            ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: list of filtered material -> ", Materials.toList(Materials.getFilteredData(filter)));
-
-            ProjectUtility.debug("materialNameComboBox.getValue():", materialNameComboBox.getValue());
-            ProjectUtility.debug("Materials.getFilteredData(filter):", Materials.getFilteredData(filter));
-            ProjectUtility.debug("Materials.toList(Materials.getFilteredData(filter)):", Materials.toList(Materials.getFilteredData(filter)));
-            ProjectUtility.debug("Materials.toList(Materials.getFilteredData(filter)).get(0):", Materials.toList(Materials.getFilteredData(filter)).get(0));
-
+            if (Materials.getFilteredData().isEmpty()) ProjectUtility.debug("EditProductPageController[handleMaterialStringToMaterialObject]: cannot fine material with filter by material_name ->", materialNameComboBox.getValue());
+            ProjectUtility.debug("EditProductPageController[handleMaterialStringToMaterialObject]: list of filtered material -> ", Materials.toList(Materials.getFilteredData(filter)));
             return Materials.toList(Materials.getFilteredData(filter)).get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -75,10 +71,7 @@ public class AddProductPageController {
         Materials.addFilter("material_name", values);
         HashMap<String, Object> filter = Materials.getFilter();
         try {
-            ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: getting materials filter by material_name ->", values);
-            if (Materials.getFilteredData().isEmpty()) ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: cannot fine material with filter by material_name ->", values);
-            ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: list of filtered material -> ", Materials.toList(Materials.getFilteredData(filter)));
-
+//            System.out.println(Materials.toList(Materials.getFilteredData(filter)));
             return Materials.toList(Materials.getFilteredData(filter)).get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -102,12 +95,20 @@ public class AddProductPageController {
         return box;
     }
 
+    private void initMaterialList(Product product) throws SQLException {
+        for (MaterialUsage materialUsage : product.getMaterialsUsed()){
+            HBox box = createMaterialList(materialUsage.getMaterial().getName(), materialUsage.getAmount(), materialUsage.getYield());
+            materialListView.getItems().add(box);
+            materialListView.refresh();
+        }
+    }
+
     public void removeMaterialList(String name) {
         try {
             for(HBox box : materialListView.getItems()){
                 String materialName =  ((Label) box.getChildren().get(0)).getText().split(" \\(")[0];
                 if(name.startsWith(materialName)){
-                    ProjectUtility.debug("AddProductPageController[removeMaterialList]: removing material use list for materialName ->", materialName);
+                    ProjectUtility.debug("EditProductPageController[removeMaterialList]: removing material use list for materialName ->", materialName);
                     materialListView.getItems().remove(box);
                 }
             }
@@ -134,6 +135,7 @@ public class AddProductPageController {
 
         int amount = Integer.parseInt(amountTextField.getText());
         int yield = Integer.parseInt(yieldTextField.getText());
+
         HBox box = createMaterialList(materialName, amount, yield);
         materialListView.getItems().add(box);
         materialListView.refresh();
@@ -142,15 +144,14 @@ public class AddProductPageController {
         amountTextField.setText("");
     }
     @FXML
-    public void handleAddProductButton() throws SQLException, ParseException {
+    public void handleSubmitButton() throws SQLException, ParseException {
         try {
-            Product product = new Product();
+            Product product = (Product) com.github.saacsos.FXRouter.getData();
             product.setName(productTextField.getText());
             product.setSize(Integer.parseInt(sizeTextField.getText()));
-            product.save();
 
-            MaterialUsage materialUsage = new MaterialUsage();
-            materialUsage.setProduct(product);
+            List<String> deletingMaterialUsageList = new ArrayList<>();
+            for (MaterialUsage materialUsage: product.getMaterialsUsed()) deletingMaterialUsageList.add(MaterialUsages.getJoinedPrimaryKeys(materialUsage));
 
             for (String stringFromHBoxListview: getSelectedMaterialUseListFromHBoxListView()) { // HBox hbox: materialListView.getItems()){
                 String material_name = stringFromHBoxListview.split(" \\(")[0];
@@ -161,12 +162,21 @@ public class AddProductPageController {
                 String yieldStr = stringFromHBoxListview.split("ต่อสินค้า ")[1];
                 yieldStr = yieldStr.split(" ตัว")[0];
 
-                ProjectUtility.debug("AddProductPageController[handleSubmitButton]: adding material usage for product ->", product);
-                ProjectUtility.debug("AddProductPageController[handleSubmitButton]: with material, amount, yield ->", material_name, amountStr, yieldStr);
+                ProjectUtility.debug("EditProductPageController[handleSubmitButton]: adding material usage for product ->", product);
+                ProjectUtility.debug("EditProductPageController[handleSubmitButton]: with material, amount, yield ->", material_name, amountStr, yieldStr);
 
                 product.saveMaterialUsed(handleMaterialStringToMaterialObject(material_name), Integer.parseInt(amountStr), Integer.parseInt(yieldStr));
-                com.github.saacsos.FXRouter.goTo("product-manage");
+                deletingMaterialUsageList.remove(String.join("|", product.getId(), handleMaterialStringToMaterialObject(material_name).getId()));
             }
+
+            ProjectUtility.debug("EditProductPageController[handleSubmitButton]: deletingMaterialUsageList ->", deletingMaterialUsageList);
+
+            for (String primaryKey: deletingMaterialUsageList){
+                MaterialUsages.getData().get(primaryKey).delete();
+            }
+
+            product.save();
+            com.github.saacsos.FXRouter.goTo("product-manage");
         } catch (Exception e){
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
@@ -175,9 +185,7 @@ public class AddProductPageController {
 
     private List<String> getSelectedMaterialUseListFromHBoxListView(){
         List<String> selectedMaterialUseHBoxList = new ArrayList<>();
-        for (HBox hbox: materialListView.getItems()){
-            selectedMaterialUseHBoxList.add(((Label) hbox.getChildren().get(0)).getText());
-        }
+        for (HBox hbox: materialListView.getItems()) selectedMaterialUseHBoxList.add(((Label) hbox.getChildren().get(0)).getText());
 
         return selectedMaterialUseHBoxList;
     }

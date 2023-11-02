@@ -22,7 +22,6 @@
                                 <Font name="System Bold Italic" size="16.0" />
                             </font>
                         </Text>
-                        <Button layoutX="-11.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="25.0" prefWidth="127.0" styleClass="menu-bar" text="ออกจากระบบ" />
                     </children>
                 </AnchorPane>
                 <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: left;" styleClass="menu-bar" text="สั่งงาน">
@@ -36,7 +35,7 @@
                     </font>
                <styleClass>
                   <String fx:value="menu-bar" />
-                  <String fx:value="bold-text" />
+                  <String fx:value="menu-bar-selected" />
                </styleClass>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#handleMaterialManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: left;" styleClass="menu-bar" text="จัดการวัตถุดิบ">
@@ -56,9 +55,11 @@
                 <Font name="System Bold Italic" size="32.0" />
             </font>
         </Text>
-      <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="803.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
-      <AnchorPane fx:id="productDetailPane" layoutX="803.0" layoutY="166.0" prefHeight="219.0" prefWidth="409.0">
+      <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="333.0" layoutX="803.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
+      <AnchorPane fx:id="productDetailPane" layoutX="803.0" layoutY="166.0" prefHeight="393.0" prefWidth="409.0">
          <children>
+            <Button layoutX="180.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleEditProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
+            <Button layoutX="292.0" layoutY="348.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
             <Label layoutX="46.0" layoutY="36.0" text="สินค้า : " textFill="#213555">
                <font>
                   <Font name="System Bold" size="14.0" />
@@ -69,21 +70,29 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Label layoutX="45.0" layoutY="59.0" text="วัตถุดิบที่ใช้ต่อ 1 ชิ้น " textFill="#213555">
+            <Label layoutX="46.0" layoutY="85.0" text="วัตถุดิบที่ใช้ต่อสินค้า 1 ชิ้น" textFill="#213555">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ListView fx:id="materialListView" layoutX="46.0" layoutY="86.0" prefHeight="102.0" prefWidth="246.0" />
+            <ListView fx:id="materialListView" layoutX="47.0" layoutY="112.0" prefHeight="188.0" prefWidth="319.0" />
+            <Label layoutX="47.0" layoutY="59.0" text="ขนาด :" textFill="#213555">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="sizeLabel" layoutX="87.0" layoutY="59.0" text="sizeLabel" textFill="#213555">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
-      <Text fill="#213555" layoutX="803.0" layoutY="129.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="รายการสินค้าทั้งหมด">
+      <Text fill="#213555" layoutX="803.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="ข้อมูลของสินค้าที่เลือก">
          <font>
             <Font name="System Bold Italic" size="20.0" />
          </font>
       </Text>
-      <Button layoutX="987.0" layoutY="398.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
-      <Button layoutX="1110.0" layoutY="397.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
       <Button layoutX="301.0" layoutY="575.0" mnemonicParsing="false" onAction="#handleAddProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="+ เพิ่มสินค้า" />
       <ListView fx:id="productListView" layoutX="300.0" layoutY="137.0" prefHeight="418.0" prefWidth="469.0" />
     </children>

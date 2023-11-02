@@ -3,6 +3,7 @@ package ku.cs.entity;
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -67,12 +68,25 @@ public class Users {
 
     // load data from database
     public static HashMap<String, User> load(boolean updateUsers) throws SQLException {
+
+        try {
+            PopUpUtility.popUp("loading", "Users (ผู้ใช้งาน)");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         HashMap<String, User> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new User(sqlRow.getValuesMap()));
         }
         if (updateUsers) data = dataFromDB;
+
+        try {
+            PopUpUtility.close("loading", true);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         return dataFromDB;
     }
 
@@ -168,6 +182,10 @@ public class Users {
         for (User user: getData().values()) {
             boolean isFiltered = true;
             for (String column: filter.keySet()) {
+                if (user.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if(!user.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;
@@ -185,19 +203,28 @@ public class Users {
     }
 
     public static List<User> getSortedBy(String column, HashMap<String, User> data) throws SQLException {
-        ProjectUtility.debug("Users[getSortedBy]: getting data sorted by ->", column);
-        if (data == null) throw new RuntimeException("Users[getSortedBy]: data is null, Please load data first or get all data without filter using -> Users.getData()");
-        List<String> sortedValues = new ArrayList<String>();
-        for (User user : data.values()) {
-            sortedValues.add(user.getData().get(column).toString());
-        }
-        Collections.sort(sortedValues);
-        ProjectUtility.debug("Users[getSortedBy]: sorted target ->", sortedValues);
-        List<User> sortedUsers = new ArrayList<>();
-        for (String sortedValue : sortedValues) {
-            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-            sortedUsers.addAll(getFilteredData().values());
-        }
-        return sortedUsers;
+//        ProjectUtility.debug("Users[getSortedBy]: getting data sorted by ->", column);
+//        if (data == null) throw new RuntimeException("Users[getSortedBy]: data is null, Please load data first or get all data without filter using -> Users.getData()");
+//        List<String> sortedValues = new ArrayList<String>();
+//        for (User user : data.values()) {
+//            sortedValues.add(user.getData().get(column).toString());
+//        }
+//        Collections.sort(sortedValues);
+//        ProjectUtility.debug("Users[getSortedBy]: sorted target ->", sortedValues);
+//        List<User> sortedUsers = new ArrayList<>();
+//        for (String sortedValue : sortedValues) {
+//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+//            sortedUsers.addAll(getFilteredData().values());
+//        }
+//        return sortedUsers;
+        List<User> users = toList(data);
+        users.sort((o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (RuntimeException e) {
+                return 0;
+            }
+        });
+        return users;
     }
 }

@@ -32,7 +32,7 @@ public class Example1_SetUp {
         if you want to drop all table before migrate, set this to true
         (to clear all data before do testing)
         */
-        boolean wantToDropAllTable = false;
+        boolean wantToDropAllTable = true;
 
         // use DBMigration.migrate() to migrate database
         DBMigration.migrate(wantToDropAllTable);
@@ -65,7 +65,8 @@ public class Example1_SetUp {
     /**
      * you can test your code here
      */
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException, ParseException {
+        migrateDB();
+        seedDB();
     }
 }

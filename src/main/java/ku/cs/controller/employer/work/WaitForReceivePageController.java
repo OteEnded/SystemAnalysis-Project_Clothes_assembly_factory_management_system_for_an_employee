@@ -9,7 +9,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import ku.cs.entity.Products;
 import ku.cs.entity.Works;
+import ku.cs.model.Material;
+import ku.cs.model.MaterialUsage;
+import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
@@ -27,24 +32,24 @@ public class WaitForReceivePageController {
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
 
     // work detail
-//    @FXML private AnchorPane detailPane;
-//    @FXML private Label workTypeLabel;
-//    @FXML private Label productLabel;
-//    @FXML private Label deadlineLabel;
-//    @FXML private Label amountLabel;
-//    @FXML private ListView yieldListView;
-//    @FXML private ListView materialListView;
+    @FXML private AnchorPane detailPane;
+    @FXML private Label workTypeLabel;
+    @FXML private Label productLabel;
+    @FXML private Label deadlineLabel;
+    @FXML private Label amountLabel;
 
+    @FXML private Text noteText;
+    @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> total_materialListView;
 
     @FXML
     void initialize() throws SQLException {
-//        detailPane.setVisible(false);
+        detailPane.setVisible(false);
         // Bez code
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
         goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-
         tableView.setItems(fetchData());
         handleSelectedRow();
     }
@@ -52,17 +57,72 @@ public class WaitForReceivePageController {
     private void handleSelectedRow() {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    showSelectedRow(newValue);
+                    if(newValue != null) {
+                        try {
+                            showSelectedRow(newValue);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
                 }
         );
     }
 
-    private void showSelectedRow(WorkWrapper newValue) {
-//        detailPane.setVisible(true);
-//        workTypeLabel.setText(newValue.getType());
-//        productLabel.setText(newValue.getProduct());
-//        deadlineLabel.setText(newValue.getDeadline().toString());
-//        amountLabel.setText(String.valueOf(newValue.getQuantity()));
+    private void showSelectedRow(WorkWrapper newValue) throws SQLException {
+        detailPane.setVisible(true);
+        workTypeLabel.setText(newValue.getType());
+        productLabel.setText(newValue.getDisplay_product());
+        deadlineLabel.setText(newValue.getDeadline().toString());
+        amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
+        showListView(newValue.getDisplay_product());
+        noteText.setText(newValue.getNote());
+
+    }
+
+    private void showListView(String value) throws SQLException {
+        materialListView.getItems().clear();
+        total_materialListView.getItems().clear();
+        // เรียกข้อมูล
+        Product product = handleProductStringToProductObject(value);
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+
+        // เพิ่มช้อมูลเข้าลิสต์
+        for (MaterialUsage materialUsage : product.getMaterialsUsed()){
+            Material material = materialUsage.getMaterial();
+            material.getName();
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
+            total_materialListView.getItems().add(material.getName() + " " + materialUsage.getExpectedMaterialUsedByWork(work) + " " + materialUsage.getMaterial().getUnitName());
+        }
+    }
+
+    private Product handleProductStringToProductObject(String value){
+        String[] values = value.split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[2]));
+        try {
+            return Products.toList(Products.getFilteredData()).get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.addFilter("status", Works.status_waitForAccept);
+        HashMap<String, Work> works = Works.getFilteredData();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
+    }
+
+    @FXML private void handleDeleteWorkButton(){
+        // pop up
     }
 
 
@@ -79,7 +139,7 @@ public class WaitForReceivePageController {
     @FXML
     public void handleOrderWorkButton() throws IOException{
         try {
-            com.github.saacsos.FXRouter.goTo("order");
+            com.github.saacsos.FXRouter.goTo("order",null);
         } catch (Exception e){
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
@@ -165,19 +225,5 @@ public class WaitForReceivePageController {
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
         }
-    }
-
-    private ObservableList<WorkWrapper> fetchData() throws SQLException {
-
-        Works.addFilter("status", Works.status_waitForAccept);
-        HashMap<String, Work> works = Works.getFilteredData();
-
-        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
-        for(String workId : works.keySet()) {
-            Work work = works.get(workId);
-            WorkWrapper workWrapper = new WorkWrapper(work);
-            workWrappers.add(workWrapper);
-        }
-        return workWrappers;
     }
 }

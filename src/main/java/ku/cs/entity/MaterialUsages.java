@@ -3,6 +3,7 @@ package ku.cs.entity;
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -82,12 +83,26 @@ public class MaterialUsages {
 
     // load data from database
     public static HashMap<String, MaterialUsage> load(boolean updateBuffer) throws SQLException {
+
+        try {
+            PopUpUtility.popUp("loading", "MaterialUsages (การใช้วัตถุดิบ)");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         HashMap<String, MaterialUsage> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new MaterialUsage(sqlRow.getValuesMap()));
         }
         if (updateBuffer) data = dataFromDB;
+
+        try {
+            PopUpUtility.close("loading", true);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         return dataFromDB;
     }
 
@@ -165,9 +180,13 @@ public class MaterialUsages {
         if (filter == null) throw new RuntimeException("MaterialUsages[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> MaterialUsages.getData()");
         if (data == null) load();
         HashMap<String, MaterialUsage> filteredData = new HashMap<>();
-        for (MaterialUsage materialUsage : data.values()) {
+        for (MaterialUsage materialUsage : getData().values()) {
             boolean isFiltered = true;
             for (String column : filter.keySet()) {
+                if (materialUsage.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if (!materialUsage.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;
@@ -185,19 +204,28 @@ public class MaterialUsages {
     }
 
     public static List<MaterialUsage> getSortedBy(String column, HashMap<String, MaterialUsage> data) throws SQLException {
-        ProjectUtility.debug("MaterialUsages[getSortedBy]: getting data sorted by ->", column);
-        if (data == null) throw new RuntimeException("MaterialUsages[getSortedBy]: data is null, Please set data first or get all data without filter using -> MaterialUsages.getData()");
-        List<String> sortedValues = new ArrayList<String>();
-        for (MaterialUsage materialUsage : data.values()) {
-            sortedValues.add(materialUsage.getData().get(column).toString());
-        }
-        Collections.sort(sortedValues);
-        ProjectUtility.debug("MaterialUsages[getSortedBy]: sorted target ->", sortedValues);
-        List<MaterialUsage> sortedMaterialUsages = new ArrayList<>();
-        for (String sortedValue : sortedValues) {
-            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-            sortedMaterialUsages.addAll(getFilteredData().values());
-        }
-        return sortedMaterialUsages;
+//        ProjectUtility.debug("MaterialUsages[getSortedBy]: getting data sorted by ->", column);
+//        if (data == null) throw new RuntimeException("MaterialUsages[getSortedBy]: data is null, Please set data first or get all data without filter using -> MaterialUsages.getData()");
+//        List<String> sortedValues = new ArrayList<String>();
+//        for (MaterialUsage materialUsage : data.values()) {
+//            sortedValues.add(materialUsage.getData().get(column).toString());
+//        }
+//        Collections.sort(sortedValues);
+//        ProjectUtility.debug("MaterialUsages[getSortedBy]: sorted target ->", sortedValues);
+//        List<MaterialUsage> sortedMaterialUsages = new ArrayList<>();
+//        for (String sortedValue : sortedValues) {
+//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+//            sortedMaterialUsages.addAll(getFilteredData().values());
+//        }
+//        return sortedMaterialUsages;
+        List<MaterialUsage> materialUsages = toList(data);
+        materialUsages.sort((o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (RuntimeException e) {
+                return 0;
+            }
+        });
+        return materialUsages;
     }
 }

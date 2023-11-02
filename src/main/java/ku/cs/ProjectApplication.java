@@ -11,8 +11,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 import com.github.saacsos.FXRouter;
-import ku.cs.service.DBMigration;
+import ku.cs.controller.employer.dialogs.DeleteProductDialogController;
 import ku.cs.service.DBSeedAndLoad;
+import ku.cs.utility.CustomPopUp;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 public class ProjectApplication extends Application {
@@ -20,9 +22,15 @@ public class ProjectApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException, SQLException, ParseException {
 
+        FXRouter.bind(ProjectUtility.getApplicationReference(), stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
+        configRoute();
+
+        configPopUpRoute();
+
         if (!isScreenBigEnoughToShowStage()) return;
 
-        ProjectUtility.setStage(stage);
+        ProjectUtility.setMainStage(stage);
+        ProjectUtility.setApplicationReference(this);
         stage.setResizable(false);
         stage.getIcons().add(ProjectUtility.getProgramIcon());
 
@@ -31,14 +39,22 @@ public class ProjectApplication extends Application {
 //        DBSeedAndLoad.seed();
         DBSeedAndLoad.quickLoad();
 
-        FXRouter.bind(this, stage, "ระบบจัดการทำงานในโรงงานประกอบผ้า สำหรับลูกจ้างหนึ่งคน", ProjectUtility.programWidth, ProjectUtility.programHeight);
-        configRoute();
+        FXRouter.goTo("order");
 
-//        User user = new User();
-//        user.load("Ote");
-//        FXRouter.goTo("change-forgotten-password", user);
+//        PopUpUtility.popUp("delete-product", "Hello");
+//        PopUpUtility.popUp("save-material");
+//        PopUpUtility.popUp("loading", "testing");
+//        PopUpUtility.close("loading");
 
-        FXRouter.goTo("wait-for-receive");
+    }
+
+    private static void configPopUpRoute() {
+        String packageStr = "/ku/cs/fxml/";
+        PopUpUtility.addPopUp(new CustomPopUp("delete-product", packageStr + "employer/dialogs/delete-product-dialog.fxml", "ลบสินค้า"));
+        PopUpUtility.addPopUp(new CustomPopUp("save-material", packageStr + "employer/dialogs/save-material-dialog.fxml", "เพิ่ม-แก้ใขวัตถุดิบ"));
+        PopUpUtility.addPopUp(new CustomPopUp("loading", packageStr + "loading-dialog.fxml", "กำลังโหลด..."));
+
+        //        ProjectUtility.debug("PopUpUtility: " + PopUpUtility.getPopUps());
     }
 
     private static void configRoute() {
@@ -54,6 +70,8 @@ public class ProjectApplication extends Application {
         FXRouter.when("work-in-progress", packageStr + "employer/work-management/work-in-progress-view-page.fxml");
         FXRouter.when("review-work", packageStr + "employer/work-management/review-work-page.fxml");
         FXRouter.when("complete-work", packageStr + "employer/work-management/complete-work-view-page.fxml");
+        FXRouter.when("edit-work", packageStr + "employer/edit-work-page.fxml");
+        FXRouter.when("edit-product",packageStr + "employer/edit-product-page.fxml");
 
         FXRouter.when("received-work", packageStr + "employee/received-work-page.fxml");
         FXRouter.when("waiting-for-material-work", packageStr + "employee/waiting-for-material-work-page.fxml");

@@ -4,70 +4,142 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import ku.cs.entity.Products;
+import ku.cs.entity.Works;
+import ku.cs.model.Material;
+import ku.cs.model.MaterialUsage;
+import ku.cs.model.Product;
+import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class AbnormalWorkPageController {
 
     @FXML private TableView<WorkWrapper> tableView;
     @FXML private TableColumn<WorkWrapper, String> type;
-    @FXML private TableColumn<WorkWrapper, String> product;
-    @FXML private TableColumn<WorkWrapper, Integer> quantity;
+    @FXML private TableColumn<WorkWrapper, String> display_product;
+    @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
+    @FXML private TableColumn<WorkWrapper, String> estimate;
 
-    // work detail
+
+    @FXML private AnchorPane detailPane;
     @FXML private Label workTypeLabel;
     @FXML private Label productLabel;
     @FXML private Label deadlineLabel;
     @FXML private Label amountLabel;
 
+    @FXML private Text noteText;
+    @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> total_materialListView;
+
+
+
+
     @FXML
-    void initialize() {
-        // Bez Code
+    void initialize() throws SQLException {
+        detailPane.setVisible(false);
+        // Bez code
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
-        product.setCellValueFactory(new PropertyValueFactory<>("product"));
-        quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
+        goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
         deadline.setCellValueFactory(new PropertyValueFactory<>("deadline"));
-
-//        ObservableList<WorkWrapper> works = FXCollections.observableArrayList();
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        works.add(new WorkWrapper("งานธรรมดา", "กระโปรง ขนาด 20 นิ้ว", 20, LocalDate.now(), "ทันตามกำหนด", 10, "note"));
-//        tableView.setItems(works);
-        //handleSelectedRow();
+        estimate.setCellValueFactory(new PropertyValueFactory<>("estimate"));
+        tableView.setItems(fetchData());
+        handleSelectedRow();
     }
-//
-//    private void handleSelectedRow() {
-//        tableView.getSelectionModel().selectedItemProperty().addListener(
-//                (observable, oldValue, newValue) -> {
-//                    showSelectedRow(newValue);
-//                }
-//        );
-//    }
-//
-//    private void showSelectedRow(Work newValue) {
-//        // productLabel.setText(newValue.getProduct());
-//        productLabel.setText(newValue.toString());
-//    }
 
-    // MenuBar Handle
-    @FXML
-    public void handleLogoutButton() throws IOException {
+    private void handleSelectedRow() {
+        tableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if(newValue != null) {
+                        try {
+                            showSelectedRow(newValue);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void showSelectedRow(WorkWrapper newValue) throws SQLException {
+        detailPane.setVisible(true);
+        workTypeLabel.setText(newValue.getType());
+        productLabel.setText(newValue.getDisplay_product());
+        deadlineLabel.setText(newValue.getDeadline().toString());
+        amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
+        showListView(newValue.getDisplay_product());
+        noteText.setText(newValue.getNote());
+
+    }
+
+    private void showListView(String value) throws SQLException {
+        materialListView.getItems().clear();
+        total_materialListView.getItems().clear();
+        Product product = handleProductStringToProductObject(value);
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+        for (MaterialUsage materialUsage : product.getMaterialsUsed()){
+            Material material = materialUsage.getMaterial();
+            material.getName();
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
+            total_materialListView.getItems().add(material.getName() + " " + materialUsage.getExpectedMaterialUsedByWork(work) + " " + materialUsage.getMaterial().getUnitName());
+        }
+    }
+
+    private Product handleProductStringToProductObject(String value){
+        String[] values = value.split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[2]));
         try {
-            com.github.saacsos.FXRouter.goTo("home");
+            return Products.toList(Products.getFilteredData()).get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        HashMap<String, Work> works = Works.getAbnormalWorks();
+
+        ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
+        for(String workId : works.keySet()) {
+            Work work = works.get(workId);
+            WorkWrapper workWrapper = new WorkWrapper(work);
+            workWrappers.add(workWrapper);
+        }
+        return workWrappers;
+
+    }
+
+    @FXML private void handleEditWorkButton(){
+        try {
+            WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+            Work work = Works.getData().get(selectedWork.getId());
+            com.github.saacsos.FXRouter.goTo("edit-work", work);
         } catch (Exception e){
-            System.err.println("ไปหน้า home ไม่ได้");
+            System.err.println("ไปหน้า edit-work ไม่ได้");
             e.printStackTrace();
         }
     }
+
+
+    // MenuBar Handle
     @FXML
     public void handleOrderWorkButton() throws IOException{
         try {
-            com.github.saacsos.FXRouter.goTo("order");
+            com.github.saacsos.FXRouter.goTo("order",null);
         } catch (Exception e){
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();

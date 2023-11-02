@@ -3,6 +3,7 @@ package ku.cs.entity;
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
@@ -72,12 +73,26 @@ public class Products {
 
     // load data from database
     public static HashMap<String, Product> load(boolean updateBuffer) throws SQLException {
+
+        try {
+            PopUpUtility.popUp("loading", "Products (สินค้า)");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         HashMap<String, Product> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Product(sqlRow.getValuesMap()));
         }
         if (updateBuffer) data = dataFromDB;
+
+        try {
+            PopUpUtility.close("loading", true);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         return dataFromDB;
     }
 
@@ -168,6 +183,10 @@ public class Products {
         for (Product product: getData().values()) {
             boolean isFiltered = true;
             for (String column: filter.keySet()) {
+                if (product.getData().get(column) == null) {
+                    isFiltered = false;
+                    break;
+                }
                 if(!product.getData().get(column).equals(filter.get(column))) {
                     isFiltered = false;
                     break;
@@ -184,19 +203,28 @@ public class Products {
     }
 
     public static List<Product> getSortedBy(String column, HashMap<String, Product> data) throws SQLException {
-        ProjectUtility.debug("Products[getSortedBy]: getting data sorted by ->", column);
-        if (data == null) throw new RuntimeException("Products[getSortedBy]: data is null, Please load data first or get all data without filter using -> Products.getData()");
-        List<String> sortedValues = new ArrayList<String>();
-        for (Product product : data.values()) {
-            sortedValues.add(product.getData().get(column).toString());
-        }
-        Collections.sort(sortedValues);
-        ProjectUtility.debug("Products[getSortedBy]: sorted target ->", sortedValues);
-        List<Product> sortedProducts = new ArrayList<>();
-        for (String sortedValue : sortedValues) {
-            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-            sortedProducts.addAll(getFilteredData().values());
-        }
-        return sortedProducts;
+//        ProjectUtility.debug("Products[getSortedBy]: getting data sorted by ->", column);
+//        if (data == null) throw new RuntimeException("Products[getSortedBy]: data is null, Please load data first or get all data without filter using -> Products.getData()");
+//        List<String> sortedValues = new ArrayList<String>();
+//        for (Product product : data.values()) {
+//            sortedValues.add(product.getData().get(column).toString());
+//        }
+//        Collections.sort(sortedValues);
+//        ProjectUtility.debug("Products[getSortedBy]: sorted target ->", sortedValues);
+//        List<Product> sortedProducts = new ArrayList<>();
+//        for (String sortedValue : sortedValues) {
+//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
+//            sortedProducts.addAll(getFilteredData().values());
+//        }
+//        return sortedProducts;
+        List<Product> products = toList(data);
+        products.sort((o1, o2) -> {
+            try {
+                return o1.getData().get(column).toString().compareTo(o2.getData().get(column).toString());
+            } catch (RuntimeException e) {
+                return 0;
+            }
+        });
+        return products;
     }
 }

@@ -22,6 +22,8 @@ module cs.ku {
     opens ku.cs.model to java.base;
     exports ku.cs.tool;
     opens ku.cs.tool to java.base;
+    exports ku.cs.controller;
+    opens ku.cs.controller to javafx.fxml;
     exports ku.cs.controller.employer;
     opens ku.cs.controller.employer to javafx.fxml;
     exports ku.cs.controller.employer.work;
@@ -30,5 +32,7 @@ module cs.ku {
     opens ku.cs.controller.employee to javafx.fxml;
     exports ku.cs.tableview;
     opens ku.cs.tableview to javafx.fxml;
+    exports ku.cs.controller.employer.dialogs;
+    opens ku.cs.controller.employer.dialogs to javafx.fxml;
 
 }

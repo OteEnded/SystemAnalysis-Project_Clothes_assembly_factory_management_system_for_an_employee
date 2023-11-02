@@ -25,7 +25,6 @@
                                 <Font name="System Bold Italic" size="16.0" />
                             </font>
                         </Text>
-                        <Button layoutX="-11.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="25.0" prefWidth="127.0" styleClass="menu-bar" text="ออกจากระบบ" />
                     </children>
                 </AnchorPane>
                 <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="สั่งงาน">
@@ -49,7 +48,7 @@
                     </font>
                     <styleClass>
                         <String fx:value="menu-bar" />
-                        <String fx:value="bold-text" />
+                        <String fx:value="menu-bar-selected" />
                     </styleClass>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#handleWaitForReceiveButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="• งานที่รอลูกจ้างรับ">
@@ -63,7 +62,7 @@
                     </font>
                <styleClass>
                   <String fx:value="menu-bar" />
-                  <String fx:value="bold-text" />
+                  <String fx:value="menu-bar-selected" />
                </styleClass>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#handleMaterialPreparationButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="• งานที่ต้องส่งวัตถุดิบ">
@@ -95,18 +94,20 @@
         </Text>
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="305.0" layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="469.0" scaleShape="false">
          <columns>
-            <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="ประเภทงาน" />
-            <TableColumn fx:id="product" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="สินค้า" />
-            <TableColumn fx:id="quantity" editable="false" minWidth="-Infinity" prefWidth="102.0" resizable="false" sortable="false" text="จำนวน(ตัว)" />
-            <TableColumn fx:id="deadline" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="กำหนดส่ง" />
+            <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" sortable="false" text="ประเภทงาน" />
+            <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="100.0" resizable="false" sortable="false" text="สินค้า" />
+            <TableColumn fx:id="goal_amount" editable="false" minWidth="-Infinity" prefWidth="90.0" resizable="false" sortable="false" text="จำนวน(ตัว)" />
+            <TableColumn fx:id="deadline" editable="false" minWidth="-Infinity" prefWidth="90.0" resizable="false" sortable="false" text="กำหนดส่ง" />
+            <TableColumn fx:id="estimate" editable="false" minWidth="-Infinity" prefWidth="90.0" resizable="false" sortable="false" text="ปัญหา" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
       <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="400.0" layoutX="813.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
-      <AnchorPane layoutX="813.0" layoutY="166.0" prefHeight="364.0" prefWidth="409.0">
+      <AnchorPane fx:id="detailPane" layoutX="813.0" layoutY="166.0" prefHeight="489.0" prefWidth="409.0">
          <children>
+            <Button layoutX="273.0" layoutY="414.0" mnemonicParsing="false" onAction="#handleEditWorkButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="แก้ไชรายละเอียดงาน" />
             <VBox layoutX="27.0" layoutY="28.0" prefHeight="313.0" prefWidth="354.0">
                <children>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -137,7 +138,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox prefHeight="29.0" prefWidth="354.0">
+                  <HBox fx:id="detailAnchorPane1" prefHeight="29.0" prefWidth="354.0">
                      <children>
                         <Label text="กำหนดส่ง :" textFill="#213555">
                            <font>
@@ -181,7 +182,7 @@
                   </HBox>
                   <AnchorPane prefHeight="75.0" prefWidth="354.0">
                      <children>
-                        <ListView layoutX="7.0" layoutY="5.0" prefHeight="58.0" prefWidth="200.0" />
+                        <ListView fx:id="materialListView" layoutX="7.0" layoutY="5.0" prefHeight="58.0" prefWidth="343.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -200,7 +201,7 @@
                   </HBox>
                   <AnchorPane prefHeight="75.0" prefWidth="354.0">
                      <children>
-                        <ListView layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="200.0" />
+                        <ListView fx:id="total_materialListView" layoutX="6.0" layoutY="5.0" prefHeight="58.0" prefWidth="343.0" />
                      </children>
                   </AnchorPane>
                   <HBox prefHeight="29.0" prefWidth="354.0">
@@ -224,18 +225,14 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label prefHeight="60.0" prefWidth="354.0" text="noteLabel" textFill="#213555">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
+                        <Text fx:id="noteText" fill="#213555" strokeType="OUTSIDE" strokeWidth="0.0" text="noteText" />
                      </children>
                   </HBox>
                </children>
             </VBox>
          </children>
       </AnchorPane>
-      <Text fill="#213555" layoutX="813.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="รายการสินค้าทั้งหมด">
+      <Text fill="#213555" layoutX="813.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="ข้อมูลงานที่เลือก">
          <font>
             <Font name="System Bold Italic" size="20.0" />
          </font>

@@ -21,7 +21,6 @@
                                 <Font name="System Bold Italic" size="16.0" />
                             </font>
                         </Text>
-                        <Button layoutX="-11.0" layoutY="100.0" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="25.0" prefWidth="127.0" styleClass="menu-bar" text="ออกจากระบบ" />
                     </children>
                 </AnchorPane>
                 <Button mnemonicParsing="false" onAction="#handleOrderWorkButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="สั่งงาน">
@@ -40,7 +39,7 @@
                     </font>
                <styleClass>
                   <String fx:value="menu-bar" />
-                  <String fx:value="bold-text" />
+                  <String fx:value="menu-bar-selected" />
                </styleClass>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#handleWorkManagementButton" prefHeight="20.0" prefWidth="285.0" style="-fx-alignment: right-center;" styleClass="menu-bar" text="งานที่สั่ง">

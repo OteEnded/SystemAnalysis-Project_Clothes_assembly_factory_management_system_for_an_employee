@@ -21,6 +21,7 @@ public class ProductManagementPageController {
     @FXML private ListView<String> productListView;
     @FXML private AnchorPane productDetailPane;
     @FXML private Label productLabel;
+    @FXML private Label sizeLabel;
     @FXML private ListView<String> materialListView;
 
     @FXML
@@ -49,6 +50,7 @@ public class ProductManagementPageController {
                     public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
                         productDetailPane.setVisible(true);
                         productLabel.setText((handleProductStringToProductObject(newValue).getName()));
+                        sizeLabel.setText((handleProductStringToProductObject(newValue).getSize() + " นิ้ว"));
                         try {
                             showMaterialListView(handleProductStringToProductObject(newValue));
                         } catch (SQLException e) {

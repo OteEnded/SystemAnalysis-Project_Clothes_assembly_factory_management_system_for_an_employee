@@ -137,15 +137,6 @@ public class AbnormalWorkPageController {
 
     // MenuBar Handle
     @FXML
-    public void handleLogoutButton() throws IOException {
-        try {
-            com.github.saacsos.FXRouter.goTo("home");
-        } catch (Exception e){
-            System.err.println("ไปหน้า home ไม่ได้");
-            e.printStackTrace();
-        }
-    }
-    @FXML
     public void handleOrderWorkButton() throws IOException{
         try {
             com.github.saacsos.FXRouter.goTo("order",null);

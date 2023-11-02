@@ -1,0 +1,123 @@
+package ku.cs.utility;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+public class CustomPopUp {
+
+    private String key;
+    private String path;
+    private String windowTitle;
+    private String closeBy;
+    private Object passingData;
+
+    private boolean positiveClosing = true;
+
+    private static HashMap<String, Boolean> isPositiveClosing = new HashMap<>();
+    static {
+        isPositiveClosing.put(PopUpUtility.closeWith_confirm, false);
+        isPositiveClosing.put(PopUpUtility.closeWith_exit, false);
+        isPositiveClosing.put(PopUpUtility.closeWith_cancel, false);
+        isPositiveClosing.put(PopUpUtility.closeWith_ok, true);
+        isPositiveClosing.put(PopUpUtility.closeWith_yes, true);
+        isPositiveClosing.put(PopUpUtility.closeWith_no, false);
+    }
+
+    public CustomPopUp(){
+    }
+
+    public CustomPopUp(String key, String path, String windowTitle){
+        this.key = key;
+        this.path = path;
+        this.windowTitle = windowTitle;
+    }
+
+    public void setKey(String key){
+        this.key = key;
+    }
+
+    public void setPath(String path){
+        this.path = path;
+    }
+
+    public void setWindowTitle(String windowTitle){
+        this.windowTitle = windowTitle;
+    }
+
+    public String getKey(){
+        return key;
+    }
+
+    public String getPath(){
+        return path;
+    }
+
+    public String getWindowTitle(){
+        return windowTitle;
+    }
+
+    public void setCloseBy(String closeBy){
+        this.closeBy = closeBy;
+    }
+
+
+    public String getCloseBy(){
+        return closeBy;
+    }
+
+    public void setPassingData(Object passingData){
+        this.passingData = passingData;
+    }
+
+    public Object getPassingData(){
+        return passingData;
+    }
+
+    public void popUp(Object passingData) throws IOException {
+        this.passingData = passingData;
+        popUp();
+    }
+
+    public boolean isPositiveClosing() {
+        return positiveClosing;
+    }
+
+
+    public void popUp() throws IOException {
+        ProjectUtility.debug("CustomPopUp[popUp]: popping up popUp ->", key);
+
+        PopUpUtility.addPoppingUp(this);
+
+        FXMLLoader loader = new FXMLLoader(PopUpUtility.class.getResource(path));
+        Parent dialog = loader.load();
+
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle(windowTitle);
+        dialogStage.setScene(new Scene(dialog));
+
+        dialogStage.showAndWait();
+
+        if (closeBy == null) closeBy = PopUpUtility.closeWith_exit;
+
+        positiveClosing = isPositiveClosing.get(closeBy);
+        PopUpUtility.removePoppingUp(this);
+        ProjectUtility.debug("CustomPopUp[popUp]: closed popUp ->", key, "->", closeBy);
+    }
+
+
+    @Override
+    public String toString() {
+        return "CustomPopUp{" +
+                "key='" + key + '\'' +
+                ", path='" + path + '\'' +
+                ", windowTitle='" + windowTitle + '\'' +
+                '}';
+    }
+}

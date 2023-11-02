@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="300" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.fxml.employer.dialogs.DeleteProductDialogController">
+<AnchorPane prefHeight="300" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employer.dialogs.DeleteProductDialogController">
    <children>
       <Label layoutX="57.0" layoutY="54.0" styleClass="bold-text" text="คุณต้องการลบสินค้านี้หรือไม่" textFill="#172b4d">
          <font>
@@ -21,6 +21,6 @@
             <Label text=" หรือไม่" textFill="#172b4d" />
          </children>
       </HBox>
-      <Button layoutX="449.0" layoutY="219.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="red-btn" text="ลบรายการสินค้า" textFill="WHITE" />
+      <Button fx:id="okButton" onAction="#onOKButtonClick"  layoutX="449.0" layoutY="219.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="red-btn" text="ลบรายการสินค้า" textFill="WHITE" />
    </children>
 </AnchorPane>

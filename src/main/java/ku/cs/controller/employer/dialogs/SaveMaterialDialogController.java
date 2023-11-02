@@ -3,34 +3,19 @@ package ku.cs.controller.employer.dialogs;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import ku.cs.utility.CustomPopUp;
 import ku.cs.utility.PopUpUtility;
-import ku.cs.utility.ProjectUtility;
 
-public class DeleteProductDialogController {
-    private Stage popupStage;
+public class SaveMaterialDialogController {
 
-    static final CustomPopUp customPopUp = PopUpUtility.getPopUp("delete-product");
+
+    static final String popUpKey = "";
 
     @FXML
     private TextField textField;
 
     @FXML
     private Button okButton;
-
-    @FXML void initialize() {
-        ProjectUtility.debug(customPopUp.getPassingData());
-    }
-
-    public void setPopupStage(Stage popupStage) {
-        this.popupStage = popupStage;
-    }
-
-    public void closePopup() {
-        popupStage.close();
-    }
 
     @FXML
     public void onOKButtonClick() {
@@ -39,7 +24,7 @@ public class DeleteProductDialogController {
 
         // Perform some processing with the input
 
-        customPopUp.setCloseBy(PopUpUtility.closeWith_ok);
+        PopUpUtility.getPopUp(popUpKey).setCloseBy(PopUpUtility.closeWith_ok);
 
         // Close the dialog
         Stage stage = (Stage) okButton.getScene().getWindow();

@@ -95,6 +95,7 @@ public class CustomPopUp {
         PopUpUtility.addPoppingUp(this);
 
         FXMLLoader loader = new FXMLLoader(PopUpUtility.class.getResource(path));
+        ProjectUtility.debug("CustomPopUp[popUp]: loader ->", loader);
         Parent dialog = loader.load();
 
         Stage dialogStage = new Stage();

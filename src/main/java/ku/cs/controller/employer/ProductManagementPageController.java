@@ -6,15 +6,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
-import ku.cs.entity.MaterialUsages;
-import ku.cs.entity.Materials;
 import ku.cs.entity.Products;
 import ku.cs.model.MaterialUsage;
 import ku.cs.model.Product;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProductManagementPageController {
@@ -28,7 +29,7 @@ public class ProductManagementPageController {
     void initialize(){
         productDetailPane.setVisible(false);
         try {
-            showListView();
+            refreshListView();
         } catch (SQLException e) {
             System.err.println("แสดง Listview ไม่ได้");
             e.printStackTrace();
@@ -36,7 +37,8 @@ public class ProductManagementPageController {
         handleSelectedListView();
     }
 
-    private void showListView() throws SQLException {
+    private void refreshListView() throws SQLException {
+        productListView.getItems().clear();
         for (Product product: Products.getDataAsList()) {
             productListView.getItems().addAll(product.getName() + " "
                     + product.getSize() + " นิ้ว");
@@ -48,6 +50,10 @@ public class ProductManagementPageController {
                 new ChangeListener<>() {
                     @Override
                     public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+                        if (newValue == null) {
+                            productDetailPane.setVisible(false);
+                            return;
+                        }
                         productDetailPane.setVisible(true);
                         productLabel.setText((handleProductStringToProductObject(newValue).getName()));
                         sizeLabel.setText((handleProductStringToProductObject(newValue).getSize() + " นิ้ว"));
@@ -140,5 +146,25 @@ public class ProductManagementPageController {
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void handleDeleteProductButton() throws SQLException, ParseException, IOException {
+        ProjectUtility.debug("ProductManagementPageController[handleDeleteProductButton]: trying to delete material ->", productListView.getSelectionModel().getSelectedItem());
+
+        Product product = handleProductStringToProductObject(productListView.getSelectionModel().getSelectedItem());
+
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("windowsTitle", "ลบสินค้า");
+        passingData.put("headerLabel", "คุณต้องการลบสินค้าหรือไม่");
+        passingData.put("objectLabel", product.getName());
+        PopUpUtility.popUp("delete-confirmation", passingData);
+        if (!PopUpUtility.getPopUp("delete-confirmation").isPositiveClosing()) return;
+
+        product.delete();
+
+        ProjectUtility.debug("ProductManagementPageController[handleDeleteProductButton]: deleted product ->", product);
+
+        refreshListView();
     }
 }

@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employer.ProductManagementPageController">
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../style/styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employer.ProductManagementPageController">
     <children>
         <Rectangle arcHeight="5.0" fill="#213555" height="720.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="256.0" />
         <VBox layoutX="62.0" prefHeight="720.0" prefWidth="194.0" spacing="20.0">
@@ -59,7 +59,7 @@
       <AnchorPane fx:id="productDetailPane" layoutX="803.0" layoutY="166.0" prefHeight="393.0" prefWidth="409.0">
          <children>
             <Button layoutX="180.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleEditProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-btn" text="แก้ไขสินค้า" textFill="#213555" />
-            <Button layoutX="292.0" layoutY="348.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
+            <Button layoutX="292.0" layoutY="348.0" mnemonicParsing="false" onAction="#handleDeleteProductButton" prefHeight="34.0" prefWidth="105.0" styleClass="white-red-btn" text="ลบสินค้า" />
             <Label layoutX="46.0" layoutY="36.0" text="สินค้า : " textFill="#213555">
                <font>
                   <Font name="System Bold" size="14.0" />

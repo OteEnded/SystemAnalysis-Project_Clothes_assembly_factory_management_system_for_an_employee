@@ -65,7 +65,7 @@ public class Works {
         sqlColumn.setForeignKey();
         sqlColumn.setForeignKeyTable("Products");
         sqlColumn.setForeignKeyColumn("product_id");
-        sqlColumn.setOnDelete("SET NULL");
+        sqlColumn.setOnDelete("CASCADE");
         sqlTable.addColumObj(sqlColumn);
 
         sqlColumn = new SQLColumn();
@@ -153,7 +153,9 @@ public class Works {
         try {
             PopUpUtility.popUp("loading", "Works (งาน)");
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Works[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
+//            e.printStackTrace();
         }
 
         HashMap<String, Work> dataFromDB = new HashMap<>();
@@ -166,7 +168,8 @@ public class Works {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Works[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         return dataFromDB;
@@ -236,7 +239,9 @@ public class Works {
         ProjectUtility.debug("Works[delete]: deleting work ->", work);
         if (isNew(work)) throw new RuntimeException("Works[delete]: Can't find work with work_id: " + work.getId());
         data.remove(getJoinedPrimaryKeys(work));
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
+        int affectedRow = DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
+        Works.load();
+        return affectedRow;
     }
 
     public static HashMap<String, Object> filter;
@@ -314,6 +319,10 @@ public class Works {
         for (Work work: getData().values()) {
             if (Objects.equals(work.getEstimated(), Works.estimate_late)) abnormalWorks.put(work.getId(), work);
         }
+
+        // ให้มันคัดเฉพาะงานที่ยังไม่เสร็จด้วย
+
+
         return abnormalWorks;
     }
 }

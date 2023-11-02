@@ -8,16 +8,24 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import ku.cs.entity.Materials;
 import ku.cs.model.Material;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.HashMap;
 
 public class MaterialManagementPageController {
 
     @FXML private ListView<HBox> materialListview;
 
     @FXML void initialize() throws SQLException {
+        refreshMaterialList();
+    }
+
+    private void refreshMaterialList() throws SQLException {
+        materialListview.getItems().clear();
         for (Material material : Materials.getDataAsList()){
             materialListview.getItems().add(createMaterialList(material.getName(), material.getUnitName()));
         }
@@ -36,7 +44,7 @@ public class MaterialManagementPageController {
         deleteBtn.setOnAction(e -> {
             try {
                 handleDeleteMaterialButton(name);
-            } catch (SQLException ex) {
+            } catch (SQLException | IOException | ParseException ex) {
                 throw new RuntimeException(ex);
             }
         });
@@ -53,8 +61,19 @@ public class MaterialManagementPageController {
         return box;
     }
 
-    private void handleDeleteMaterialButton(String name) throws SQLException {
+    private void handleDeleteMaterialButton(String name) throws SQLException, IOException, ParseException {
         ProjectUtility.debug("MaterialManagementPageController[handleDeleteMaterialButton]: trying to delete material ->", getMaterialFromStringName(name));
+
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("windowsTitle", "ลบวัตถุดิบ");
+        passingData.put("headerLabel", "คุณต้องการลบวัตถุดิบหรือไม่");
+        passingData.put("objectLabel", name);
+        PopUpUtility.popUp("delete-confirmation", passingData);
+        if (!PopUpUtility.getPopUp("delete-confirmation").isPositiveClosing()) return;
+
+        getMaterialFromStringName(name).delete();
+
+        refreshMaterialList();
     }
 
     private void handleEditMaterialButton(String name){

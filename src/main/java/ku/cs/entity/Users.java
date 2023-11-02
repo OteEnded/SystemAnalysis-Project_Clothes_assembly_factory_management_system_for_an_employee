@@ -72,7 +72,8 @@ public class Users {
         try {
             PopUpUtility.popUp("loading", "Users (ผู้ใช้งาน)");
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Users[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
         HashMap<String, User> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
@@ -84,7 +85,8 @@ public class Users {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("Users[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         return dataFromDB;

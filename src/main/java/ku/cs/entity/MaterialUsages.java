@@ -87,7 +87,8 @@ public class MaterialUsages {
         try {
             PopUpUtility.popUp("loading", "MaterialUsages (การใช้วัตถุดิบ)");
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("MaterialUsages[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         HashMap<String, MaterialUsage> dataFromDB = new HashMap<>();
@@ -100,7 +101,8 @@ public class MaterialUsages {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("MaterialUsages[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         return dataFromDB;

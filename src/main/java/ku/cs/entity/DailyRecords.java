@@ -76,7 +76,8 @@ public class DailyRecords {
         try {
             PopUpUtility.popUp("loading", "DailyRecords (บันทึกการทำงาน)");
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("DailyRecords[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         HashMap<String, DailyRecord> dataFromDB = new HashMap<>();
@@ -89,7 +90,8 @@ public class DailyRecords {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            e.printStackTrace();
+            ProjectUtility.debug("DailyRecords[load]: cannot do pop ups thing");
+            ProjectUtility.debug(e);
         }
 
         return dataFromDB;

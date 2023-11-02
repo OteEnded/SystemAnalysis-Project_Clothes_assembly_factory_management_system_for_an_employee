@@ -57,7 +57,7 @@
             </font>
         </Text>
       <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="219.0" layoutX="803.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
-      <AnchorPane layoutX="803.0" layoutY="166.0" prefHeight="219.0" prefWidth="409.0">
+      <AnchorPane fx:id="productDetailPane" layoutX="803.0" layoutY="166.0" prefHeight="219.0" prefWidth="409.0">
          <children>
             <Label layoutX="46.0" layoutY="36.0" text="สินค้า : " textFill="#213555">
                <font>

@@ -181,6 +181,15 @@ public class WaitingForMaterialWorkController {
         }
     }
 
+    @FXML private void handleDailyRecordBtn() throws IOException {
+        try {
+            com.github.saacsos.FXRouter.goTo("record-daily-result");
+        } catch (Exception e) {
+            System.err.println("ไปหน้า received-work ไม่ได้");
+            e.printStackTrace();
+        }
+    }
+
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 
         Works.addFilter("status", Works.status_waitForMaterial);

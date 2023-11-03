@@ -221,6 +221,7 @@ public class ReceivedWorkController {
         }
     }
 
+
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 
         Works.addFilter("status", Works.status_waitForAccept);

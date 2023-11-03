@@ -7,8 +7,6 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -19,23 +17,6 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employee.FinishedWorkController">
    <children>
       <Rectangle arcHeight="5.0" fill="#213555" height="720.0" layoutX="-3.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" width="241.0" />
-      <VBox layoutX="62.0" layoutY="90.0" prefHeight="60.0" prefWidth="151.0" spacing="5.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" layoutX="42.0" layoutY="60.0" prefHeight="31.0" prefWidth="100.0" spacing="8.0">
-               <children>
-                  <ImageView fitHeight="20.0" fitWidth="20.0">
-                     <image>
-                        <Image url="@../../../../../../../../../Users/bez/Downloads/user-alt-1-svgrepo-com.png" />
-                     </image>
-                  </ImageView>
-                  <Label prefHeight="22.0" prefWidth="87.0" text="แม่ปลาย" textFill="WHITE">
-                     <font>
-                        <Font name="Century" size="16.0" />
-                     </font></Label>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="305.0" layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="519.0" scaleShape="false">
         <columns>
           <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="87.199951171875" resizable="false" sortable="false" text="ประเภทงาน" />
@@ -112,7 +93,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="33.0" prefWidth="208.0" styleClass="menu-bar" text="บันทึกการทำงาน">
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleDailyRecordBtn" prefHeight="33.0" prefWidth="208.0" styleClass="menu-bar" text="บันทึกการทำงาน">
                <font>
                   <Font size="16.0" />
                </font>
@@ -263,5 +244,18 @@
             </VBox>
          </children>
       </AnchorPane>
+      <VBox layoutX="62.0" layoutY="90.0" prefHeight="60.0" prefWidth="151.0" spacing="5.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" layoutX="42.0" layoutY="60.0" prefHeight="31.0" prefWidth="151.0" spacing="8.0">
+               <children>
+                  <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="ลูกจ้าง">
+                     <font>
+                        <Font name="System Bold Italic" size="18.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

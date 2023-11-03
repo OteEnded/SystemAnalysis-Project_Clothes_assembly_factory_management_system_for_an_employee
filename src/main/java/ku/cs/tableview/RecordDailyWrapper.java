@@ -1,42 +1,32 @@
 package ku.cs.tableview;
 
+import javafx.scene.control.TextField;
 import ku.cs.model.Product;
 import ku.cs.model.Work;
+import org.w3c.dom.Text;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-/* for tableView only */
+public class RecordDailyWrapper {
 
-public class WorkWrapper {
-
-    private String estimate;
     private String id;
     private String type;
     private LocalDate deadline;
-    private String status;
     private int goal_amount;
     private int progress_amount;
-    private String note;
-    private Work repair_work;
-
     private String display_product;
-    private String isPass;
+    private TextField dailyRecord;
 
-
-    public WorkWrapper(Work work) throws SQLException {
+    public RecordDailyWrapper(Work work, TextField dailyRecord) throws SQLException {
         this.id = work.getId();
         this.type = work.getWorkType();
         this.deadline = work.getDeadline().toLocalDate();
-        this.status = work.getStatus();
         this.goal_amount = work.getGoalAmount();
         this.progress_amount = work.getProgressAmount();
-        this.note = work.getNote();
-        this.repair_work = work.isPass() ? getRepair_work() : null;
         Product product = work.getProduct();
-        this.estimate = product.getProgressRate() == -1 ? "ไม่พบอัตราการทำงาน" : work.getEstimated();
         this.display_product = product.getName() + " ขนาด " + product.getSize() + " นิ้ว";
-        this.isPass = work.isPass() ? "ผ่าน" : "ไม่ผ่าน";
+        this.dailyRecord = dailyRecord;
     }
 
     public String getId() {
@@ -51,10 +41,6 @@ public class WorkWrapper {
         return deadline;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public int getGoal_amount() {
         return goal_amount;
     }
@@ -63,23 +49,11 @@ public class WorkWrapper {
         return progress_amount;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public Work getRepair_work() {
-        return repair_work;
-    }
-
     public String getDisplay_product() {
         return display_product;
     }
 
-    public String getIsPass() {
-        return isPass;
-    }
-
-    public String getEstimate() {
-        return estimate;
+    public TextField getDailyRecord() {
+        return dailyRecord;
     }
 }

@@ -107,7 +107,7 @@ public class ReviewPageController {
 
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 
-        Works.addFilter("status", Works.status_done);
+        Works.addFilter("status", Works.status_sent);
         HashMap<String, Work> works = Works.getFilteredData();
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();

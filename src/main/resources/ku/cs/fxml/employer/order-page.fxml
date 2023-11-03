@@ -125,5 +125,6 @@
          </font>
       </Text>
       <Label fx:id="promptLabel" layoutX="305.0" layoutY="612.0" text="promptLabel" textFill="#f32013" />
+      <Button layoutX="1151.0" layoutY="58.0" mnemonicParsing="false" onAction="#handleEmployeeButton" text="employee" />
    </children>
 </AnchorPane>

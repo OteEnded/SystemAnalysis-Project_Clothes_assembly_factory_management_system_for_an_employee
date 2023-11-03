@@ -71,9 +71,11 @@ public class OrderWorkPageController {
 
         if (validate()) {
             promptLabel.setText("");
-            if (!addWork()){
-                // pop up
-            }
+//            if (!addWork()){
+//                // pop up
+//            }
+
+            addWork();
 
             try {
                 com.github.saacsos.FXRouter.goTo("wait-for-receive");
@@ -96,11 +98,11 @@ public class OrderWorkPageController {
             work.setRepairWork((Work) FXRouter.getData());
         }
 
-        if (work.getProduct().getProgressRate() != -1){
-            if (work.getEstimated().equals(Works.estimate_late)){
-                return false;
-            }
-        }
+//        if (work.getProduct().getProgressRate() != -1){
+//            if (work.getEstimated().equals(Works.estimate_late)){
+//                return false;
+//            }
+//        }
         work.save();
         System.out.println(work);
         return true;

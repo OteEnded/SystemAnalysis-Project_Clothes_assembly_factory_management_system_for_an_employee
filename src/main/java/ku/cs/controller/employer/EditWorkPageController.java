@@ -54,9 +54,10 @@ public class EditWorkPageController {
     public void handleSubmitButton() throws SQLException, ParseException {
         if (validate()) {
             promptLabel.setText("");
-            if (!addWork()){
-                // pop up
-            }
+//            if (!addWork()){
+//                // pop up
+//            }
+            addWork();
 
             try {
                 com.github.saacsos.FXRouter.goTo("wait-for-receive");
@@ -74,11 +75,11 @@ public class EditWorkPageController {
         work.setDeadline(ProjectUtility.getDate(deadlineDatePicker.getValue()));
         work.setNote(noteTextArea.getText());
 
-        if (work.getProduct().getProgressRate() != -1){
-            if (work.getEstimated().equals(Works.estimate_late)){
-                return false;
-            }
-        }
+//        if (work.getProduct().getProgressRate() != -1){
+//            if (work.getEstimated().equals(Works.estimate_late)){
+//                return false;
+//            }
+//        }
         work.save();
         System.out.println(work);
         return true;

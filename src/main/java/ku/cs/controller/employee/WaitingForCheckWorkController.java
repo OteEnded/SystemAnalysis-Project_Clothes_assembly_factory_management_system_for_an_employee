@@ -45,7 +45,7 @@ public class WaitingForCheckWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
         goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));

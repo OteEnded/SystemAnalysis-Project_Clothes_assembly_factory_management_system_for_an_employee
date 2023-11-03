@@ -55,7 +55,7 @@ public class ReceivedWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         acceptBtn.setVisible(false);
         putWorkRateBtn.setVisible(false);
 

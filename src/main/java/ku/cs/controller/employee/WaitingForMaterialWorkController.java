@@ -48,7 +48,7 @@ public class WaitingForMaterialWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         submitReceivedMaterialBtn.setVisible(false);
 
         type.setCellValueFactory(new PropertyValueFactory<>("type"));

@@ -45,7 +45,7 @@ public class FinishedWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         sendWorkBtn.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));

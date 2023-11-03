@@ -27,6 +27,8 @@ public class OrderWorkPageController {
 
     @FXML private Label promptLabel;
 
+    private Work addingRepairWork;
+
     @FXML
     void initialize() throws SQLException {
         if (com.github.saacsos.FXRouter.getData() != null){
@@ -55,7 +57,8 @@ public class OrderWorkPageController {
         workTypeComboBox.getItems().addAll(Works.type_repair);
         workTypeComboBox.getSelectionModel().select(Works.type_repair);
         if (FXRouter.getData() != null){
-            Product product = ((Work)FXRouter.getData()).getProduct();
+            addingRepairWork = (Work) FXRouter.getData();
+            Product product = addingRepairWork.getProduct();
             productComboBox.getSelectionModel().select(product.getName() + " "
                     + product.getSize() + " นิ้ว");
         }
@@ -94,8 +97,9 @@ public class OrderWorkPageController {
         work.setGoalAmount(Integer.parseInt(amountTextField.getText()));
         work.setDeadline(ProjectUtility.getDate(deadlineDatePicker.getValue()));
         work.setNote(noteTextArea.getText());
-        if (com.github.saacsos.FXRouter.getData() != null){
-            work.setRepairWork((Work) FXRouter.getData());
+        if (addingRepairWork != null){
+            addingRepairWork.setStatus(Works.status_checked);
+            work.setRepairWork(addingRepairWork);
         }
 
 //        if (work.getProduct().getProgressRate() != -1){
@@ -121,6 +125,7 @@ public class OrderWorkPageController {
 
     private boolean validate(){
         if (productComboBox.getSelectionModel().isEmpty()){
+            if (addingRepairWork != null) return true;
             promptLabel.setText("กรุณาเลือกสินค้าที่ต้องการสั่งผลิต");
             return false;
         }

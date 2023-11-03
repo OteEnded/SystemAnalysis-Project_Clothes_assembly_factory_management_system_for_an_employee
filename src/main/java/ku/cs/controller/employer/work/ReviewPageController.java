@@ -123,7 +123,7 @@ public class ReviewPageController {
         try {
             WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
             Work work = Works.getData().get(selectedWork.getId());
-            work.setStatus(Works.status_checked);
+//            work.setStatus(Works.status_checked);
             com.github.saacsos.FXRouter.goTo("order", work);
         } catch (Exception e){
             System.err.println("ไปหน้า order ไม่ได้");

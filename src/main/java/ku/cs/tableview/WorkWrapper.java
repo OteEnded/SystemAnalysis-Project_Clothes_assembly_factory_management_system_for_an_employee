@@ -33,8 +33,8 @@ public class WorkWrapper {
         this.progress_amount = work.getProgressAmount();
         this.note = work.getNote();
         this.repair_work = work.isPass() ? getRepair_work() : null;
-        this.estimate = work.getEstimated();
         Product product = work.getProduct();
+        this.estimate = product.getProgressRate() == -1 ? "ไม่พบอัตราการทำงาน" : work.getEstimated();
         this.display_product = product.getName() + " ขนาด " + product.getSize() + " นิ้ว";
         this.isPass = work.isPass() ? "ผ่าน" : "ไม่ผ่าน";
     }

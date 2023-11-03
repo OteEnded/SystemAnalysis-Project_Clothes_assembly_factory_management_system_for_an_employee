@@ -53,8 +53,9 @@ public class ProjectApplication extends Application {
         String packageStr = "/ku/cs/fxml/";
         PopUpUtility.addPopUp(new CustomPopUp("delete-confirmation", packageStr + "employer/dialogs/delete-confirmation-dialog.fxml"));
         PopUpUtility.addPopUp(new CustomPopUp("save-material", packageStr + "employer/dialogs/save-material-dialog.fxml", "เพิ่ม-แก้ใขวัตถุดิบ"));
+        PopUpUtility.addPopUp(new CustomPopUp("set-progress-rate", packageStr + "employee/dialogs/set-progress-rate-dialog.fxml", "กรุณากรอกอัตราการทำงาน"));
         PopUpUtility.addPopUp(new CustomPopUp("loading", packageStr + "loading-dialog.fxml", "กำลังโหลด..."));
-
+        PopUpUtility.addPopUp(new CustomPopUp("progress-rate-warning", packageStr + "employee/dialogs/progress-rate-warning-dialog.fxml", "คำเตือน"));
         // ProjectUtility.debug("PopUpUtility: " + PopUpUtility.getPopUps());
     }
 

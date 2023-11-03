@@ -1,72 +1,59 @@
-package ku.cs.controller.employee;
+package ku.cs.tableview;
 
 import javafx.scene.control.TextField;
+import ku.cs.model.Product;
+import ku.cs.model.Work;
 import org.w3c.dom.Text;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class RecordDailyWrapper {
+
+    private String id;
     private String type;
-    private String product;
-    private int quantity;
-    private int capacity;
     private LocalDate deadline;
+    private int goal_amount;
+    private int progress_amount;
+    private String display_product;
     private TextField dailyRecord;
+
+    public RecordDailyWrapper(Work work, TextField dailyRecord) throws SQLException {
+        this.id = work.getId();
+        this.type = work.getWorkType();
+        this.deadline = work.getDeadline().toLocalDate();
+        this.goal_amount = work.getGoalAmount();
+        this.progress_amount = work.getProgressAmount();
+        Product product = work.getProduct();
+        this.display_product = product.getName() + " ขนาด " + product.getSize() + " นิ้ว";
+        this.dailyRecord = dailyRecord;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
+    public int getGoal_amount() {
+        return goal_amount;
+    }
+
+    public int getProgress_amount() {
+        return progress_amount;
+    }
+
+    public String getDisplay_product() {
+        return display_product;
     }
 
     public TextField getDailyRecord() {
         return dailyRecord;
-    }
-
-    public void setDailyRecord(TextField dailyRecord) {
-        this.dailyRecord = dailyRecord;
-    }
-
-    public RecordDailyWrapper(String type, String product, int quantity, int capacity, LocalDate deadline, TextField dailyRecord) {
-        this.type = type;
-        this.product = product;
-        this.quantity = quantity;
-        this.capacity = capacity;
-        this.deadline = deadline;
-        this.dailyRecord = dailyRecord;
     }
 }

@@ -147,6 +147,7 @@ public class AddProductPageController {
             Product product = new Product();
             product.setName(productTextField.getText());
             product.setSize(Integer.parseInt(sizeTextField.getText()));
+            product.setProgressRate(-1);
             product.save();
 
             MaterialUsage materialUsage = new MaterialUsage();

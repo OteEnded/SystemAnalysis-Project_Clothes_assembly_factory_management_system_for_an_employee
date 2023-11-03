@@ -92,7 +92,7 @@
                 <Font name="System Bold Italic" size="32.0" />
             </font>
         </Text>
-      <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="305.0" layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="469.0" scaleShape="false">
+      <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="305.0" layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="474.0" prefWidth="485.0" scaleShape="false">
          <columns>
             <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="ประเภทงาน" />
             <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="122.0" resizable="false" sortable="false" text="สินค้า" />

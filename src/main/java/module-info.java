@@ -34,5 +34,7 @@ module cs.ku {
     opens ku.cs.tableview to javafx.fxml;
     exports ku.cs.controller.employer.dialogs;
     opens ku.cs.controller.employer.dialogs to javafx.fxml;
+    exports ku.cs.controller.employee.dialogs;
+    opens ku.cs.controller.employee.dialogs to javafx.fxml;
 
 }

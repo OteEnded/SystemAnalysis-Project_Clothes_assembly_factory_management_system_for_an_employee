@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employee.RecordDailyResultController">
    <children>
@@ -32,23 +33,11 @@
                      </font></Label>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" styleClass="menu-bar" text="ออกจากระบบ">
-               <font>
-                  <Font size="16.0" />
-               </font></Button>
          </children>
       </VBox>
       <VBox layoutX="42.0" layoutY="188.0" prefHeight="334.0" prefWidth="165.0" spacing="5.0">
          <children>
             <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleReceivedWorkBtn" prefHeight="33.0" prefWidth="179.0" styleClass="menu-bar" text="จัดการงาน">
-               <font>
-                  <Font size="16.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="33.0" prefWidth="208.0" styleClass="menu-bar" text="อัตราการทำงาน">
                <font>
                   <Font size="16.0" />
                </font>
@@ -65,22 +54,17 @@
                </cursor>
                <styleClass>
                   <String fx:value="menu-bar" />
-                  <String fx:value="bold-text" />
+                  <String fx:value="menu-bar-selected" />
                </styleClass>
             </Button>
          </children>
       </VBox>
-      <Label layoutX="300.0" layoutY="104.0" styleClass="bold-text" text="บันทึกการทำงาน" textFill="#213555">
-         <font>
-            <Font name="System Bold" size="28.0" />
-         </font>
-      </Label>
       <TableView fx:id="tableView" centerShape="false" focusTraversable="false" layoutX="300.0" layoutY="155.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="439.0" prefWidth="911.0" scaleShape="false">
         <columns>
           <TableColumn fx:id="type" editable="false" minWidth="-Infinity" prefWidth="87.199951171875" resizable="false" sortable="false" text="ประเภทงาน" />
-          <TableColumn fx:id="product" editable="false" minWidth="-Infinity" prefWidth="252.0" resizable="false" sortable="false" text="สินค้า" />
-            <TableColumn fx:id="quantity" editable="false" minWidth="-Infinity" prefWidth="108.79998779296875" resizable="false" sortable="false" text="จำนวน(ตัว)" />
-            <TableColumn fx:id="capacity" editable="false" minWidth="-Infinity" prefWidth="120.800048828125" resizable="false" sortable="false" text="จำนวนที่ทำไปแล้ว" />
+          <TableColumn fx:id="display_product" editable="false" minWidth="-Infinity" prefWidth="252.0" resizable="false" sortable="false" text="สินค้า" />
+            <TableColumn fx:id="goal_amount" editable="false" minWidth="-Infinity" prefWidth="108.79998779296875" resizable="false" sortable="false" text="จำนวน(ตัว)" />
+            <TableColumn fx:id="progress_amount" editable="false" minWidth="-Infinity" prefWidth="120.800048828125" resizable="false" sortable="false" text="จำนวนที่ทำไปแล้ว" />
             <TableColumn fx:id="deadline" editable="false" maxWidth="383.20001220703125" minWidth="-Infinity" prefWidth="107.99993896484375" resizable="false" sortable="false" text="กำหนดส่ง" />
             <TableColumn fx:id="dailyRecord" editable="false" maxWidth="380.79997558593755" minWidth="-Infinity" prefWidth="220.0" resizable="false" sortable="false" text="จำนวนที่ทำได้ของวันนี้" />
         </columns>
@@ -89,5 +73,10 @@
          </columnResizePolicy>
       </TableView>
       <Button layoutX="300.0" layoutY="610.0" mnemonicParsing="false" onAction="#handleRecordDailyResultBtn" prefHeight="33.0" prefWidth="134.0" styleClass="blue-btn" text="บันทึกการทำงาน" textFill="WHITE" />
+      <Text fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="บันทึกการทำงาน">
+         <font>
+            <Font name="System Bold Italic" size="32.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

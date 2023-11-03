@@ -7,19 +7,28 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.entity.Products;
 import ku.cs.entity.Works;
+import ku.cs.model.Material;
+import ku.cs.model.MaterialUsage;
 import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
+import ku.cs.utility.PopUpUtility;
+import ku.cs.utility.ProjectUtility;
 
 public class ReceivedWorkController {
 
@@ -32,7 +41,17 @@ public class ReceivedWorkController {
 
     @FXML private Button acceptBtn;
     @FXML private Button putWorkRateBtn;
-    @FXML private Label workDetail;
+
+    // work detail
+    @FXML private AnchorPane detailPane;
+    @FXML private Label workTypeLabel;
+    @FXML private Label productLabel;
+    @FXML private Label deadlineLabel;
+    @FXML private Label amountLabel;
+
+    @FXML private Text noteText;
+    @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> total_materialListView;
 
     @FXML
     void initialize() throws SQLException {
@@ -54,23 +73,35 @@ public class ReceivedWorkController {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if(newValue != null) {
-                        showSelectedRow(newValue);
+                        try {
+                            showSelectedRow(newValue);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
         );
     }
+
     @FXML
     private void handleAcceptWorkBtn() throws SQLException, ParseException {
         WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
         Work work = Works.getData().get(selectedWork.getId());
         work.setStatus(Works.status_waitForMaterial);
+        work.setStartDate(ProjectUtility.getDate());
         Works.save(work);
         tableView.setItems(fetchData());
         tableView.refresh();
     }
 
-    private void showSelectedRow(WorkWrapper newValue) {
-        workDetail.setText(newValue.toString());
+    private void showSelectedRow(WorkWrapper newValue) throws SQLException {
+        detailPane.setVisible(true);
+        workTypeLabel.setText(newValue.getType());
+        productLabel.setText(newValue.getDisplay_product());
+        deadlineLabel.setText(newValue.getDeadline().toString());
+        amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
+        showListView(newValue.getDisplay_product());
+        noteText.setText(newValue.getNote());
         if(newValue.getEstimate().equals("ทันเวลา")) {
             acceptBtn.setVisible(true);
             putWorkRateBtn.setVisible(false);
@@ -79,16 +110,42 @@ public class ReceivedWorkController {
             putWorkRateBtn.setVisible(true);
         }
     }
-    @FXML
-    private void handlePutWorkRateBtn(ActionEvent actionEvent) throws IOException {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ku/cs/fxml/employee/put-work-rate-dialog.fxml"));
-        dialog.setDialogPane(loader.load());
-        dialog.setResizable(false);
-        if (dialog.isShowing()) {
-            // Close the dialog.
-            dialog.close();
+
+    private Product handleProductStringToProductObject(String value){
+        String[] values = value.split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[2]));
+        try {
+            return Products.toList(Products.getFilteredData()).get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private void showListView(String value) throws SQLException {
+        materialListView.getItems().clear();
+        total_materialListView.getItems().clear();
+        // เรียกข้อมูล
+        Product product = handleProductStringToProductObject(value);
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+
+        // เพิ่มช้อมูลเข้าลิสต์
+        for (MaterialUsage materialUsage : product.getMaterialsUsed()){
+            Material material = materialUsage.getMaterial();
+            material.getName();
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
+            total_materialListView.getItems().add(material.getName() + " " + materialUsage.getExpectedMaterialUsedByWork(work) + " " + materialUsage.getMaterial().getUnitName());
+        }
+    }
+    @FXML
+    private void handlePutWorkRateBtn(ActionEvent actionEvent) throws IOException, SQLException {
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("objectLabel", tableView.getSelectionModel().getSelectedItem().getDisplay_product());
+        passingData.put("work", Works.getData().get(tableView.getSelectionModel().getSelectedItem().getId()));
+        System.out.println(passingData);
+        PopUpUtility.popUp("set-progress-rate", passingData);
+        if (!PopUpUtility.getPopUp("set-progress-rate").isPositiveClosing()) return;
     }
 
     /* Navbar Btn */
@@ -146,14 +203,31 @@ public class ReceivedWorkController {
         }
     }
 
+    @FXML private void handleDailyRecordBtn() throws IOException {
+        try {
+            com.github.saacsos.FXRouter.goTo("record-daily-result");
+        } catch (Exception e) {
+            System.err.println("ไปหน้า received-work ไม่ได้");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void handleFactoryBtn() throws IOException {
+        try {
+            com.github.saacsos.FXRouter.goTo("order");
+        } catch (Exception e) {
+            System.err.println("ไปหน้า order ไม่ได้");
+            e.printStackTrace();
+        }
+    }
+
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 
         Works.addFilter("status", Works.status_waitForAccept);
-        HashMap<String, Work> works = Works.getFilteredData();
+        List<Work> works =  Works.getSortedBy("deadline", Works.getFilteredData());
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
-        for(String workId : works.keySet()) {
-            Work work = works.get(workId);
+        for(Work work : works) {
             WorkWrapper workWrapper = new WorkWrapper(work);
             workWrappers.add(workWrapper);
         }

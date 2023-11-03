@@ -3,10 +3,7 @@ package ku.cs.controller.employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
@@ -14,9 +11,16 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 
 import com.github.saacsos.FXRouter;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import ku.cs.entity.Products;
 import ku.cs.entity.Works;
+import ku.cs.model.Material;
+import ku.cs.model.MaterialUsage;
+import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
 
@@ -29,7 +33,17 @@ public class WaitingForMaterialWorkController {
     @FXML private TableColumn<WorkWrapper, Integer> goal_amount;
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
 
-    @FXML private Label workDetail;
+    // work detail
+    @FXML private AnchorPane detailPane;
+    @FXML private Label workTypeLabel;
+    @FXML private Label productLabel;
+    @FXML private Label deadlineLabel;
+    @FXML private Label amountLabel;
+
+    @FXML private Text noteText;
+    @FXML private ListView<String> materialListView;
+    @FXML private ListView<String> total_materialListView;
+
     @FXML private Button submitReceivedMaterialBtn;
 
     @FXML
@@ -63,15 +77,53 @@ public class WaitingForMaterialWorkController {
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if(newValue != null) {
-                        showSelectedRow(newValue);
+                        try {
+                            showSelectedRow(newValue);
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
         );
     }
 
-    private void showSelectedRow(WorkWrapper newValue) {
-        workDetail.setText(newValue.toString());
+    private void showSelectedRow(WorkWrapper newValue) throws SQLException {
+        detailPane.setVisible(true);
+        workTypeLabel.setText(newValue.getType());
+        productLabel.setText(newValue.getDisplay_product());
+        deadlineLabel.setText(newValue.getDeadline().toString());
+        amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
+        showListView(newValue.getDisplay_product());
+        noteText.setText(newValue.getNote());
         submitReceivedMaterialBtn.setVisible(true);
+    }
+
+    private Product handleProductStringToProductObject(String value){
+        String[] values = value.split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[2]));
+        try {
+            return Products.toList(Products.getFilteredData()).get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showListView(String value) throws SQLException {
+        materialListView.getItems().clear();
+        total_materialListView.getItems().clear();
+        // เรียกข้อมูล
+        Product product = handleProductStringToProductObject(value);
+        WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        Work work = Works.getData().get(selectedWork.getId());
+
+        // เพิ่มช้อมูลเข้าลิสต์
+        for (MaterialUsage materialUsage : product.getMaterialsUsed()){
+            Material material = materialUsage.getMaterial();
+            material.getName();
+            materialListView.getItems().add(material.getName() + " " + materialUsage.getAmountPerYield() + " " + materialUsage.getMaterial().getUnitName());
+            total_materialListView.getItems().add(material.getName() + " " + materialUsage.getExpectedMaterialUsedByWork(work) + " " + materialUsage.getMaterial().getUnitName());
+        }
     }
 
     /* Navbar Btn */
@@ -132,11 +184,10 @@ public class WaitingForMaterialWorkController {
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 
         Works.addFilter("status", Works.status_waitForMaterial);
-        HashMap<String, Work> works = Works.getFilteredData();
+        List<Work> works =  Works.getSortedBy("deadline", Works.getFilteredData());
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
-        for(String workId : works.keySet()) {
-            Work work = works.get(workId);
+        for(Work work : works) {
             WorkWrapper workWrapper = new WorkWrapper(work);
             workWrappers.add(workWrapper);
         }

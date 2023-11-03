@@ -177,4 +177,14 @@ public class OrderWorkPageController {
         }
     }
 
+    @FXML
+    public void handleEmployeeButton() throws IOException{
+        try {
+            com.github.saacsos.FXRouter.goTo("received-work");
+        } catch (Exception e){
+            System.err.println("ไปหน้า received-work ไม่ได้");
+            e.printStackTrace();
+        }
+    }
+
 }

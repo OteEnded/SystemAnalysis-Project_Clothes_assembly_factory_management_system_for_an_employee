@@ -54,6 +54,7 @@ public class ProjectApplication extends Application {
         PopUpUtility.addPopUp(new CustomPopUp("delete-confirmation", packageStr + "employer/dialogs/delete-confirmation-dialog.fxml"));
         PopUpUtility.addPopUp(new CustomPopUp("save-material", packageStr + "employer/dialogs/save-material-dialog.fxml", "เพิ่ม-แก้ใขวัตถุดิบ"));
         PopUpUtility.addPopUp(new CustomPopUp("loading", packageStr + "loading-dialog.fxml", "กำลังโหลด..."));
+        PopUpUtility.addPopUp(new CustomPopUp("order-late-work", ""));
 
         // ProjectUtility.debug("PopUpUtility: " + PopUpUtility.getPopUps());
     }

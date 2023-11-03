@@ -19,8 +19,6 @@ public class DeleteConfirmationDialogController {
 
     static final CustomPopUp customPopUp = PopUpUtility.getPopUp("delete-confirmation");
 
-    private Material material;
-
     @FXML
     private TextField textField;
 

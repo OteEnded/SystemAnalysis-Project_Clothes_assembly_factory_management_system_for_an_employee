@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import ku.cs.ProjectApplication;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -87,8 +88,10 @@ public class CustomPopUp {
         return passingData;
     }
 
-    public void clearPassingData(){
+    public void clearData(){
         passingData = null;
+        closeBy = null;
+        windowTitle = null;
     }
 
     public boolean isPositiveClosing() {
@@ -112,7 +115,7 @@ public class CustomPopUp {
 
         PopUpUtility.addPoppingUp(this);
 
-        FXMLLoader loader = new FXMLLoader(PopUpUtility.class.getResource(path));
+        FXMLLoader loader = new FXMLLoader(ProjectApplication.class.getResource(path));
         Parent dialog;
         try{
             dialog = loader.load();
@@ -130,7 +133,7 @@ public class CustomPopUp {
 
         if (passingData != null && passingData instanceof HashMap) {
             HashMap<String, Object> passingDataMap = (HashMap<String, Object>) passingData;
-            if (passingDataMap.containsKey("headerLabel")) windowTitle = ((String) passingDataMap.get("windowsTitle"));
+            if (passingDataMap.containsKey("windowsTitle")) windowTitle = ((String) passingDataMap.get("windowsTitle"));
         }
 
         if (windowTitle == null) windowTitle = "โปรดทราบ...";
@@ -153,7 +156,7 @@ public class CustomPopUp {
 
     public void close(boolean clearPassingData){
         ProjectUtility.debug("CustomPopUp[close]: closing popUp ->", key);
-        if (clearPassingData) clearPassingData();
+        if (clearPassingData) clearData();
         dialogStage.close();
         if (closeBy == null) closeBy = PopUpUtility.closeWith_close;
         ProjectUtility.debug("CustomPopUp[close]: closed popUp ->", key);

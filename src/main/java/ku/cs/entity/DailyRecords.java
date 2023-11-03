@@ -131,8 +131,13 @@ public class DailyRecords {
     public static int save(DailyRecord dailyRecord) throws SQLException, ParseException {
         ProjectUtility.debug("DailyRecords[save]: saving dailyRecord ->", dailyRecord);
         if(!isDailyRecordValid(dailyRecord)) throw new RuntimeException("DailyRecords[save]: dailyRecord is not valid ->" + verifyDailyRecord(dailyRecord));
+        Work w = dailyRecord.getForWork();
+        w.setProgressAmount(w.getProgressAmount() + dailyRecord.getAmount());
+        w.save();
         if(isNew(dailyRecord)) {
             addData(dailyRecord);
+
+
             Product product = dailyRecord.getForWork().getProduct();
             if (product.getProgressRate() == -1) {
                 product.setProgressRate(dailyRecord.getAmount());
@@ -155,6 +160,13 @@ public class DailyRecords {
             }
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, dailyRecord)));
         }
+
+        ProjectUtility.debug("DailyRecords[save]: updating dailyRecord ->", dailyRecord);
+        ProjectUtility.debug("DailyRecords[save]: old dailyRecord.getAmount() ->", DailyRecords.getData().get(getJoinedPrimaryKeys(dailyRecord)).getAmount());
+        ProjectUtility.debug("DailyRecords[save]: adding new dailyRecord.getAmount() ->", dailyRecord.getAmount());
+        dailyRecord.setAmount(dailyRecord.getAmount() + DailyRecords.getData().get(getJoinedPrimaryKeys(dailyRecord)).getAmount());
+        ProjectUtility.debug("DailyRecords[save]: new dailyRecord.getAmount() ->", dailyRecord.getAmount());
+
         data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
         return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, dailyRecord)));
     }

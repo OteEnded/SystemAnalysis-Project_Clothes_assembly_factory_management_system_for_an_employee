@@ -18,6 +18,8 @@ public class Works {
 
     public static final String status_waitForAccept = "รอรับงาน";
     public static final String status_waitForMaterial = "รอวัตถุดิบ";
+    public static final String status_waitForWorking = "รอทำงาน";
+
     public static final String status_working = "กำลังทำงาน";
     public static final String status_done = "ทำงานเสร็จ";
     public static final String status_sent = "ส่งงานแล้ว";
@@ -25,6 +27,9 @@ public class Works {
 
     public static final String estimate_onTime = "ทันเวลา";
     public static final String estimate_late = "อาจไม่ทันเวลา";
+
+    public static final String note_waitForEstimate = "รอลูกจ้างประเมินเวลา";
+    public static final String note_estimateLate = "ลูกจ้างประเมินเวลาแล้ว อาจทำงานได้ไม่ทันเวลา";
 
     public static List<String> typeList = new ArrayList<>();
     static {
@@ -37,6 +42,7 @@ public class Works {
     static {
         statusList.add(status_waitForAccept);
         statusList.add(status_waitForMaterial);
+        statusList.add(status_waitForWorking);
         statusList.add(status_working);
         statusList.add(status_done);
         statusList.add(status_sent);
@@ -241,6 +247,7 @@ public class Works {
         data.remove(getJoinedPrimaryKeys(work));
         int affectedRow = DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
         Works.load();
+        DailyRecords.load();
         return affectedRow;
     }
 

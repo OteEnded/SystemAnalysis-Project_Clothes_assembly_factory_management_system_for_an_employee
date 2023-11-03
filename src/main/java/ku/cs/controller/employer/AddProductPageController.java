@@ -11,6 +11,7 @@ import ku.cs.entity.Products;
 import ku.cs.model.Material;
 import ku.cs.model.MaterialUsage;
 import ku.cs.model.Product;
+import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
@@ -37,11 +38,16 @@ public class AddProductPageController {
 
 
     @FXML void initialize() throws SQLException {
+        refreshMaterialComboBox();
+        unitText.setText("");
+        yieldTextField.setText("1");
+    }
+
+    private void refreshMaterialComboBox() throws SQLException {
+        materialNameComboBox.getItems().clear();
         for (Material materials : Materials.getDataAsList()){
             materialNameComboBox.getItems().addAll(materials.getName());
         }
-        unitText.setText("");
-        yieldTextField.setText("1");
     }
 
     @FXML public void handleComboBoxSelected(){
@@ -56,8 +62,8 @@ public class AddProductPageController {
         HashMap<String, Object> filter = Materials.getFilter();
         try {
             ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: getting materials filter by material_name ->", materialNameComboBox.getValue());
-            Materials.getFilteredData();
-            if (Materials.getFilteredData().isEmpty()) ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: cannot fine material with filter by material_name ->", materialNameComboBox.getValue());
+            Materials.getFilteredData(filter);
+            if (Materials.getFilteredData(filter).isEmpty()) ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: cannot fine material with filter by material_name ->", materialNameComboBox.getValue());
             ProjectUtility.debug("AddProductPageController[handleMaterialStringToMaterialObject]: list of filtered material -> ", Materials.toList(Materials.getFilteredData(filter)));
 
             ProjectUtility.debug("materialNameComboBox.getValue():", materialNameComboBox.getValue());
@@ -183,8 +189,20 @@ public class AddProductPageController {
     }
 
     @FXML
-    public void handleAddMaterialButton(){
-        // popup
+    public void handleAddMaterialButton() throws IOException, SQLException, ParseException {
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("windowsTitle", "เพิ่มวัตถุดิบ");
+        PopUpUtility.popUp("save-material", passingData);
+        if (!PopUpUtility.getPopUp("save-material").isPositiveClosing()) return;
+
+        Material addingMaterial = (Material) PopUpUtility.getPopUp("save-material").getPassingData();
+        ProjectUtility.debug("MaterialManagementPageController[handleAddMaterialButton]: addingMaterial ->", addingMaterial);
+
+        addingMaterial.save();
+
+        PopUpUtility.getPopUp("save-material").clearData();
+
+        refreshMaterialComboBox();
     }
 
     // MenuBar Handle

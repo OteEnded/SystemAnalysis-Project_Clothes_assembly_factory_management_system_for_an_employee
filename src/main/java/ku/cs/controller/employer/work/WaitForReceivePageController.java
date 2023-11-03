@@ -11,15 +11,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import ku.cs.entity.Products;
+import ku.cs.entity.Users;
 import ku.cs.entity.Works;
 import ku.cs.model.Material;
 import ku.cs.model.MaterialUsage;
 import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
+import ku.cs.utility.PopUpUtility;
+import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -41,6 +45,8 @@ public class WaitForReceivePageController {
     @FXML private Text noteText;
     @FXML private ListView<String> materialListView;
     @FXML private ListView<String> total_materialListView;
+
+    private String selectedWorkId;
 
     @FXML
     void initialize() throws SQLException {
@@ -69,6 +75,7 @@ public class WaitForReceivePageController {
     }
 
     private void showSelectedRow(WorkWrapper newValue) throws SQLException {
+        selectedWorkId = newValue.getId();
         detailPane.setVisible(true);
         workTypeLabel.setText(newValue.getType());
         productLabel.setText(newValue.getDisplay_product());
@@ -121,8 +128,24 @@ public class WaitForReceivePageController {
         return workWrappers;
     }
 
-    @FXML private void handleDeleteWorkButton(){
+    @FXML private void handleDeleteWorkButton() throws SQLException, IOException, ParseException {
         // pop up
+        Work deletingWork = Works.getData().get(selectedWorkId);
+        if (deletingWork == null) throw new RuntimeException("WaitForReceivePageController[handleDeleteWorkButton]: cannot find work with id -> " + selectedWorkId);
+
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("windowsTitle", "ลบงาน");
+        passingData.put("headerLabel", "คุณต้องการลบงานหรือไม่");
+        passingData.put("objectLabel", "งานนี้");
+        PopUpUtility.popUp("delete-confirmation", passingData);
+        if (!PopUpUtility.getPopUp("delete-confirmation").isPositiveClosing()) return;
+        PopUpUtility.getPopUp("delete-confirmation").clearData();
+
+        deletingWork.delete();
+
+        ProjectUtility.debug("WaitForReceivePageController[handleDeleteWorkButton]: deleted work ->", deletingWork);
+
+        tableView.setItems(fetchData());
     }
 
 

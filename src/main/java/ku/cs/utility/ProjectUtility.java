@@ -102,6 +102,10 @@ public class ProjectUtility {
         return (int) (date1.toEpochDay() - date2.toEpochDay());
     }
 
+    public static Date getDate(int offsetFromToday){
+        return getDate(LocalDate.now().plusDays(offsetFromToday));
+    }
+
     public static void copyFile(String from, String to){
         File file = new File(from);
         Path path = Paths.get(to);

@@ -13,7 +13,7 @@
             <Font name="System Bold Italic" size="24.0" />
          </font>
       </Label>
-      <HBox layoutX="57.0" layoutY="94.0" prefHeight="30.0" prefWidth="450.0">
+      <HBox layoutX="57.0" layoutY="94.0" prefHeight="30.0" prefWidth="540.0">
          <children>
             <Label styleClass="text" text="โปรดรอสักครู ขณะนี้โปรแกรมกำลังโหลดข้อมูลจาก " textFill="#172b4d">
                <font>

@@ -63,43 +63,6 @@ public class DataSourceDB {
         affectedRows += dropTable("Products");
         affectedRows += dropTable("Users");
 
-//
-//        // Execute a SQL query to retrieve foreign key constraints
-//        ResultSet resultSet = JdbcConnector.query("SELECT TABLE_NAME, CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = 'FOREIGN KEY'");
-//
-//        while (resultSet.next()) {
-//            String tableName = resultSet.getString("TABLE_NAME");
-//            String constraintName = resultSet.getString("CONSTRAINT_NAME");
-//
-//            boolean isTableExist = false;
-//            for (String myTable : getTableList()) {
-//                if (myTable.equals(tableName)) {
-//                    isTableExist = true;
-//                    break;
-//                }
-//            }
-//            if (!isTableExist) continue;
-//
-//
-//            // Generate DROP FOREIGN KEY statement
-//            String dropStatement = "ALTER TABLE " + tableName + " DROP FOREIGN KEY " + constraintName;
-//            System.out.println("Dropping foreign key constraint: " + constraintName + " in table " + tableName);
-//
-//            // Execute the DROP FOREIGN KEY statement
-//            JdbcConnector.update(dropStatement);
-//        }
-//
-//        System.out.println("All foreign key constraints dropped successfully.");
-//
-//        int affectedRows = 0;
-//        for (String tableName : getTableList()) {
-//            System.out.println("Dropping table: " + tableName);
-//
-//            // Execute a DROP TABLE statement for each table
-//            affectedRows += dropTable(tableName);
-//        }
-//
-//        System.out.println("All tables dropped successfully.");
         JdbcConnector.disconnect();
         return affectedRows;
     }

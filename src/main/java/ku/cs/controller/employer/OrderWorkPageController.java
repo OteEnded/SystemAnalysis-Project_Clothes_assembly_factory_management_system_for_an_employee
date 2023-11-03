@@ -66,6 +66,9 @@ public class OrderWorkPageController {
 
 //        PopUpUtility.popUp("loading", "กำลังบันทึกข้อมูล...");
 
+        ProjectUtility.debug("###############################");
+        ProjectUtility.debug(validate());
+
         if (validate()) {
             promptLabel.setText("");
             if (!addWork()){
@@ -115,12 +118,16 @@ public class OrderWorkPageController {
     }
 
     private boolean validate(){
+        if (productComboBox.getSelectionModel().isEmpty()){
+            promptLabel.setText("กรุณาเลือกสินค้าที่ต้องการสั่งผลิต");
+            return false;
+        }
         if (amountTextField.getText().isEmpty()){
             promptLabel.setText("กรุณากรอกจำนวนงาน");
             return false;
         }
         if (deadlineDatePicker.getValue().isBefore(LocalDate.now())){
-            promptLabel.setText("กรุณากรอกกำหนดส่งให้ถูกต้อง");
+            promptLabel.setText("กรุณากรอกวันกำหนดส่งให้ถูกต้อง");
             return false;
         }
         return true;

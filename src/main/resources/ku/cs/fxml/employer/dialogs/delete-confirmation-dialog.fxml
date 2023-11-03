@@ -21,6 +21,6 @@
          </children>
       </HBox>
       <Button fx:id="cancelButton" layoutX="449.0" layoutY="219.0" mnemonicParsing="false" onAction="#onCancelButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="ยกเลิก" textFill="WHITE" />
-      <Button fx:id="confirmButton" layoutX="331.0" layoutY="219.0" mnemonicParsing="false" onAction="#onConfirmButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="red-btn" text="ลบรายการวัตถุดิบ" textFill="WHITE" />
+      <Button fx:id="confirmButton" layoutX="331.0" layoutY="219.0" mnemonicParsing="false" onAction="#onConfirmButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="red-btn" text="ยืนยันการลบ" textFill="WHITE" />
    </children>
 </AnchorPane>

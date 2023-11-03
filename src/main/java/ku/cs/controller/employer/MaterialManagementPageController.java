@@ -52,7 +52,13 @@ public class MaterialManagementPageController {
         Button editBtn = new Button();
         editBtn.setText("แก้ไขวัตถุดิบ");
         editBtn.getStyleClass().add("white-btn");
-        editBtn.setOnAction(e -> handleEditMaterialButton(name));
+        editBtn.setOnAction(e -> {
+            try {
+                handleEditMaterialButton(name);
+            } catch (SQLException | IOException | ParseException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         box.getChildren().add(material);
         box.getChildren().add(editBtn);
@@ -70,19 +76,43 @@ public class MaterialManagementPageController {
         passingData.put("objectLabel", name);
         PopUpUtility.popUp("delete-confirmation", passingData);
         if (!PopUpUtility.getPopUp("delete-confirmation").isPositiveClosing()) return;
+        PopUpUtility.getPopUp("delete-confirmation").clearData();
 
         getMaterialFromStringName(name).delete();
 
         refreshMaterialList();
     }
 
-    private void handleEditMaterialButton(String name){
-        System.out.println("edit " + name);
+    private void handleEditMaterialButton(String name) throws SQLException, IOException, ParseException {
+        Material editingMaterial = getMaterialFromStringName(name);
+        if (editingMaterial == null) throw new RuntimeException("MaterialManagementPageController[handleEditMaterialButton]: editingMaterial is null");
+
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("windowsTitle", "แก้ไขวัตถุดิบ");
+        passingData.put("material", editingMaterial);
+        PopUpUtility.popUp("save-material", passingData);
+        if (!PopUpUtility.getPopUp("save-material").isPositiveClosing()) return;
+
+        editingMaterial = (Material) PopUpUtility.getPopUp("save-material").getPassingData();
+        ProjectUtility.debug("MaterialManagementPageController[handleEditMaterialButton]: editingMaterial ->", editingMaterial);
+
+        editingMaterial.save();
+
+        PopUpUtility.getPopUp("save-material").clearData();
+
+        refreshMaterialList();
+
     }
 
     private Material getMaterialFromStringName(String name) throws SQLException {
         Materials.addFilter("material_name", name);
-        return Materials.toList(Materials.getFilteredData()).get(0);
+        HashMap<String, Object> filter = Materials.getFilter();
+        Materials.getFilteredData(filter);
+        if (Materials.getFilteredData(filter).isEmpty()) {
+            ProjectUtility.debug("MaterialManagementPageController[getMaterialFromStringName]: cannot find material with name ->", name);
+            return null;
+        }
+        return Materials.toList(Materials.getFilteredData(filter)).get(0);
     }
 
     // MenuBar Handle
@@ -132,5 +162,22 @@ public class MaterialManagementPageController {
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void handleAddMaterialButton() throws IOException, SQLException, ParseException {
+        HashMap<String, Object> passingData = new HashMap<>();
+        passingData.put("windowsTitle", "เพิ่มวัตถุดิบ");
+        PopUpUtility.popUp("save-material", passingData);
+        if (!PopUpUtility.getPopUp("save-material").isPositiveClosing()) return;
+
+        Material addingMaterial = (Material) PopUpUtility.getPopUp("save-material").getPassingData();
+        ProjectUtility.debug("MaterialManagementPageController[handleAddMaterialButton]: addingMaterial ->", addingMaterial);
+
+        addingMaterial.save();
+
+        PopUpUtility.getPopUp("save-material").clearData();
+
+        refreshMaterialList();
     }
 }

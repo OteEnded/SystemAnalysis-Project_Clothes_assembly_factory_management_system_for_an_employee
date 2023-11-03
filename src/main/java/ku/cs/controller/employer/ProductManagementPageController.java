@@ -160,6 +160,7 @@ public class ProductManagementPageController {
         passingData.put("objectLabel", product.getName());
         PopUpUtility.popUp("delete-confirmation", passingData);
         if (!PopUpUtility.getPopUp("delete-confirmation").isPositiveClosing()) return;
+        PopUpUtility.getPopUp("delete-confirmation").clearData();
 
         product.delete();
 

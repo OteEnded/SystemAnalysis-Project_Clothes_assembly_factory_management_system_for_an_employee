@@ -2,6 +2,7 @@ package ku.cs.entity;
 
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
+import ku.cs.service.WorkCalendar;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
@@ -227,16 +228,21 @@ public class Works {
 
         if (!isWorkValid(work)) throw new RuntimeException("Works[save]: work's data is not valid -> " + verifyWork(work));
 
+        int affectedRow = 0;
         if (isNew(work)){
             Products.load();
             if (work.getProduct().getProgressRate() == -1){
                 work.setNote(Works.note_waitForUserEstimate + "\n" + work.getNote());
             }
             addData(work);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
+            affectedRow += DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
+            WorkCalendar.init();
+            return affectedRow;
         }
         data.put(getJoinedPrimaryKeys(work), work);
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
+        affectedRow += DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
+        WorkCalendar.init();
+        return affectedRow;
     }
 
     public static int delete(String id) throws SQLException, ParseException {

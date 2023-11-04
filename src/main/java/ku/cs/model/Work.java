@@ -2,6 +2,7 @@ package ku.cs.model;
 
 import ku.cs.entity.DailyRecords;
 import ku.cs.entity.Works;
+import ku.cs.service.WorkCalendar;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
 
@@ -19,6 +20,7 @@ public class Work implements Row {
     public Work(){
         setProgressAmount(0);
         setCreateDate(ProjectUtility.getDate());
+        setStatus(Works.status_waitForAccept);
     }
 
     public Work(HashMap<String, Object> data){
@@ -57,6 +59,10 @@ public class Work implements Row {
 
     public void setProduct(String product) {
         data.put("product", product);
+    }
+
+    public String getProductId() {
+        return (String) data.get("product");
     }
 
     public Product getProduct() throws SQLException {
@@ -146,15 +152,17 @@ public class Work implements Row {
     // not done
     public String getEstimated() throws SQLException {
 
-        int todo = getGoalAmount() - getProgressAmount();
+//        int todo = getGoalAmount() - getProgressAmount();
+//
+//        int workDay = ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
+//
+//        int remainingDay = (int) Math.ceil(todo / getProduct().getProgressRate());
+//
+//        if (workDay > remainingDay) return Works.estimate_onTime;
+//
+//        return Works.estimate_late;
 
-        int workDay = ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
-
-        int remainingDay = (int) Math.ceil(todo / getProduct().getProgressRate());
-
-        if (workDay > remainingDay) return Works.estimate_onTime;
-
-        return Works.estimate_late;
+        return WorkCalendar.getWorkEstimating(this);
     }
 
     public boolean isPass() throws SQLException {
@@ -174,6 +182,12 @@ public class Work implements Row {
     public boolean isRecorded(Date date) throws SQLException {
         return DailyRecords.isRecorded(this, date);
     }
+
+    public String getAdviceMessage(){
+        return "";
+    }
+
+
 
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Works.getSqlTable(), id));

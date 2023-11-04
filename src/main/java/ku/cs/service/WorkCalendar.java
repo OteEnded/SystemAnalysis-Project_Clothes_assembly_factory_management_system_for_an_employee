@@ -15,44 +15,46 @@ public class WorkCalendar {
     private static List<HashMap<String, Object>> workCalendar;
 
     public static void init() throws SQLException {
-        fetch();
+        workCalendar = new ArrayList<>();
+        workCalendar = fetch();
     }
 
-    public static void fetch() throws SQLException {
-        ProjectUtility.debug("WorkCalendar[fetch]: #### fetching...");
-        workCalendar = new ArrayList<>();
+    public static List<HashMap<String, Object>> fetch() throws SQLException {
+        return fetch(Works.getData());
+    }
 
-        HashMap<String, Work> workInPlan = Works.getData();
+    public static List<HashMap<String, Object>> fetch(HashMap<String, Work> workInPlan) throws SQLException {
+        ProjectUtility.debug("WorkCalendar[fetch]: fetching...");
+        List<HashMap<String, Object>> fetchingWorkCalendar = new ArrayList<>();
+
         List<String> notInPlan = new ArrayList<>();
         for (Work work: workInPlan.values()) {
-            if (
-                work.getStatus().equals(Works.status_done) ||
-                work.getStatus().equals(Works.status_sent) ||
-                work.getStatus().equals(Works.status_checked) ||
-                work.getProduct().getProgressRate() == -1
-            ) { notInPlan.add(Works.getJoinedPrimaryKeys(work)); }
+            if (!isWorkPlanAble(work)) { notInPlan.add(Works.getJoinedPrimaryKeys(work)); }
         }
         for (String key: notInPlan) {
             workInPlan.remove(key);
         }
 
 
-        if (workInPlan.isEmpty()) throw new RuntimeException("WorkCalendar[fetch]: #### workInPlan is empty");
+        if (workInPlan.isEmpty()) {
+            ProjectUtility.debug("WorkCalendar[fetch]: workInPlan is empty");
+            return null;
+        }
 
         List<Work> sortedWorkInPlan = Works.getSortedBy("deadline", workInPlan);
 
-        ProjectUtility.debug(sortedWorkInPlan);
 
-        for (Work work: workInPlan.values()) {
+        for (Work work: sortedWorkInPlan) {
             HashMap<String, Object> event = new HashMap<>();
             event.put("work", work);
             event.put("start_date", getExpectedStartDate(work));
             event.put("done_date", getExpectedDoneDate(work));
-            workCalendar.add(event);
+            fetchingWorkCalendar.add(event);
         }
 
-        ProjectUtility.debug(workCalendar);
-
+        ProjectUtility.debug("WorkCalendar[fetch]: fetching done");
+        ProjectUtility.debug("WorkCalendar[fetch]: fetchingWorkCalendar ->", fetchingWorkCalendar);
+        return fetchingWorkCalendar;
     }
 
     public static Date getExpectedStartDate(Work work) throws SQLException {
@@ -75,7 +77,7 @@ public class WorkCalendar {
     }
 
     public static Date getExpectedDoneDate(Work work) throws SQLException {
-        if (workCalendar == null) fetch();
+        if (workCalendar == null) init();
         if (getExpectedStartDate(work) == null) throw new RuntimeException("WorkCalendar[getExpectedDoneDate]: #### getExpectedStartDate(work) is null");
         return ProjectUtility.getDateWithOffset(getExpectedStartDate(work), work.getEstimatedWorkDay());
 
@@ -90,11 +92,12 @@ public class WorkCalendar {
     }
 
     public static HashMap<String, Object> getEventFromWork(Work work) throws SQLException {
+        if (workCalendar == null) init();
         return getEventFromWork(work, workCalendar);
     }
 
     public static HashMap<String, Object> getEventFromWork(Work work, List<HashMap<String, Object>> workCalendar) throws SQLException {
-        if (workCalendar == null) fetch();
+        if (workCalendar == null) throw new RuntimeException("WorkCalendar[getEventFromWork]: #### workCalendar is null");
 
         for (HashMap<String, Object> event: workCalendar){
             Work workInEvent = (Work) event.get("work");
@@ -105,28 +108,46 @@ public class WorkCalendar {
     }
 
     private static boolean isNew(Work work) throws SQLException {
+        if (workCalendar == null) init();
         return (getEventFromWork(work) == null);
     }
-
-//    private static void addWorkToCalendar(Work work) {
-//
-//    }
 
     public List<HashMap<String, Object>> getWorkCalendar() {
         return workCalendar;
     }
 
     public static String getWorkEstimating(Work work) throws SQLException {
-        if (workCalendar == null) fetch();
+        if (workCalendar == null) init();
 
-        HashMap<String, Object> workEvent = getEventFromWork(work);
-        if (workEvent == null) {
+//        if (!isNew(work)) {
+//            HashMap<String, Object> workEvent = getEventFromWork(work);
+//
+//            if (ProjectUtility.differanceDate(work.getDeadline(), (Date) workEvent.get("done_date")) < 0)
+//                return Works.estimate_late;
+//            else return Works.estimate_onTime;
+//        }
+//        ProjectUtility.debug("WorkCalendar[getWorkEstimating]: work is new");
 
-        }
+        if (!isWorkPlanAble(work)) return "cannot estimate this work";
+
+        HashMap<String, Work> workInPlan = new HashMap<>(Works.getData());
+        if (work.getId() == null) work.setId(Works.getNewId());
+        workInPlan.put(work.getId(), work);
+        List<HashMap<String, Object>> tempWorkCalendar = fetch(workInPlan);
+        HashMap<String, Object> workEvent = getEventFromWork(work, tempWorkCalendar);
         if (ProjectUtility.differanceDate(work.getDeadline(), (Date) workEvent.get("done_date")) < 0)
             return Works.estimate_late;
         else return Works.estimate_onTime;
+    }
 
+    public static boolean isWorkPlanAble(Work work) throws SQLException {
+        return !(
+                work.getStatus().equals(Works.status_done) ||
+                work.getStatus().equals(Works.status_sent) ||
+                work.getStatus().equals(Works.status_checked) ||
+                work.getProductId() == null ||
+                work.getProduct().getProgressRate() == -1
+        );
     }
 
     public static void print(){

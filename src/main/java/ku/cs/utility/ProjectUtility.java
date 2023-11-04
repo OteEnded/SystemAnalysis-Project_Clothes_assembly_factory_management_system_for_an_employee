@@ -30,15 +30,15 @@ public class ProjectUtility {
     public static final boolean isDebug = true;
 
     public static void debug(Object... msgs) {
-        debug(Arrays.stream(msgs).toList(), true);
+        debug(Arrays.stream(msgs).toList());
     }
 
     public static void debug(List<Object> msgs){
         debug(msgs, false);
     }
 
-    public static void debug(List<Object> msgs, boolean asOneLine){
-        if (asOneLine) {
+    public static void debug(List<Object> msgs, boolean separateLine){
+        if (!separateLine) {
             List<String> msgList = new ArrayList<>();
             for (Object i : msgs) {
                 if (i == null) i = "null";

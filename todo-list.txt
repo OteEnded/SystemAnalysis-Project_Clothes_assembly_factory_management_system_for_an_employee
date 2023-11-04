@@ -5,10 +5,10 @@ todo
 * product add material usage [done-tested]
 * product remove material usage [done-tested]
 * PU can get date from Date or string [done-tested]
-* check adding and verifier [done]
-* sorting [done] -> ปลาย ฝาก [done]
-* DBSeeder -> ปลาย
+* check adding and verifier [half-done]
+* sorting [done] -> ปลาย ฝาก [done-tested]
+* DBSeeder -> ปลาย [done-ok]
 * DBSeeder to DBSeedAndLoad [done-test]
 * work calendar management
-**
-* custom popup service
+** work
+* custom popup service [done-ok]

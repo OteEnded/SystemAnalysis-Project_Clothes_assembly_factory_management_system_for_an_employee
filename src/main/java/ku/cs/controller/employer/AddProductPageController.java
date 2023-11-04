@@ -36,6 +36,8 @@ public class AddProductPageController {
     @FXML private TextField yieldTextField;
     @FXML private Text unitText;
 
+    @FXML private Label promptLabel;
+
 
     @FXML void initialize() throws SQLException {
         refreshMaterialComboBox();
@@ -147,9 +149,39 @@ public class AddProductPageController {
         materialNameComboBox.getSelectionModel().clearSelection();
         amountTextField.setText("");
     }
+
+    private boolean validate() throws SQLException {
+        if (productTextField.getText().isEmpty()){
+            promptLabel.setText("กรุณากรอกชื่อสินค้า");
+            return false;
+        }
+        if (sizeTextField.getText().isEmpty()){
+            promptLabel.setText("กรุณากรอกขนาดสินค้า");
+            return false;
+        }
+        // check if sizeTextField is number
+        if (!sizeTextField.getText().matches("[0-9]+")){
+            promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
+            return false;
+        }
+
+        Products.addFilter("product_name", productTextField.getText());
+        Products.addFilter("size", Integer.parseInt(sizeTextField.getText()));
+        if (!Products.getFilteredData().isEmpty()){
+            promptLabel.setText("มีสินค้าชื่อ " + productTextField.getText() + " ขนาด " + sizeTextField.getText() + " นิ้ว ในระบบอยู่แล้ว");
+            return false;
+        }
+
+
+        return true;
+
+    }
+
     @FXML
     public void handleAddProductButton() throws SQLException, ParseException {
         try {
+            if (!validate()) return;
+            promptLabel.setText("");
             Product product = new Product();
             product.setName(productTextField.getText());
             product.setSize(Integer.parseInt(sizeTextField.getText()));
@@ -171,8 +203,10 @@ public class AddProductPageController {
                 ProjectUtility.debug("AddProductPageController[handleSubmitButton]: with material, amount, yield ->", material_name, amountStr, yieldStr);
 
                 product.saveMaterialUsed(handleMaterialStringToMaterialObject(material_name), Integer.parseInt(amountStr), Integer.parseInt(yieldStr));
-                com.github.saacsos.FXRouter.goTo("product-manage");
             }
+
+
+            com.github.saacsos.FXRouter.goTo("product-manage");
         } catch (Exception e){
             System.err.println("ไปหน้า home ไม่ได้");
             e.printStackTrace();

@@ -35,6 +35,8 @@ public class EditProductPageController {
     @FXML private TextField yieldTextField;
     @FXML private Text unitText;
 
+    @FXML private Label promptLabel;
+
 
     @FXML void initialize() throws SQLException {
         Product product = (Product) com.github.saacsos.FXRouter.getData();
@@ -143,9 +145,29 @@ public class EditProductPageController {
         materialNameComboBox.getSelectionModel().clearSelection();
         amountTextField.setText("");
     }
+
+    private boolean validate(){
+        if (productTextField.getText().isEmpty()){
+            promptLabel.setText("กรุณากรอกชื่อสินค้า");
+            return false;
+        }
+        if (sizeTextField.getText().isEmpty()){
+            promptLabel.setText("กรุณากรอกขนาดสินค้า");
+            return false;
+        }
+        // check if sizeTextField is number
+        if (!sizeTextField.getText().matches("[0-9]+")){
+            promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
+            return false;
+        }
+        return true;
+    }
+
     @FXML
     public void handleSubmitButton() throws SQLException, ParseException {
         try {
+            if (!validate()) return;
+            promptLabel.setText("");
             Product product = (Product) com.github.saacsos.FXRouter.getData();
             product.setName(productTextField.getText());
             product.setSize(Integer.parseInt(sizeTextField.getText()));

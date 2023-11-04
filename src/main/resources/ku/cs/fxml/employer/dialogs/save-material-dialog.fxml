@@ -26,7 +26,7 @@
       </Text>
       <TextField fx:id="materialName" layoutX="67.0" layoutY="135.0" prefHeight="36.0" prefWidth="219.0" />
       <TextField fx:id="materialUnitName" layoutX="336.0" layoutY="134.0" prefHeight="36.0" prefWidth="177.0" />
-      <Button fx:id="confirmButton" layoutX="67.0" layoutY="196.0" mnemonicParsing="false" onAction="#onConfirmButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="เพิ่มวัตถุดิบ" />
+      <Button fx:id="confirmButton" layoutX="67.0" layoutY="196.0" mnemonicParsing="false" onAction="#onConfirmButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="บันทึก" />
       <Button fx:id="cancelButton" layoutX="182.0" layoutY="196.0" mnemonicParsing="false" onAction="#onCancelButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="red-btn" text="ยกเลิก" textFill="WHITE" />
       <Label fx:id="promptLabel" layoutX="67.0" layoutY="247.0" textFill="#f32013" />
    </children>

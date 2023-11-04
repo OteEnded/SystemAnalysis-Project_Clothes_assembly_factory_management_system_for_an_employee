@@ -6,6 +6,7 @@ import ku.cs.utility.EntityUtility;
 import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -107,6 +108,13 @@ public class DailyRecords {
         ProjectUtility.debug("DailyRecords[addData]: adding dailyRecord ->", dailyRecord);
         data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
         ProjectUtility.debug("DailyRecords[addData]: added dailyRecord with primaryKeys ->", getJoinedPrimaryKeys(dailyRecord), "=", dailyRecord);
+    }
+
+    public static boolean isRecorded(Work work, Date date) throws SQLException {
+        DailyRecord dailyRecord = new DailyRecord();
+        dailyRecord.setForWork(work);
+        dailyRecord.setDate(date);
+        return isNew(dailyRecord);
     }
 
     public static boolean isNew(DailyRecord dailyRecord) throws SQLException {

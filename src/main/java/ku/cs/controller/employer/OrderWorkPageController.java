@@ -98,11 +98,11 @@ public class OrderWorkPageController {
             work.setRepairWork((Work) FXRouter.getData());
         }
 
-//        if (work.getProduct().getProgressRate() != -1){
-//            if (work.getEstimated().equals(Works.estimate_late)){
-//                return false;
-//            }
-//        }
+        if (work.getProduct().getProgressRate() != -1){
+            if (work.getEstimated().equals(Works.estimate_late)){
+                return false;
+            }
+        }
         work.save();
         System.out.println(work);
         return true;

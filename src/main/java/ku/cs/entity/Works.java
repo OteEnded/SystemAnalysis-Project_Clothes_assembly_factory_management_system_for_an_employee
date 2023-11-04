@@ -6,6 +6,7 @@ import ku.cs.utility.EntityUtility;
 import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
@@ -19,7 +20,6 @@ public class Works {
     public static final String status_waitForAccept = "รอรับงาน";
     public static final String status_waitForMaterial = "รอวัตถุดิบ";
     public static final String status_waitForWorking = "รอทำงาน";
-
     public static final String status_working = "กำลังทำงาน";
     public static final String status_done = "ทำงานเสร็จ";
     public static final String status_sent = "ส่งงานแล้ว";
@@ -28,8 +28,8 @@ public class Works {
     public static final String estimate_onTime = "ทันเวลา";
     public static final String estimate_late = "อาจไม่ทันเวลา";
 
-    public static final String note_waitForEstimate = "รอลูกจ้างประเมินเวลา";
-    public static final String note_estimateLate = "ลูกจ้างประเมินเวลาแล้ว อาจทำงานได้ไม่ทันเวลา";
+    public static final String note_waitForUserEstimate = "รอลูกจ้างประเมินเวลา";
+    public static final String note_userEstimatedLate = "ลูกจ้างประเมินเวลาแล้ว อาจทำงานได้ไม่ทันเวลา";
 
     public static List<String> typeList = new ArrayList<>();
     static {
@@ -228,6 +228,10 @@ public class Works {
         if (!isWorkValid(work)) throw new RuntimeException("Works[save]: work's data is not valid -> " + verifyWork(work));
 
         if (isNew(work)){
+            Products.load();
+            if (work.getProduct().getProgressRate() == -1){
+                work.setNote(Works.note_waitForUserEstimate + "\n" + work.getNote());
+            }
             addData(work);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
         }
@@ -327,9 +331,21 @@ public class Works {
             if (Objects.equals(work.getEstimated(), Works.estimate_late)) abnormalWorks.put(work.getId(), work);
         }
 
-        // ให้มันคัดเฉพาะงานที่ยังไม่เสร็จด้วย
-
+        for (Work work: abnormalWorks.values()) {
+            if (work.getStatus().equals(Works.status_done) || work.getStatus().equals(Works.status_sent) || work.getStatus().equals(Works.status_checked)) {
+                abnormalWorks.remove(getJoinedPrimaryKeys(work));
+            }
+        }
 
         return abnormalWorks;
+    }
+
+    public static HashMap<String, Work> getWorkWaitingForDairyRecord(Date date) throws SQLException {
+        if (data == null) load();
+        HashMap<String, Work> workWaitingForDairyRecord = new HashMap<>();
+        for (Work work: getData().values()) {
+            if (work.getStatus().equals(Works.status_working) && !work.isRecorded(date)) workWaitingForDairyRecord.put(work.getId(), work);
+        }
+        return workWaitingForDairyRecord;
     }
 }

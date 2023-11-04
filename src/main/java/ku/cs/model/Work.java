@@ -116,6 +116,10 @@ public class Work implements Row {
         return (int) data.get("progress_amount");
     }
 
+    public int getRemainingAmount() {
+        return getGoalAmount() - getProgressAmount();
+    }
+
     public void setNote (String note) {
         data.put("note", note);
     }
@@ -157,6 +161,18 @@ public class Work implements Row {
         Works.addFilter("repair_work", getId());
 //        ProjectUtility.debug(repairWorks);
         return Works.getFilteredData().isEmpty();
+    }
+
+    public int getRecommendedProgressRate(){
+        return 100;
+    }
+
+    public int getEstimatedWorkDay() throws SQLException {
+        return (int) Math.ceil(getRemainingAmount() / getProduct().getProgressRate());
+    }
+
+    public boolean isRecorded(Date date) throws SQLException {
+        return DailyRecords.isRecorded(this, date);
     }
 
     public void load(int id) throws SQLException {

@@ -30,16 +30,24 @@ public class ProjectUtility {
     public static final boolean isDebug = true;
 
     public static void debug(Object... msgs) {
-        debug(Arrays.stream(msgs).toList());
+        debug(Arrays.stream(msgs).toList(), true);
     }
 
     public static void debug(List<Object> msgs){
-        List<String> msgList = new ArrayList<>();
-        for (Object i: msgs) {
-            if (i == null) i = "null";
-            msgList.add(i.toString());
+        debug(msgs, false);
+    }
+
+    public static void debug(List<Object> msgs, boolean asOneLine){
+        if (asOneLine) {
+            List<String> msgList = new ArrayList<>();
+            for (Object i : msgs) {
+                if (i == null) i = "null";
+                msgList.add(i.toString());
+            }
+            debug(String.join(" ", msgList));
+            return;
         }
-        debug(String.join(" ", msgList));
+        for (Object i: msgs) debug(i);
     }
 
     public static void debug(Object msg){
@@ -100,6 +108,16 @@ public class ProjectUtility {
 
     public static int differanceDate(LocalDate date1, LocalDate date2){
         return (int) (date1.toEpochDay() - date2.toEpochDay());
+    }
+
+    public static Date getDateWithOffset(Date date, int offset){
+        if (date == null) getDate(offset);
+        return getDateWithOffset(date.toLocalDate(), offset);
+    }
+
+    public static Date getDateWithOffset(LocalDate date, int offset){
+        if (date == null) getDate(offset);
+        return Date.valueOf(date.plusDays(offset));
     }
 
     public static Date getDate(int offsetFromToday){

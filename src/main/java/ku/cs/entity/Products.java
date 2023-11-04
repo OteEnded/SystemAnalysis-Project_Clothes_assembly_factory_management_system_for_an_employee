@@ -147,6 +147,15 @@ public class Products {
             addData(product);
             return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, product)));
         }
+
+        if (data.get(getJoinedPrimaryKeys(product)).getProgressRate() == -1 && product.getProgressRate() != -1) {
+            Works.addFilter("product", product.getId());
+            for (Work work : Works.getFilteredData().values()) {
+                work.setNote(work.getNote().replace(Works.note_waitForUserEstimate, ""));
+                work.save();
+            }
+        }
+
         data.put(getJoinedPrimaryKeys(product), product);
         return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, product)));
     }

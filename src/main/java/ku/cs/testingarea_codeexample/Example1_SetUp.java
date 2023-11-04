@@ -67,6 +67,6 @@ public class Example1_SetUp {
      */
     public static void main(String[] args) throws SQLException, ParseException {
         migrateDB();
-//        seedDB();
+        seedDB();
     }
 }

@@ -55,7 +55,7 @@ public class ReceivedWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         acceptBtn.setVisible(false);
         putWorkRateBtn.setVisible(false);
 
@@ -220,6 +220,7 @@ public class ReceivedWorkController {
             e.printStackTrace();
         }
     }
+
 
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
 

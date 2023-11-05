@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 
 public class OrderWorkPageController {
     @FXML private Text headerText;
@@ -69,16 +70,14 @@ public class OrderWorkPageController {
 
 //        PopUpUtility.popUp("loading", "กำลังบันทึกข้อมูล...");
 
-        ProjectUtility.debug("###############################");
-        ProjectUtility.debug(validate());
+//        ProjectUtility.debug("###############################");
+//        ProjectUtility.debug(validate());
 
         if (validate()) {
             promptLabel.setText("");
-//            if (!addWork()){
-//                // pop up
-//            }
-
-            addWork();
+            if (!addWork()){
+                return;
+            }
 
             try {
                 com.github.saacsos.FXRouter.goTo("wait-for-receive");
@@ -89,7 +88,7 @@ public class OrderWorkPageController {
         }
     }
 
-    private boolean addWork() throws SQLException, ParseException {
+    private boolean addWork() throws SQLException, ParseException, IOException {
         Work work = new Work();
         work.setStatus(Works.status_waitForAccept);
         work.setWorkType(workTypeComboBox.getValue());
@@ -102,10 +101,26 @@ public class OrderWorkPageController {
             work.setRepairWork(addingRepairWork);
         }
 
-//        if (work.getProduct().getProgressRate() != -1){
-//            if (work.getEstimated().equals(Works.estimate_late)){
+        if (work.getProduct().getProgressRate() != -1){
+            if (work.getEstimated().equals(Works.estimate_late)){
+
+                HashMap<String, Object> passingData = new HashMap<>();
+                passingData.put("work", work);
+                PopUpUtility.popUp("order-estimated-late", passingData);
+
+                return false;
+            }
+        }
+//        else {
+//            Work bufferWork = new Work(work.getData());
+//            bufferWork.save();
+//            if (bufferWork.getRecommendedProgressRate() == 100){
+//                HashMap<String, Object> passingData = new HashMap<>();
+//                passingData.put("work", bufferWork);
+//                PopUpUtility.popUp("order-estimated-late", passingData);
 //                return false;
 //            }
+//            bufferWork.delete();
 //        }
 
         work.save();

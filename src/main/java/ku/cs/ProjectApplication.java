@@ -9,8 +9,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.HashMap;
 
 import com.github.saacsos.FXRouter;
+import ku.cs.model.Work;
 import ku.cs.service.DBSeedAndLoad;
 import ku.cs.utility.CustomPopUp;
 import ku.cs.utility.PopUpUtility;
@@ -55,14 +57,17 @@ public class ProjectApplication extends Application {
         PopUpUtility.addPopUp(new CustomPopUp("save-material", packageStr + "employer/dialogs/save-material-dialog.fxml", "เพิ่ม-แก้ใขวัตถุดิบ"));
         PopUpUtility.addPopUp(new CustomPopUp("set-progress-rate", packageStr + "employee/dialogs/set-progress-rate-dialog.fxml", "กรุณากรอกอัตราการทำงาน"));
         PopUpUtility.addPopUp(new CustomPopUp("loading", packageStr + "loading-dialog.fxml", "กำลังโหลด..."));
-        PopUpUtility.addPopUp(new CustomPopUp("order-late-work", ""));
 
         PopUpUtility.addPopUp(new CustomPopUp("progress-rate-warning", packageStr + "employee/dialogs/progress-rate-warning-dialog.fxml", "คำเตือน"));
-        // ProjectUtility.debug("PopUpUtility: " + PopUpUtility.getPopUps());
+
+        PopUpUtility.addPopUp(new CustomPopUp("order-estimated-late", packageStr + "employer/dialogs/order-estimated-late-dialog.fxml", "คำเตือน"));
     }
 
     private static void configRoute() {
         String packageStr = "ku/cs/fxml/";
+
+        FXRouter.when("loading", packageStr + "loading-dialog.fxml");
+
         FXRouter.when("home", packageStr + "home-page.fxml");
         FXRouter.when("order", packageStr + "employer/order-page.fxml");
         FXRouter.when("product-manage", packageStr + "employer/product-view-page.fxml");

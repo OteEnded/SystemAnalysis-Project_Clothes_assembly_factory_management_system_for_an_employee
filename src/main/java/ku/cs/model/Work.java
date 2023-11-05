@@ -171,8 +171,49 @@ public class Work implements Row {
         return Works.getFilteredData().isEmpty();
     }
 
-    public int getRecommendedProgressRate(){
-        return 100;
+//    public int getRecommendedProgressRate() throws SQLException, ParseException {
+//        double bufferProgressRate = getProduct().getProgressRate();
+//        int recommendedProgressRate = (int) bufferProgressRate;
+//        while (true){
+//            Product product = getProduct();
+//            product.setProgressRate(recommendedProgressRate);
+//            product.save();
+//            ProjectUtility.debug(product);
+//            if (getEstimated().equals(Works.estimate_onTime)) break;
+//            recommendedProgressRate += 1;
+//        }
+//
+//        Product product = getProduct();
+//        product.setProgressRate(bufferProgressRate);
+//        product.save();
+//        return recommendedProgressRate;
+//    }
+
+    public int getRecommendedGoalAmount() throws SQLException {
+        int bufferGoalAmount = getGoalAmount();
+        int recommendedGoalAmount = bufferGoalAmount;
+        while (recommendedGoalAmount >= 0){
+            ProjectUtility.debug("Work[getRecommendedGoalAmount]: tring ->", recommendedGoalAmount);
+            setGoalAmount(recommendedGoalAmount);
+            if (getEstimated().equals(Works.estimate_onTime)) break;
+            recommendedGoalAmount -= 1;
+        }
+
+        setGoalAmount(bufferGoalAmount);
+        return recommendedGoalAmount;
+    }
+
+    public Date getRecommendedDeadline() throws SQLException {
+        Date bufferDeadline = ProjectUtility.getDate(ProjectUtility.differanceDate(ProjectUtility.getDate(), getDeadline()));
+        Date recommendedDeadline = ProjectUtility.getDate(ProjectUtility.differanceDate(ProjectUtility.getDate(), getDeadline()));
+        while (true){
+            setDeadline(recommendedDeadline);
+            if (getEstimated().equals(Works.estimate_onTime)) break;
+            recommendedDeadline = ProjectUtility.getDateWithOffset(recommendedDeadline, 1);
+        }
+
+        setDeadline(bufferDeadline);
+        return recommendedDeadline;
     }
 
     public int getEstimatedWorkDay() throws SQLException {

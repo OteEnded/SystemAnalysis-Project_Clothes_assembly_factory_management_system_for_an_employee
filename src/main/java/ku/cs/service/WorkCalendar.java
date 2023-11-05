@@ -15,8 +15,7 @@ public class WorkCalendar {
     private static List<HashMap<String, Object>> workCalendar;
 
     public static void init() throws SQLException {
-        workCalendar = new ArrayList<>();
-        workCalendar = fetch();
+        fetch();
     }
 
     public static List<HashMap<String, Object>> fetch() throws SQLException {
@@ -25,7 +24,8 @@ public class WorkCalendar {
 
     public static List<HashMap<String, Object>> fetch(HashMap<String, Work> workInPlan) throws SQLException {
         ProjectUtility.debug("WorkCalendar[fetch]: fetching...");
-        List<HashMap<String, Object>> fetchingWorkCalendar = new ArrayList<>();
+//        List<HashMap<String, Object>> fetchingWorkCalendar = new ArrayList<>();
+        workCalendar = new ArrayList<>();
 
         List<String> notInPlan = new ArrayList<>();
         for (Work work: workInPlan.values()) {
@@ -42,25 +42,30 @@ public class WorkCalendar {
         }
 
         List<Work> sortedWorkInPlan = Works.getSortedBy("deadline", workInPlan);
-
+        ProjectUtility.debug("WorkCalendar[fetch]: sortedWorkInPlan ->", sortedWorkInPlan);
 
         for (Work work: sortedWorkInPlan) {
+            ProjectUtility.debug("WorkCalendar[fetch]: putting in work ->", work);
             HashMap<String, Object> event = new HashMap<>();
             event.put("work", work);
             event.put("start_date", getExpectedStartDate(work));
             event.put("done_date", getExpectedDoneDate(work));
-            fetchingWorkCalendar.add(event);
+            workCalendar.add(event);
         }
 
         ProjectUtility.debug("WorkCalendar[fetch]: fetching done");
-        ProjectUtility.debug("WorkCalendar[fetch]: fetchingWorkCalendar ->", fetchingWorkCalendar);
-        return fetchingWorkCalendar;
+        ProjectUtility.debug("WorkCalendar[fetch]: fetchingWorkCalendar ->", workCalendar);
+        return workCalendar;
     }
 
     public static Date getExpectedStartDate(Work work) throws SQLException {
         if (work.getStartDate() != null) return work.getStartDate();
+        ProjectUtility.debug("WorkCalendar[getExpectedStartDate]: workCalendar ->", workCalendar);
+        ProjectUtility.debug("WorkCalendar[getExpectedStartDate]: work ->", work);
         if (workCalendar == null || workCalendar.isEmpty()) {
             if (work.getStatus().equals(Works.status_waitForAccept) || work.getStatus().equals(Works.status_waitForMaterial)) {
+                ProjectUtility.debug("WorkCalendar[getExpectedStartDate]: work status is " + work.getStatus());
+                ProjectUtility.debug("WorkCalendar[getExpectedStartDate]: return " + ProjectUtility.getDate(1));
                 return ProjectUtility.getDate(1);
             }
             else if (work.getStatus().equals(Works.status_waitForWorking)) {
@@ -78,6 +83,7 @@ public class WorkCalendar {
 
     public static Date getExpectedDoneDate(Work work) throws SQLException {
         if (workCalendar == null) init();
+        ProjectUtility.debug("WorkCalendar[getExpectedDoneDate]: getting ExpectedDoneDate");
         if (getExpectedStartDate(work) == null) throw new RuntimeException("WorkCalendar[getExpectedDoneDate]: #### getExpectedStartDate(work) is null");
         return ProjectUtility.getDateWithOffset(getExpectedStartDate(work), work.getEstimatedWorkDay());
 
@@ -117,7 +123,8 @@ public class WorkCalendar {
     }
 
     public static String getWorkEstimating(Work work) throws SQLException {
-        if (workCalendar == null) init();
+//        if (workCalendar == null)
+        init();
 
 //        if (!isNew(work)) {
 //            HashMap<String, Object> workEvent = getEventFromWork(work);
@@ -135,6 +142,10 @@ public class WorkCalendar {
         workInPlan.put(work.getId(), work);
         List<HashMap<String, Object>> tempWorkCalendar = fetch(workInPlan);
         HashMap<String, Object> workEvent = getEventFromWork(work, tempWorkCalendar);
+
+        ProjectUtility.debug("WorkCalendar[getWorkEstimating]: tempWorkCalendar ->", tempWorkCalendar);
+        ProjectUtility.debug("WorkCalendar[getWorkEstimating]: workEvent ->", workEvent);
+
         if (ProjectUtility.differanceDate(work.getDeadline(), (Date) workEvent.get("done_date")) < 0)
             return Works.estimate_late;
         else return Works.estimate_onTime;
@@ -161,5 +172,7 @@ public class WorkCalendar {
             ProjectUtility.debug(printStr);
         }
     }
+
+
 
 }

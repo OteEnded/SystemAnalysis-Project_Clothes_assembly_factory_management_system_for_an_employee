@@ -235,12 +235,15 @@ public class Works {
                 work.setNote(Works.note_waitForUserEstimate + "\n" + work.getNote());
             }
             addData(work);
+            if (isNew(work)) return save(work);
             affectedRow += DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
+            load();
             WorkCalendar.init();
             return affectedRow;
         }
         data.put(getJoinedPrimaryKeys(work), work);
         affectedRow += DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
+        load();
         WorkCalendar.init();
         return affectedRow;
     }

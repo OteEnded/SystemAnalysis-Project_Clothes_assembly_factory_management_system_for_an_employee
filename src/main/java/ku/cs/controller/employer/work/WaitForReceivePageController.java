@@ -118,10 +118,12 @@ public class WaitForReceivePageController {
 
         Works.addFilter("status", Works.status_waitForAccept);
         HashMap<String, Work> works = Works.getFilteredData();
+        ProjectUtility.debug(works);
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(String workId : works.keySet()) {
             Work work = works.get(workId);
+            ProjectUtility.debug("WaitForReceivePageController[fetchData]: work ->", work);
             WorkWrapper workWrapper = new WorkWrapper(work);
             workWrappers.add(workWrapper);
         }

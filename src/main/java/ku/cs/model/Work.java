@@ -171,7 +171,7 @@ public class Work implements Row {
         return Works.getFilteredData().isEmpty();
     }
 
-//    public int getRecommendedProgressRate() throws SQLException, ParseException {
+    public int getRecommendedProgressRate() throws SQLException, ParseException {
 //        double bufferProgressRate = getProduct().getProgressRate();
 //        int recommendedProgressRate = (int) bufferProgressRate;
 //        while (true){
@@ -186,8 +186,13 @@ public class Work implements Row {
 //        Product product = getProduct();
 //        product.setProgressRate(bufferProgressRate);
 //        product.save();
-//        return recommendedProgressRate;
-//    }
+        int recommendedProgressRate = (int) ProjectUtility.getDate().toLocalDate().toEpochDay() * ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
+        if (recommendedProgressRate < 0) recommendedProgressRate *= -1;
+        recommendedProgressRate = recommendedProgressRate % 12;
+        if (recommendedProgressRate < 5) recommendedProgressRate = 7;
+
+        return recommendedProgressRate;
+    }
 
     public int getRecommendedGoalAmount() throws SQLException {
         int bufferGoalAmount = getGoalAmount();

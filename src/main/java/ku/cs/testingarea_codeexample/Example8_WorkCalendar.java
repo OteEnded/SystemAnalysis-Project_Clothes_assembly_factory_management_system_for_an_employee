@@ -34,6 +34,6 @@ public class Example8_WorkCalendar {
         Work work = new Work();
         work.load(4);
         ProjectUtility.debug(work.getEstimated());
-//        ProjectUtility.debug(work.getRecommendedProgressRate());
+        ProjectUtility.debug(work.getRecommendedProgressRate());
     }
 }

@@ -10,6 +10,8 @@ import ku.cs.utility.CustomPopUp;
 import ku.cs.utility.PopUpUtility;
 import ku.cs.utility.ProjectUtility;
 
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.HashMap;
 
 public class ProgressRateWarningDialogController {
@@ -26,13 +28,17 @@ public class ProgressRateWarningDialogController {
     @FXML
     private Button cancelButton;
 
+    @FXML
+    public Label recommendedProgressRate;
+
     private Work work;
 
-    @FXML void initialize() {
+    @FXML void initialize() throws SQLException, ParseException {
         ProjectUtility.debug(customPopUp.getPassingData());
         if (customPopUp.getPassingData() != null && customPopUp.getPassingData() instanceof HashMap) {
             HashMap<String, Object> passingData = (HashMap<String, Object>) customPopUp.getPassingData();
             work = (Work) passingData.get("work");
+//            recommendedProgressRate.setText(String.valueOf(work.getRecommendedProgressRate()));
         }
         else {
             throw new RuntimeException("DeleteConfirmationDialogController[initialize]: passingData is not valid");
@@ -48,14 +54,14 @@ public class ProgressRateWarningDialogController {
     }
 
     @FXML
-    public void onConfirmButtonClick() {
-        customPopUp.setCloseBy(PopUpUtility.closeWith_confirm);
+    public void onOkButtonClick() {
+        customPopUp.setCloseBy(PopUpUtility.closeWith_ok);
         customPopUp.close();
     }
 
     @FXML
-    public void onCancelButtonClick() {
-        customPopUp.setCloseBy(PopUpUtility.closeWith_cancel);
+    public void onNoButtonClick() {
+        customPopUp.setCloseBy(PopUpUtility.closeWith_no);
         customPopUp.close();
     }
 

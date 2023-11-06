@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="300.0" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employee.dialogs.SetProgressRateDialogController">
+<AnchorPane prefHeight="300.0" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employee.dialogs.SetProgressRateDialogController">
    <children>
       <Text fill="#172b4d" layoutX="62.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="กรุณากรอกอัตราการทำงาน">
          <font>
@@ -34,5 +34,6 @@
       </VBox>
       <Button fx:id="cancelButton" layoutX="449.0" layoutY="219.0" mnemonicParsing="false" onAction="#onCancelButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="ยกเลิก" textFill="WHITE" />
       <Button fx:id="confirmButton" layoutX="331.0" layoutY="219.0" mnemonicParsing="false" onAction="#onConfirmButtonClick" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="ยืนยัน และรับงาน" textFill="WHITE" />
+      <Label fx:id="promptLabel" layoutX="62.0" layoutY="180.0" textFill="RED" />
    </children>
 </AnchorPane>

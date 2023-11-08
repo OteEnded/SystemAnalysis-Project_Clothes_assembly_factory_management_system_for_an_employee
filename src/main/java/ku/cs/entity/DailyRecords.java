@@ -10,7 +10,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -77,12 +76,12 @@ public class DailyRecords {
         try {
             PopUpUtility.popUp("loading", "DailyRecords (บันทึกการทำงาน)");
         } catch (Exception e){
-            ProjectUtility.debug("DailyRecords[load]: cannot do pop ups thing");
+            ProjectUtility.debug("DailyRecords[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
         HashMap<String, DailyRecord> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new DailyRecord(sqlRow.getValuesMap()));
         }
@@ -91,7 +90,6 @@ public class DailyRecords {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("DailyRecords[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -166,7 +164,7 @@ public class DailyRecords {
                 product.setProgressRate(totalAmount + product.getProgressRate() / dailyRecords.size() + 1);
                 product.save();
             }
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, dailyRecord)));
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, dailyRecord)));
         }
 
         ProjectUtility.debug("DailyRecords[save]: updating dailyRecord ->", dailyRecord);
@@ -176,14 +174,14 @@ public class DailyRecords {
         ProjectUtility.debug("DailyRecords[save]: new dailyRecord.getAmount() ->", dailyRecord.getAmount());
 
         data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, dailyRecord)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, dailyRecord)));
     }
 
     public static int delete(DailyRecord dailyRecord) throws SQLException, ParseException {
         ProjectUtility.debug("DailyRecords[delete]: deleting dailyRecord ->", dailyRecord);
         if (isNew(dailyRecord)) throw new RuntimeException("DailyRecords[delete]: Can't delete dailyRecord that is not in database");
         data.remove(getJoinedPrimaryKeys(dailyRecord));
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, dailyRecord)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, dailyRecord)));
     }
 
     public static HashMap<String, Object> filter;

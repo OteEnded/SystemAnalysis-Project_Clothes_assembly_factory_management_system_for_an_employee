@@ -98,7 +98,7 @@ public class DBSeedAndLoad {
         w4.setDeadline(ProjectUtility.getDate(5));
         w4.setGoalAmount(10);
         w4.setProgressAmount(0);
-        w4.setRepairWork(w1);
+//        w4.setRepairWork(w1);
         w4.save();
 
         Work w5 = new Work();

@@ -16,7 +16,7 @@ public class Example2_Product {
         // create new HashMap to store all product
         HashMap<String, Product> products = new HashMap<>();
         // use Products.getData() to get all product from buffer
-        // this will also load data from database to buffer if buffer is empty
+        // this will also getAll data from database to buffer if buffer is empty
         products = Products.getData();
 
         // create new HashMap to store filtered product

@@ -134,34 +134,9 @@ public class Work implements Row {
         return (String) data.get("note");
     }
 
-    public void setRepairWork(Work repair_work) {
-        setRepairWork(repair_work.getId());
-    }
-
-    public void setRepairWork(String repair_work) {
-        data.put("repair_work", repair_work);
-    }
-
-    public Work getRepairWork() throws SQLException {
-        if (data.get("repair_work") == null) throw new RuntimeException("Work[getRepairWork]: repair_work is null");
-        Work work = new Work();
-        work.load((String) data.get("repair_work"));
-        return work;
-    }
 
     // not done
     public String getEstimated() throws SQLException {
-
-//        int todo = getGoalAmount() - getProgressAmount();
-//
-//        int workDay = ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
-//
-//        int remainingDay = (int) Math.ceil(todo / getProduct().getProgressRate());
-//
-//        if (workDay > remainingDay) return Works.estimate_onTime;
-//
-//        return Works.estimate_late;
-
         return WorkCalendar.getWorkEstimating(this);
     }
 
@@ -248,7 +223,7 @@ public class Work implements Row {
             cannotLoad = true;
         }
         cannotLoad = cannotLoad || !EntityUtility.isIdValid(Works.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("Work[load]: Can't load work with primaryKeys: " + primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Work[getAll]: Can't getAll work with primaryKeys: " + primaryKeys);
         setData(Works.getData().get(primaryKeys).getData());
     }
 

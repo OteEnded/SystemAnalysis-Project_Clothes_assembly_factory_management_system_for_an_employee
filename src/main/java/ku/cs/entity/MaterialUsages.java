@@ -9,7 +9,6 @@ import ku.cs.utility.ProjectUtility;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -81,18 +80,18 @@ public class MaterialUsages {
         return load(true);
     }
 
-    // load data from database
+    // getAll data from database
     public static HashMap<String, MaterialUsage> load(boolean updateBuffer) throws SQLException {
 
         try {
             PopUpUtility.popUp("loading", "MaterialUsages (การใช้วัตถุดิบ)");
         } catch (Exception e){
-            ProjectUtility.debug("MaterialUsages[load]: cannot do pop ups thing");
+            ProjectUtility.debug("MaterialUsages[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
         HashMap<String, MaterialUsage> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new MaterialUsage(sqlRow.getValuesMap()));
         }
@@ -101,7 +100,6 @@ public class MaterialUsages {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("MaterialUsages[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -146,10 +144,10 @@ public class MaterialUsages {
         if (!isMaterialUsageValid(materialUsage)) throw new RuntimeException("MaterialUsages[save]: materialUsage is not valid -> " + verifyMaterialUsage(materialUsage));
         if (isNew(materialUsage)) {
             addData(materialUsage);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, materialUsage)));
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, materialUsage)));
         }
         data.put(getJoinedPrimaryKeys(materialUsage), materialUsage);
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, materialUsage)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, materialUsage)));
     }
 
     public static int delete(MaterialUsage materialUsage) throws SQLException, ParseException {
@@ -157,7 +155,7 @@ public class MaterialUsages {
         ProjectUtility.debug(data);
         if (isNew(materialUsage)) throw new RuntimeException("MaterialUsages[delete]: Can't delete materialUsage that is not in database");
         data.remove(getJoinedPrimaryKeys(materialUsage));
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, materialUsage)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, materialUsage)));
     }
 
     public static HashMap<String, Object> filter;

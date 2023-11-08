@@ -124,7 +124,7 @@ public class MaterialUsage implements Row {
         catch (RuntimeException e) {
             cannotLoad = true;
         }
-        if (cannotLoad) throw new RuntimeException("Cannot load MaterialUsage with primaryKeys -> " + primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Cannot getAll MaterialUsage with primaryKeys -> " + primaryKeys);
         setData(MaterialUsages.getData().get(primaryKeys).getData());
     }
 

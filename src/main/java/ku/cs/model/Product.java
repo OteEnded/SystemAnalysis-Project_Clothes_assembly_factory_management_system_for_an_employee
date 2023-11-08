@@ -105,7 +105,7 @@ public class Product implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-//        if(Products.getData() == null) Products.load();
+//        if(Products.getData() == null) Products.getAll();
         boolean cannotLoad;
         try {
             cannotLoad = Products.isNew(primaryKeys);
@@ -114,7 +114,7 @@ public class Product implements Row {
             cannotLoad = true;
         }
         cannotLoad = cannotLoad || !EntityUtility.isIdValid(Products.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("Product[load]: Can't load product with primaryKeys -> " + primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Product[getAll]: Can't getAll product with primaryKeys -> " + primaryKeys);
         setData(Products.getData().get(primaryKeys).getData());
     }
 

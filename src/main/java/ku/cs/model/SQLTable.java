@@ -10,6 +10,7 @@ import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // SQLTable is a class that represents a table in a database
@@ -51,6 +52,15 @@ public class SQLTable {
             if (colum.isForeignKey()) foreignKeys.add(colum);
         }
         return foreignKeys;
+    }
+
+    public SQLColumn getColumnByName(String name){
+        for (SQLColumn column: columns){
+            if (column.getName().equals(name)){
+                return column;
+            }
+        }
+        return null;
     }
 
     public String getCreateQuery() {
@@ -146,7 +156,7 @@ public class SQLTable {
         ProjectUtility.debug("SQLTable[getInsertQuery]: built prepareStatement ->", sql);
         for (int i = 1; i <= columns.size(); i++){
             ProjectUtility.debug("SQLTable[getInsertQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getValues().get(i-1), "}");
-            preparedStatement = typePutter(sqlRow.getValues().get(i-1), columns.get(i-1).getType(), i, preparedStatement);
+            typePutter(sqlRow.getValues().get(i - 1), columns.get(i - 1).getType(), i, preparedStatement);
         }
         return preparedStatement;
     }
@@ -167,12 +177,12 @@ public class SQLTable {
         ProjectUtility.debug("SQLTable[getUpdateQuery]: built prepareStatement ->", sql);
         for (int i = 1; i <= columns.size(); i++){
             ProjectUtility.debug("SQLTable[getUpdateQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getValues().get(i-1), "}");
-            preparedStatement = typePutter(sqlRow.getValues().get(i-1), columns.get(i-1).getType(), i, preparedStatement);
+            typePutter(sqlRow.getValues().get(i - 1), columns.get(i - 1).getType(), i, preparedStatement);
         }
         int j = 0;
         for (int i = columns.size()+1; i <= columns.size()+getPrimaryKeys().size(); i++){
             ProjectUtility.debug("SQLTable[getUpdateQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), "}");
-            preparedStatement = typePutter(sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), getPrimaryKeys().get(j).getType(), i, preparedStatement);
+            typePutter(sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), getPrimaryKeys().get(j).getType(), i, preparedStatement);
             j++;
         }
         return preparedStatement;
@@ -190,24 +200,38 @@ public class SQLTable {
         int j = 0;
         for (int i = 1; i <= getPrimaryKeys().size(); i++){
             ProjectUtility.debug("SQLTable[getDeleteQuery]: adding prepareStatement parameter {", i, ":", sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), "}");
-            preparedStatement = typePutter(sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), getPrimaryKeys().get(j).getType(), i, preparedStatement);
+            typePutter(sqlRow.getPrimaryKeys().get(getPrimaryKeys().get(j).getName()), getPrimaryKeys().get(j).getType(), i, preparedStatement);
             j++;
         }
         return preparedStatement;
     }
 
-    public SQLColumn getColumnByName(String name){
-        for (SQLColumn column: columns){
-            if (column.getName().equals(name)){
-                return column;
-            }
+    public List<SQLRow> getAll() throws SQLException {
+        return DataSourceDB.query("SELECT * FROM " + name);
+    }
+
+    public List<SQLRow> getWhere(String column, Object value) throws SQLException, ParseException {
+        if (getColumnByName(column) == null) throw new SQLException("SQLTable[getWhere]: column " + column + " not found in table " + this);
+        String sql = "SELECT * FROM " + name + " WHERE " + column + " = ?";
+        PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
+        typePutter(value, getColumnByName(column).getType(), 1, preparedStatement);
+        return DataSourceDB.exeQueryPrepare(preparedStatement);
+    }
+
+    public List<SQLRow> getSortedBy(String... selectedColumns) throws SQLException {
+        String sql = "SELECT * FROM " + name + " ORDER BY ";
+        for (String column: selectedColumns){
+            if (getColumnByName(column) == null) throw new SQLException("SQLTable[getSortedBy]: column " + column + " not found in table " + this);
+            sql += column + ", ";
         }
-        return null;
+        sql = sql.substring(0, sql.length() - 2);
+
+        return DataSourceDB.query(sql);
     }
 
     @Override
     public String toString() {
-        String msg_out =  "Object-SQLTable[name(columns.count())]: " + name + "(" + columns.size() + ") {";
+        String msg_out =  "Object-SQLTable[" + name + " with " + columns.size() + " column(s)] {";
         for (SQLColumn colum: columns){
             msg_out += "\n\t" + colum.toString();
         }

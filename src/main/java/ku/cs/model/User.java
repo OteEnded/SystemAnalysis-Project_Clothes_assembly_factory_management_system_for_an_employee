@@ -81,7 +81,7 @@ public class User implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-//        if(Users.getData() == null) Users.load();
+//        if(Users.getData() == null) Users.getAll();
         boolean cannotLoad;
         try {
             cannotLoad = Users.isNew(primaryKeys);
@@ -90,7 +90,7 @@ public class User implements Row {
             cannotLoad = true;
         }
         cannotLoad = cannotLoad || !EntityUtility.isIdValid(Users.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("User[load]: Can't load user with primaryKeys: " + primaryKeys);
+        if (cannotLoad) throw new RuntimeException("User[getAll]: Can't getAll user with primaryKeys: " + primaryKeys);
         setData(Users.getData().get(primaryKeys).getData());
     }
 

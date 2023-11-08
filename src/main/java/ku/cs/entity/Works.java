@@ -116,15 +116,6 @@ public class Works {
         sqlColumn.setName("note");
         sqlColumn.setType("varchar(255)");
         sqlTable.addColumObj(sqlColumn);
-
-        sqlColumn = new SQLColumn();
-        sqlColumn.setName("repair_work");
-        sqlColumn.setType("varchar(255)");
-        sqlColumn.setForeignKey();
-        sqlColumn.setForeignKeyTable("Works");
-        sqlColumn.setForeignKeyColumn("work_id");
-        sqlColumn.setOnDelete("CASCADE");
-        sqlTable.addColumObj(sqlColumn);
     }
 
     public static SQLTable getSqlTable() {
@@ -160,13 +151,13 @@ public class Works {
         try {
             PopUpUtility.popUp("loading", "Works (งาน)");
         } catch (Exception e){
-            ProjectUtility.debug("Works[load]: cannot do pop ups thing");
+            ProjectUtility.debug("Works[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
 //            e.printStackTrace();
         }
 
         HashMap<String, Work> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow: sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Work(sqlRow.getValuesMap()));
         }
@@ -175,7 +166,6 @@ public class Works {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("Works[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -236,13 +226,13 @@ public class Works {
             }
             addData(work);
             if (isNew(work)) return save(work);
-            affectedRow += DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
+            affectedRow += DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
             load();
             WorkCalendar.init();
             return affectedRow;
         }
         data.put(getJoinedPrimaryKeys(work), work);
-        affectedRow += DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
+        affectedRow += DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
         load();
         WorkCalendar.init();
         return affectedRow;
@@ -258,7 +248,7 @@ public class Works {
         ProjectUtility.debug("Works[delete]: deleting work ->", work);
         if (isNew(work)) throw new RuntimeException("Works[delete]: Can't find work with work_id: " + work.getId());
         data.remove(getJoinedPrimaryKeys(work));
-        int affectedRow = DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
+        int affectedRow = DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
         Works.load();
         DailyRecords.load();
         return affectedRow;
@@ -269,6 +259,7 @@ public class Works {
         if (filter == null) filter = new HashMap<>();
         filter.put(column, value);
     }
+
     public static void setFilter(HashMap<String, Object> filter) {
         Works.filter = filter;
     }
@@ -280,6 +271,7 @@ public class Works {
         setFilter(filter);
         return getFilteredData();
     }
+
     public static HashMap<String, Work> getFilteredData() throws SQLException {
         if (filter == null) throw new RuntimeException("Works[getFilteredData]: filter is null. Please set filter first or get all data without filter using -> Works.getData()");
         if (data == null) load();
@@ -308,20 +300,6 @@ public class Works {
     }
 
     public static List<Work> getSortedBy(String column, HashMap<String, Work> data) throws SQLException {
-//        ProjectUtility.debug("Works[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("Works[getSortedBy]: data is null. Please load data first or get all data without filter using -> Works.getData()");
-//        List<String> sortedValues = new ArrayList<String>();
-//        for (Work work : data.values()) {
-//            sortedValues.add(work.getData().get(column).toString());
-//        }
-//        Collections.sort(sortedValues);
-//        ProjectUtility.debug("Works[getSortedBy]: sorted target ->", sortedValues);
-//        List<Work> sortedWorks = new ArrayList<>();
-//        for (String sortedValue : sortedValues) {
-//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-//            sortedWorks.addAll(getFilteredData().values());
-//        }
-//        return sortedWorks;
         List<Work> works = toList(data);
         works.sort((o1, o2) -> {
             try {

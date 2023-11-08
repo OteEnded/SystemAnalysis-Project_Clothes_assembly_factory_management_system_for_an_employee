@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class Example5_Work {
     public static void main(String[] args) throws SQLException, ParseException {
 //        Work w4 = new Work();
-//        w4.load("W00004");
+//        w4.getAll("W00004");
 //        ProjectUtility.debug(w4.getData());
 //
 //        ProjectUtility.debug(w4.isPass());
@@ -21,13 +21,13 @@ public class Example5_Work {
 //
 //
 //        Work w1 = new Work();
-//        w1.load("W00001");
+//        w1.getAll("W00001");
 //        ProjectUtility.debug(w1.getData());
 //
 //        ProjectUtility.debug(w1.isPass());
 //        ProjectUtility.debug(w1.getRepairWork());
 //        Work work = new Work();
-//        work.load("W00005");
+//        work.getAll("W00005");
 //        ProjectUtility.debug(work.getEstimated());
 //
 //        Work work2 = new Work();

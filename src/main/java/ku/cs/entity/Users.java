@@ -66,17 +66,17 @@ public class Users {
         return load(true);
     }
 
-    // load data from database
+    // getAll data from database
     public static HashMap<String, User> load(boolean updateUsers) throws SQLException {
 
         try {
             PopUpUtility.popUp("loading", "Users (ผู้ใช้งาน)");
         } catch (Exception e){
-            ProjectUtility.debug("Users[load]: cannot do pop ups thing");
+            ProjectUtility.debug("Users[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
         HashMap<String, User> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new User(sqlRow.getValuesMap()));
         }
@@ -85,7 +85,6 @@ public class Users {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("Users[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -140,9 +139,9 @@ public class Users {
         if (!isUserValid(user)) throw new RuntimeException("Users[save]: user's data is not valid ->" + verifyUser(user));
         if (isNew(user)){
             addData(user);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, user)));
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, user)));
         }
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, user)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, user)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
@@ -156,7 +155,7 @@ public class Users {
         ProjectUtility.debug("Users[delete]: deleting user ->", user);
         if (isNew(user)) throw new RuntimeException("Users[delete]: Can not delete user that is not in database");
         data.remove(user.getId());
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, user)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, user)));
     }
 
     public static HashMap<String, Object> filter;
@@ -206,7 +205,7 @@ public class Users {
 
     public static List<User> getSortedBy(String column, HashMap<String, User> data) throws SQLException {
 //        ProjectUtility.debug("Users[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("Users[getSortedBy]: data is null, Please load data first or get all data without filter using -> Users.getData()");
+//        if (data == null) throw new RuntimeException("Users[getSortedBy]: data is null, Please getAll data first or get all data without filter using -> Users.getData()");
 //        List<String> sortedValues = new ArrayList<String>();
 //        for (User user : data.values()) {
 //            sortedValues.add(user.getData().get(column).toString());

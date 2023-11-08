@@ -49,14 +49,14 @@ public class Example1_SetUp {
     }
 
     /**
-     * how to do DB loading (load data from database to entity buffer)
+     * how to do DB loading (getAll data from database to entity buffer)
      */
     public static void loadDB() throws SQLException, ParseException {
 
-        // use DBMigration.load() to load database
+        // use DBMigration.getAll() to getAll database
         DBSeedAndLoad.load();
 
-        // and you can use quick load to load data faster (load only Work and Product)
+        // and you can use quick getAll to getAll data faster (getAll only Work and Product)
         DBSeedAndLoad.quickLoad();
 
     }

@@ -98,7 +98,7 @@ public class OrderWorkPageController {
         work.setNote(noteTextArea.getText());
         if (addingRepairWork != null){
             addingRepairWork.setStatus(Works.status_checked);
-            work.setRepairWork(addingRepairWork);
+//            work.setRepairWork(addingRepairWork);
         }
 
         if (work.getProduct().getProgressRate() != -1){

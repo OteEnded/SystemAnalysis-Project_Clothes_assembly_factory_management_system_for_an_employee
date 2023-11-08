@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -71,5 +72,6 @@
             </HBox>
          </children>
       </VBox>
+      <Label fx:id="promptLabel" layoutX="300.0" layoutY="655.0" textFill="RED" />
    </children>
 </AnchorPane>

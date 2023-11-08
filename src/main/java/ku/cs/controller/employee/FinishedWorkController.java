@@ -184,6 +184,7 @@ public class FinishedWorkController {
 
         Works.addFilter("status", Works.status_done);
         List<Work> works =  Works.getSortedBy("deadline", Works.getFilteredData());
+        System.out.println(works);
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(Work work : works) {

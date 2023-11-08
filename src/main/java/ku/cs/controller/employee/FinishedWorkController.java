@@ -23,6 +23,7 @@ import ku.cs.model.MaterialUsage;
 import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.tableview.WorkWrapper;
+import ku.cs.utility.ProjectUtility;
 
 public class FinishedWorkController {
 
@@ -45,6 +46,7 @@ public class FinishedWorkController {
 
     @FXML
     void initialize() throws SQLException {
+        Works.load();
         detailPane.setVisible(false);
         sendWorkBtn.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -109,9 +111,14 @@ public class FinishedWorkController {
 
     @FXML private void handleSendWorkBtn() throws SQLException, ParseException {
         WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
+        ProjectUtility.debug("####", selectedWork.getId());
         Work work = Works.getData().get(selectedWork.getId());
-        work.setStatus(Works.status_sent);
-        Works.save(work);
+//
+//        Work work = Works.getData().get(selectedWork.getId());
+        if (work != null){
+            work.setStatus(Works.status_sent);
+            Works.save(work);
+        }
         tableView.setItems(fetchData());
         tableView.refresh();
     }
@@ -184,6 +191,7 @@ public class FinishedWorkController {
 
         Works.addFilter("status", Works.status_done);
         List<Work> works =  Works.getSortedBy("deadline", Works.getFilteredData());
+        System.out.println(works);
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(Work work : works) {

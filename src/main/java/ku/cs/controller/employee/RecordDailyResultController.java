@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -35,6 +36,7 @@ public class RecordDailyResultController {
     @FXML private TableColumn<WorkWrapper, LocalDate> deadline;
     @FXML private TableColumn<WorkWrapper, Integer> progress_amount;
     @FXML private TableColumn<RecordDailyWrapper, TextField> dailyRecord;
+    @FXML private Label promptLabel;
 
     private final ArrayList<Work> allWorks = new ArrayList<>();
 
@@ -53,17 +55,28 @@ public class RecordDailyResultController {
         for(int i = 0; i < allWorks.size(); i++){
             TextField textField = (TextField) tableView.getColumns().get(5).getCellData(i);
             boolean checkNumeric = Pattern.matches("[0-9]+", textField.getText());
+            //check numeric
             if(checkNumeric) {
+                //check out of bound
+                try {
+                    int daily = Integer.parseInt(textField.getText());
+                } catch (Exception e) {
+                    promptLabel.setText("กรุณากรอกจำนวนให้ถูกต้อง");
+                }
+
                 int daily = Integer.parseInt(textField.getText());
                 Work work = allWorks.get(i);
+
+                if(work.getProgressAmount() + daily > work.getGoalAmount() || daily < 0) {
+                    promptLabel.setText("กรุณากรอกจำนวนให้ถูกต้อง");
+                    return;
+                }
 
                 DailyRecord dailyRecord = new DailyRecord();
                 dailyRecord.setDate(ProjectUtility.getDate());
                 dailyRecord.setForWork(work);
                 dailyRecord.setAmount(daily);
                 dailyRecord.save();
-
-                work.setProgressAmount(work.getProgressAmount() + daily);
 
                 if(work.getProgressAmount() == work.getGoalAmount()) {
                     work.setStatus(Works.status_done);
@@ -76,7 +89,7 @@ public class RecordDailyResultController {
                     e.printStackTrace();
                 }
             } else {
-                System.err.println("invalid");
+                promptLabel.setText("กรุณากรอกจำนวนให้ถูกต้อง");
             }
         }
     }
@@ -100,6 +113,17 @@ public class RecordDailyResultController {
         for(Work work : works) {
             allWorks.add(work);
             TextField dailyRecord = new TextField();
+
+            dailyRecord.textProperty().addListener((ov, oldValue, newValue) -> {
+                try {
+                    int daily = Integer.parseInt(newValue);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                if(work.getProgressAmount() + Integer.parseInt(newValue) > work.getGoalAmount()) {
+                    dailyRecord.setText(String.valueOf(work.getRemainingAmount()));
+                }
+            });
             dailyRecord.setPrefWidth(200);
             RecordDailyWrapper recordDailyWrapper = new RecordDailyWrapper(work, dailyRecord);
             recordDailyWrappers.add(recordDailyWrapper);

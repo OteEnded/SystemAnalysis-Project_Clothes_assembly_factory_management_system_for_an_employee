@@ -160,6 +160,17 @@ public class EditProductPageController {
             promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
             return false;
         }
+
+        if (!sizeTextField.getText().matches("[0-9]+")){
+            promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
+            return false;
+        }
+
+        if (materialListView.getItems().isEmpty()){
+            promptLabel.setText("กรุณาใส่วัตถุดิบที่ใช้ในการผลิต");
+            return false;
+        }
+
         return true;
     }
 

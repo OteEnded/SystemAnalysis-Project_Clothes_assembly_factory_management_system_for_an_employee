@@ -160,8 +160,17 @@ public class AddProductPageController {
             return false;
         }
         // check if sizeTextField is number
+        if (Integer.parseInt(sizeTextField.getText()) <= 0 || Integer.parseInt(sizeTextField.getText())  > 200 ){
+            promptLabel.setText("กรุณากรอกขนาดสินค้าให้ถูกต้อง");
+            return false;
+        }
         if (!sizeTextField.getText().matches("[0-9]+")){
             promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
+            return false;
+        }
+
+        if (materialListView.getItems().isEmpty()){
+            promptLabel.setText("กรุณาใส่วัตถุดิบที่ใช้ในการผลิต");
             return false;
         }
 

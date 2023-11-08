@@ -43,6 +43,13 @@ public class Example5_Work {
 //
 //        ProjectUtility.debug(work2.getEstimated());
 
-        ProjectUtility.debug(Works.getAbnormalWorks());
+//        ProjectUtility.debug(Works.getAbnormalWorks());
+//        Works.load();
+//        Works.addFilter("status", Works.status_done);
+//        ProjectUtility.debug(Works.getFilteredData());
+
+        Work work = new Work();
+        work.load("W00001");
+        ProjectUtility.debug(work);
     }
 }

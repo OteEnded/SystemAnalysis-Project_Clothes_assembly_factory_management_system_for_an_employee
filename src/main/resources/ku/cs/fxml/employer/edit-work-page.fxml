@@ -156,7 +156,7 @@
             </children>
         </HBox>
         <Button layoutX="301.0" layoutY="565.0" mnemonicParsing="false" onAction="#handleSubmitButton" prefHeight="34.0" prefWidth="105.0" styleClass="blue-btn" text="บันทึก" textFill="WHITE" />
-        <Text fx:id="headerText" fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="แก้ไขรายละเอียดงาน">
+        <Text fx:id="headerText" fill="#213555" layoutX="305.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="ปรับแผนงานใหม่">
             <font>
                 <Font name="System Bold Italic" size="32.0" />
             </font>

@@ -107,7 +107,7 @@
       <Rectangle arcHeight="8.0" arcWidth="8.0" fill="WHITE" height="400.0" layoutX="813.0" layoutY="166.0" stroke="#213555" strokeType="INSIDE" width="409.0" />
       <AnchorPane fx:id="detailPane" layoutX="813.0" layoutY="166.0" prefHeight="489.0" prefWidth="409.0">
          <children>
-            <Button layoutX="273.0" layoutY="414.0" mnemonicParsing="false" onAction="#handleEditWorkButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="แก้ไชรายละเอียดงาน" />
+            <Button layoutX="273.0" layoutY="414.0" mnemonicParsing="false" onAction="#handleEditWorkButton" prefHeight="34.0" prefWidth="138.0" styleClass="white-btn" text="แก้ไขรายละเอียดงาน" />
             <VBox layoutX="27.0" layoutY="28.0" prefHeight="313.0" prefWidth="354.0">
                <children>
                   <HBox prefHeight="29.0" prefWidth="354.0">

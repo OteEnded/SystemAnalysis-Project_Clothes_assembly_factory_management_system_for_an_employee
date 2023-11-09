@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class EditWorkPageController {
 
@@ -44,11 +45,30 @@ public class EditWorkPageController {
 
             amountTextField.setText(String.valueOf(work.getGoalAmount()));
             noteTextArea.setText(work.getNote());
+
+            amountTextField.textProperty().addListener((ov, oldValue, newValue) -> {
+                deadlineDatePicker.setDisable(Objects.equals(newValue, "")
+                        || Integer.parseInt(newValue) < 1);
+                try {
+                    setRecommendedDateToDatePicker();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    LocalDate tomorrow = ProjectUtility.getDate(1).toLocalDate();
+                    setDisable(empty || date.isBefore(tomorrow));
+                }
+            });
+
         }
 
 
     }
-
 
     @FXML
     public void handleSubmitButton() throws SQLException, ParseException {
@@ -87,18 +107,37 @@ public class EditWorkPageController {
 
 
     private boolean validate(){
-        if (amountTextField.getText().isEmpty()){
-            promptLabel.setText("กรุณากรอกจำนวนงาน");
+        if (Long.parseLong(amountTextField.getText()) > Integer.MAX_VALUE) {
+            promptLabel.setText("กรุณากรอกจำนวนงานให้ถูกต้อง");
             return false;
         }
-        if (deadlineDatePicker.getValue().isBefore(LocalDate.now())){
-            promptLabel.setText("กรุณากรอกกำหนดส่งให้ถูกต้อง");
+        if(Integer.parseInt(amountTextField.getText()) < 1)  {
+            promptLabel.setText("กรุณากรอกจำนวนงานให้ถูกต้อง");
             return false;
         }
+        if(deadlineDatePicker.getValue().isBefore(LocalDate.now())){
+            promptLabel.setText("กรุณากรอกวันกำหนดส่งให้ถูกต้อง");
+            return false;
+        }
+
         return true;
     }
 
-
+    private void setRecommendedDateToDatePicker() throws SQLException {
+        String[] values = productLabel.getText().split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[1]));
+        Work work = new Work();
+        work.setProduct(Products.toList(Products.getFilteredData()).get(0));
+        int amount = Integer.parseInt(amountTextField.getText());
+        double progress_rate = work.getProduct().getProgressRate();
+        System.out.println(progress_rate * amount);
+        if(progress_rate == -1) {
+            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), 1).toLocalDate());
+        } else {
+            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), (int) (amount * progress_rate)).toLocalDate());
+        }
+    }
 
     // MenuBar Handle
 

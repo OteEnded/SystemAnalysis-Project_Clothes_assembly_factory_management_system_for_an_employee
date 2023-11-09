@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 // SQLTable is a class that represents a table in a database
@@ -215,6 +216,23 @@ public class SQLTable {
         String sql = "SELECT * FROM " + name + " WHERE " + column + " = ?";
         PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
         typePutter(value, getColumnByName(column).getType(), 1, preparedStatement);
+        return DataSourceDB.exeQueryPrepare(preparedStatement);
+    }
+
+    public List<SQLRow> getWhere(HashMap<String, Object> filter) throws SQLException, ParseException {
+        String sql = "SELECT * FROM " + name + " WHERE ";
+        for (String column: filter.keySet()){
+            if (getColumnByName(column) == null) throw new SQLException("SQLTable[getWhere]: column " + column + " not found in table " + this);
+            sql += column + " = ? AND ";
+        }
+        sql = sql.substring(0, sql.length() - 5);
+
+        PreparedStatement preparedStatement = DataSourceDB.getConnection(true).prepareStatement(sql);
+        int i = 1;
+        for (String column: filter.keySet()){
+            typePutter(filter.get(column), getColumnByName(column).getType(), i, preparedStatement);
+            i++;
+        }
         return DataSourceDB.exeQueryPrepare(preparedStatement);
     }
 

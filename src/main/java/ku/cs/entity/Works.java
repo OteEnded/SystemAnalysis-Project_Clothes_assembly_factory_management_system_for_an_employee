@@ -31,6 +31,8 @@ public class Works {
 
     public static final String note_waitForUserEstimate = "รอลูกจ้างประเมินเวลา";
     public static final String note_userEstimatedLate = "ลูกจ้างประเมินเวลาแล้ว อาจทำงานได้ไม่ทันเวลา";
+    public static final String note_noRepair = "ไม่มีงานแก้";
+    public static final String note_haveToRepair = "มีงานแก้";
 
     public static List<String> typeList = new ArrayList<>();
     static {
@@ -153,12 +155,10 @@ public class Works {
         } catch (Exception e){
             ProjectUtility.debug("Works[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
-//            e.printStackTrace();
         }
 
         HashMap<String, Work> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = sqlTable.getAll();
-        for (SQLRow sqlRow: sqlRows) {
+        for (SQLRow sqlRow: sqlTable.getAll()) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Work(sqlRow.getValuesMap()));
         }
         if (updateBuffer) data = dataFromDB;
@@ -201,6 +201,7 @@ public class Works {
     public static boolean isNew(String primaryKeys) throws SQLException {
         if (data == null) load();
         if (data.isEmpty()) return true;
+//        List<>
         return !data.containsKey(primaryKeys);
     }
 
@@ -274,28 +275,21 @@ public class Works {
 
     public static HashMap<String, Work> getFilteredData() throws SQLException {
         if (filter == null) throw new RuntimeException("Works[getFilteredData]: filter is null. Please set filter first or get all data without filter using -> Works.getData()");
-        if (data == null) load();
         HashMap<String, Work> filteredData = new HashMap<>();
-        for (Work work: getData().values()) {
-            boolean isFiltered = true;
-            for (String column: filter.keySet()) {
-                if (work.getData().get(column) == null) {
-                    isFiltered = false;
-                    break;
-                }
-                if (!work.getData().get(column).equals(filter.get(column))) {
-                    isFiltered = false;
-                    break;
-                }
+        try {
+            for (SQLRow sqlRow: sqlTable.getWhere(filter)) {
+                filteredData.put(sqlRow.getJoinedPrimaryKeys(), new Work(sqlRow.getValuesMap()));
             }
-            if (isFiltered) filteredData.put(work.getId(), work);
         }
-        filter = null;
+        catch (ParseException e){
+            e.printStackTrace();
+            throw new RuntimeException("Works[getFilteredData]: ParseException");
+        }
         return filteredData;
     }
 
     public static List<Work> getSortedBy(String column) throws SQLException {
-        if (data == null) load();
+        load();
         return getSortedBy(column, data);
     }
 

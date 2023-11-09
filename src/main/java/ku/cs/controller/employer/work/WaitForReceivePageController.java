@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import ku.cs.entity.Products;
-import ku.cs.entity.Users;
 import ku.cs.entity.Works;
 import ku.cs.model.Material;
 import ku.cs.model.MaterialUsage;

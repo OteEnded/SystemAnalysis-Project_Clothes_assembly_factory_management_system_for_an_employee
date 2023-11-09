@@ -13,7 +13,6 @@ public class DBMigration {
     // list out tables that need to be created here
     private static ArrayList<SQLTable> tables = new ArrayList<>();
     static {
-        tables.add(Users.getSqlTable());
         tables.add(Materials.getSqlTable());
         tables.add(Products.getSqlTable());
         tables.add(MaterialUsages.getSqlTable());

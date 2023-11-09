@@ -175,23 +175,16 @@ public class Materials {
     }
     public static HashMap<String, Material> getFilteredData() throws SQLException{
         if (filter == null) throw new RuntimeException("Materials[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Materials.getData()");
-        if (data == null) load();
         HashMap<String, Material> filteredData = new HashMap<>();
-        for (Material material: getData().values()) {
-            boolean isFiltered = true;
-            for (String column: filter.keySet()) {
-                if (material.getData().get(column) == null) {
-                    isFiltered = false;
-                    break;
-                }
-                if(!material.getData().get(column).equals(filter.get(column))) {
-                    isFiltered = false;
-                    break;
-                }
+        try {
+            for (SQLRow sqlRow: sqlTable.getWhere(filter)) {
+                filteredData.put(sqlRow.getJoinedPrimaryKeys(), new Material(sqlRow.getValuesMap()));
             }
-            if (isFiltered) filteredData.put(material.getId(), material);
         }
-        filter = null;
+        catch (ParseException e){
+            e.printStackTrace();
+            throw new RuntimeException("Materials[getFilteredData]: ParseException");
+        }
         return filteredData;
     }
 
@@ -201,20 +194,6 @@ public class Materials {
     }
 
     public static List<Material> getSortedBy(String column, HashMap<String, Material> data) throws SQLException {
-//        ProjectUtility.debug("Materials[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("Materials[getSortedBy]: data is null, Please getAll data first or get all data without filter using -> Materials.getData()");
-//        List<String> sortedValues = new ArrayList<String>();
-//        for (Material material : data.values()) {
-//            sortedValues.add(material.getData().get(column).toString());
-//        }
-//        Collections.sort(sortedValues);
-//        ProjectUtility.debug("Materials[getSortedBy]: sorted target ->", sortedValues);
-//        List<Material> sortedMaterial = new ArrayList<>();
-//        for (String sortedValue : sortedValues) {
-//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-//            sortedMaterial.addAll(getFilteredData().values());
-//        }
-//        return sortedMaterial;
         List<Material> materials = toList(data);
         materials.sort((o1, o2) -> {
             try {

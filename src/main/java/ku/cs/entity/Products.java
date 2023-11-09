@@ -190,46 +190,30 @@ public class Products {
         return getFilteredData();
     }
     public static HashMap<String, Product> getFilteredData() throws SQLException {
-        if (filter == null) throw new RuntimeException("Product[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Products.getData()");
-        if (data == null) load();
+        if (filter == null) throw new RuntimeException("Products[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Products.getData()");
         HashMap<String, Product> filteredData = new HashMap<>();
-        for (Product product: getData().values()) {
-            boolean isFiltered = true;
-            for (String column: filter.keySet()) {
-                if (product.getData().get(column) == null) {
-                    isFiltered = false;
-                    break;
-                }
-                if(!product.getData().get(column).equals(filter.get(column))) {
-                    isFiltered = false;
-                    break;
-                }
+        try {
+            for (SQLRow sqlRow: sqlTable.getWhere(filter)) {
+                filteredData.put(sqlRow.getJoinedPrimaryKeys(), new Product(sqlRow.getValuesMap()));
             }
-            if (isFiltered) filteredData.put(product.getId(), product);
         }
-        filter = null;
+        catch (ParseException e){
+            e.printStackTrace();
+            throw new RuntimeException("products[getFilteredData]: ParseException");
+        }
         return filteredData;
     }
+
+    public static List<Product> getFilteredDataSortedBy(String column){
+        return null;
+    }
+
     public static List<Product> getSortedBy(String column) throws SQLException {
         if (data == null) load();
         return getSortedBy(column, data);
     }
 
     public static List<Product> getSortedBy(String column, HashMap<String, Product> data) throws SQLException {
-//        ProjectUtility.debug("Products[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("Products[getSortedBy]: data is null, Please getAll data first or get all data without filter using -> Products.getData()");
-//        List<String> sortedValues = new ArrayList<String>();
-//        for (Product product : data.values()) {
-//            sortedValues.add(product.getData().get(column).toString());
-//        }
-//        Collections.sort(sortedValues);
-//        ProjectUtility.debug("Products[getSortedBy]: sorted target ->", sortedValues);
-//        List<Product> sortedProducts = new ArrayList<>();
-//        for (String sortedValue : sortedValues) {
-//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-//            sortedProducts.addAll(getFilteredData().values());
-//        }
-//        return sortedProducts;
         List<Product> products = toList(data);
         products.sort((o1, o2) -> {
             try {

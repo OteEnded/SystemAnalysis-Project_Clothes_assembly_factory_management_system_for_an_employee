@@ -10,7 +10,6 @@ import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class SQLTable {
         return name;
     }
 
-    public List<SQLColumn> getColumns() {
+    public List<SQLColumn> getColumnsValues() {
         return columns;
     }
 
@@ -208,7 +207,7 @@ public class SQLTable {
     }
 
     public List<SQLRow> getAll() throws SQLException {
-        return DataSourceDB.query("SELECT * FROM " + name);
+        return DataSourceDB.query("SELECT * FROM " + name + " LIMIT 1000");
     }
 
     public List<SQLRow> getWhere(String column, Object value) throws SQLException, ParseException {
@@ -236,6 +235,13 @@ public class SQLTable {
         return DataSourceDB.exeQueryPrepare(preparedStatement);
     }
 
+    public SQLRow getFindOne(HashMap<String, Object> filter) throws SQLException, ParseException {
+        List<SQLRow> found = getWhere(filter);
+        if (found.isEmpty()) throw new SQLException("SQLTable[getFindOne]: cannot find data with filter -> " + filter);
+        if (found.size() > 1) ProjectUtility.debug("SQLTable[getFindOne]: !!WARNING!! found more than one data ->", found);
+        return found.get(0);
+    }
+
     public List<SQLRow> getSortedBy(String... selectedColumns) throws SQLException {
         String sql = "SELECT * FROM " + name + " ORDER BY ";
         for (String column: selectedColumns){
@@ -243,6 +249,18 @@ public class SQLTable {
             sql += column + ", ";
         }
         sql = sql.substring(0, sql.length() - 2);
+
+        return DataSourceDB.query(sql);
+    }
+
+    public List<SQLRow> getColumnsValues(String... selectedColumns) throws SQLException {
+        String sql = "SELECT ";
+        for (String column: selectedColumns){
+            if (getColumnByName(column) == null) throw new SQLException("SQLTable[getColumnsValues]: column " + column + " not found in table " + this);
+            sql += column + ", ";
+        }
+        sql = sql.substring(0, sql.length() - 2);
+        sql += " FROM " + name;
 
         return DataSourceDB.query(sql);
     }

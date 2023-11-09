@@ -141,9 +141,9 @@ public class Work implements Row {
     }
 
     public boolean isPass() throws SQLException {
-        Works.addFilter("repair_work", getId());
+//        Works.addFilter("repair_work", getId());
 //        ProjectUtility.debug(repairWorks);
-        return Works.getFilteredData().isEmpty();
+        return true;
     }
 
     public int getRecommendedProgressRate() throws SQLException, ParseException {
@@ -204,27 +204,15 @@ public class Work implements Row {
         return DailyRecords.isRecorded(this, date);
     }
 
-    public String getAdviceMessage(){
-        return "";
-    }
-
-
-
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Works.getSqlTable(), id));
     }
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        boolean cannotLoad;
-        try {
-            cannotLoad = Works.isNew(primaryKeys);
-        } catch (RuntimeException e) {
-            cannotLoad = true;
-        }
-        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Works.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("Work[getAll]: Can't getAll work with primaryKeys: " + primaryKeys);
-        setData(Works.getData().get(primaryKeys).getData());
+        EntityUtility.checkId(Works.getSqlTable(), primaryKeys);
+        if (Works.isNew(this)) throw new RuntimeException("Work[load]: cannot find work with id -> " + primaryKeys);
+        setData(Works.find(primaryKeys).getData());
     }
 
     @Override

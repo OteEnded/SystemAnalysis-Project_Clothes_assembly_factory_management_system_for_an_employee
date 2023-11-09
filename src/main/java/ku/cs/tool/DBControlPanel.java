@@ -11,6 +11,6 @@ public class DBControlPanel {
     public static void main(String[] args) throws SQLException, ParseException {
 //        ProjectUtility.setDBSource(ProjectUtility.DB_Xampp);
         DBMigration.migrate(true);
-//        DBSeedAndLoad.seed();
+        DBSeedAndLoad.seed();
     }
 }

@@ -19,7 +19,6 @@ public class WorkWrapper {
     private int goal_amount;
     private int progress_amount;
     private String note;
-    private Work repair_work;
 
     private String display_product;
     private String isPass;
@@ -33,7 +32,6 @@ public class WorkWrapper {
         this.goal_amount = work.getGoalAmount();
         this.progress_amount = work.getProgressAmount();
         this.note = work.getNote();
-        this.repair_work = work.isPass() ? getRepair_work() : null;
         Product product = work.getProduct();
         this.estimate = product.getProgressRate() == -1 ? "ไม่พบอัตราการทำงาน" : work.getEstimated();
         this.display_product = product.getName() + " ขนาด " + product.getSize() + " นิ้ว";
@@ -68,9 +66,6 @@ public class WorkWrapper {
         return note;
     }
 
-    public Work getRepair_work() {
-        return repair_work;
-    }
 
     public String getDisplay_product() {
         return display_product;

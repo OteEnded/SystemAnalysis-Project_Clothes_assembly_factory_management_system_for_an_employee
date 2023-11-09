@@ -233,16 +233,19 @@ public class ProjectUtility {
     public static final String DB_Xampp = "xampp";
     public static final HashMap<String, HashMap<String, String>> DB_option = new HashMap<>();
     static {
+
         HashMap<String, String> DB_AzureDetail = new HashMap<>();
         DB_AzureDetail.put("db_URL", "jdbc:mysql://mowcodeserver.eastus.cloudapp.azure.com:3306/sa_longname");
         DB_AzureDetail.put("db_username", "project");
         DB_AzureDetail.put("db_password", "Ku81Cs36");
         DB_option.put(DB_Azure, DB_AzureDetail);
+
         HashMap<String, String> DB_XamppDetail = new HashMap<>();
         DB_XamppDetail.put("db_URL", "jdbc:mysql://localhost:3306/sa_longname");
         DB_XamppDetail.put("db_username", "root");
         DB_XamppDetail.put("db_password", "");
         DB_option.put(DB_Xampp, DB_XamppDetail);
+
     }
 
     private static String DB_source = DB_Azure;

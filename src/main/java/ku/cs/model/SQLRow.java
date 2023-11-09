@@ -61,7 +61,7 @@ public class SQLRow {
         this.tableName = sqlTable.getName();
         this.primaryKeys = row.getPrimaryKeys();
         List<String> columns = new ArrayList<>();
-        for (SQLColumn sqlColumn: sqlTable.getColumns()) columns.add(sqlColumn.getName());
+        for (SQLColumn sqlColumn: sqlTable.getColumnsValues()) columns.add(sqlColumn.getName());
         this.columns = columns;
         this.valuesMap = row.getData();
         values = new ArrayList<>();

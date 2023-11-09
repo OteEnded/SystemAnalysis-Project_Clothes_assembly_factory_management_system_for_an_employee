@@ -1,13 +1,10 @@
 package ku.cs.utility;
 
-import ku.cs.model.Product;
 import ku.cs.model.Row;
 import ku.cs.model.SQLColumn;
 import ku.cs.model.SQLTable;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +30,7 @@ public class EntityUtility {
 
     public static HashMap<String, Object> getMap(SQLTable sqlTable) {
         HashMap<String, Object> map = new HashMap<>();
-        for (SQLColumn column : sqlTable.getColumns()) {
+        for (SQLColumn column : sqlTable.getColumnsValues()) {
             map.put(column.getName(), null);
         }
         return map;
@@ -41,7 +38,7 @@ public class EntityUtility {
 
     public static List<String> verifyRowByTable(SQLTable sqlTable, Row row){
         List<String> error = new ArrayList<>();
-        for (SQLColumn column : sqlTable.getColumns()) {
+        for (SQLColumn column : sqlTable.getColumnsValues()) {
             if (column.isNotNull() && row.getData().get(column.getName()) == null) {
                 error.add("Column " + column.getName() + " is null");
             }

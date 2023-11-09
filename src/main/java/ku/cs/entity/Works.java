@@ -31,7 +31,7 @@ public class Works {
 
     public static final String note_waitForUserEstimate = "รอลูกจ้างประเมินเวลา";
     public static final String note_userEstimatedLate = "ลูกจ้างประเมินเวลาแล้ว อาจทำงานได้ไม่ทันเวลา";
-    public static final String note_noRepair = "ไม่มีงานแก้";
+    public static final String note_noRepair = "ตรวจงานผ่าน ไม่มีงานแก้";
     public static final String note_haveToRepair = "มีงานแก้";
 
     public static List<String> typeList = new ArrayList<>();
@@ -125,15 +125,15 @@ public class Works {
     }
 
     private static HashMap<String, Work> data;
+    private static boolean isDataDirty = true;
 
     public static HashMap<String, Work> getData() throws SQLException{
-        if(data == null) load();
+        load();
         return data;
     }
 
     public static List<Work> getDataAsList() throws SQLException {
-        if(data == null) load();
-        return toList(data);
+        return toList(getData());
     }
 
     public static List<Work> toList(HashMap<String, Work> data) {
@@ -150,6 +150,8 @@ public class Works {
 
     public static HashMap<String, Work> load(boolean updateBuffer) throws SQLException {
 
+        if (!isDataDirty) return data;
+
         try {
             PopUpUtility.popUp("loading", "Works (งาน)");
         } catch (Exception e){
@@ -161,7 +163,10 @@ public class Works {
         for (SQLRow sqlRow: sqlTable.getAll()) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Work(sqlRow.getValuesMap()));
         }
-        if (updateBuffer) data = dataFromDB;
+        if (updateBuffer) {
+            data = dataFromDB;
+            isDataDirty = false;
+        }
 
         try {
             PopUpUtility.close("loading", true);
@@ -178,31 +183,26 @@ public class Works {
     }
 
     public static String getNewId() throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
-        ArrayList<String> oldId = new ArrayList<>(getData().keySet());
-        Collections.sort(oldId);
-        int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));
+        List<SQLRow> work_ids = sqlTable.getColumnsValues("work_id");
+        List<String> oldIds = new ArrayList<>();
+        for (SQLRow sqlRow: work_ids) {
+            oldIds.add(sqlRow.getValuesMap().get("work_id").toString());
+        }
+        if (oldIds.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
+        Collections.sort(oldIds);
+        int oldLastId = Integer.parseInt((oldIds.get(getData().size() - 1).substring(1,6)));
         return EntityUtility.idFormatter(sqlTable, oldLastId + 1);
     }
 
-    public static void addData(Work work) throws SQLException {
-        ProjectUtility.debug("Works[addData]: adding work ->", work);
-        if (data == null) load();
-        if (work.getId() == null) work.setId(getNewId());
-        data.put(getJoinedPrimaryKeys(work), work);
-        ProjectUtility.debug("Works[addData]: added work with primaryKeys ->", getJoinedPrimaryKeys(work), "=", work);
-    }
-
     public static boolean isNew(Work work) throws SQLException {
+        if (work == null) throw new RuntimeException("Works[isNew]: work is null");
+        if (work.getId() == null) return true;
         return isNew(work.getId());
     }
 
-    public static boolean isNew(String primaryKeys) throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return true;
-//        List<>
-        return !data.containsKey(primaryKeys);
+    public static boolean isNew(String primaryKeys) throws SQLException{
+        Works.addFilter("work_id", primaryKeys);
+        return Works.getFilteredData().isEmpty();
     }
 
     public static boolean isWorkValid(Work work) {
@@ -210,32 +210,22 @@ public class Works {
     }
 
     public static List<String> verifyWork(Work work) {
-        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, work));
-        return error;
+        return new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, work));
     }
 
     public static int save(Work work) throws SQLException, ParseException {
         ProjectUtility.debug("Works[save]: saving work ->", work);
-
         if (!isWorkValid(work)) throw new RuntimeException("Works[save]: work's data is not valid -> " + verifyWork(work));
-
+        isDataDirty = true;
         int affectedRow = 0;
         if (isNew(work)){
             Products.load();
-            if (work.getProduct().getProgressRate() == -1){
-                work.setNote(Works.note_waitForUserEstimate + "\n" + work.getNote());
-            }
-            addData(work);
-            if (isNew(work)) return save(work);
+            if (work.getProduct().getProgressRate() == -1) work.setNote(Works.note_waitForUserEstimate + "\n" + work.getNote());
+            work.setId(getNewId());
             affectedRow += DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
-            load();
-            WorkCalendar.init();
             return affectedRow;
         }
-        data.put(getJoinedPrimaryKeys(work), work);
         affectedRow += DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
-        load();
-        WorkCalendar.init();
         return affectedRow;
     }
 
@@ -248,7 +238,7 @@ public class Works {
     public static int delete(Work work) throws SQLException, ParseException {
         ProjectUtility.debug("Works[delete]: deleting work ->", work);
         if (isNew(work)) throw new RuntimeException("Works[delete]: Can't find work with work_id: " + work.getId());
-        data.remove(getJoinedPrimaryKeys(work));
+        isDataDirty = true;
         int affectedRow = DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
         Works.load();
         DailyRecords.load();
@@ -268,6 +258,28 @@ public class Works {
         return filter;
     }
 
+    public static Work find(String id) throws SQLException {
+        addFilter("work_id", id);
+        return find();
+    }
+
+    public static Work find(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return find();
+    }
+
+    public static Work find() throws SQLException {
+        try {
+            return new Work(sqlTable.getFindOne(filter).getValuesMap());
+        }
+        catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            filter = null;
+        }
+    }
+
     public static HashMap<String, Work> getFilteredData(HashMap<String, Object> filter) throws SQLException {
         setFilter(filter);
         return getFilteredData();
@@ -285,12 +297,12 @@ public class Works {
             e.printStackTrace();
             throw new RuntimeException("Works[getFilteredData]: ParseException");
         }
+        filter = null;
         return filteredData;
     }
 
     public static List<Work> getSortedBy(String column) throws SQLException {
-        load();
-        return getSortedBy(column, data);
+        return getSortedBy(column, load());
     }
 
     public static List<Work> getSortedBy(String column, HashMap<String, Work> data) throws SQLException {

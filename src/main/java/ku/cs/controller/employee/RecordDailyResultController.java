@@ -58,12 +58,10 @@ public class RecordDailyResultController {
             //check numeric
             if(checkNumeric) {
                 //check out of bound
-                try {
-                    int daily = Integer.parseInt(textField.getText());
-                } catch (Exception e) {
-                    promptLabel.setText("กรุณากรอกจำนวนให้ถูกต้อง");
+                if(Long.parseLong(textField.getText()) > Integer.MAX_VALUE) {
+                    promptLabel.setText("กรุณากรอกจำนวนให้ถูกต้อง (out of bound)");
+                    return;
                 }
-
                 int daily = Integer.parseInt(textField.getText());
                 Work work = allWorks.get(i);
 

@@ -187,9 +187,7 @@ public class OrderWorkPageController {
             promptLabel.setText("กรุณาเลือกสินค้าที่ต้องการสั่งผลิต");
             return false;
         }
-        try {
-            int amount = Integer.parseInt(amountTextField.getText());
-        } catch(Exception e) {
+        if (Long.parseLong(amountTextField.getText()) > Integer.MAX_VALUE) {
             promptLabel.setText("กรุณากรอกจำนวนงานให้ถูกต้อง");
             return false;
         }
@@ -201,7 +199,6 @@ public class OrderWorkPageController {
             promptLabel.setText("กรุณากรอกวันกำหนดส่งให้ถูกต้อง");
             return false;
         }
-
 
         return true;
     }

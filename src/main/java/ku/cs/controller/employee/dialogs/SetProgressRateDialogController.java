@@ -69,6 +69,10 @@ public class SetProgressRateDialogController {
         String userEstimateProgressRateStr = textField.getText();
         boolean checkNumeric = Pattern.matches("[0-9]+", userEstimateProgressRateStr);
         if(checkNumeric) {
+            if(Long.parseLong(textField.getText()) > Integer.MAX_VALUE) {
+                promptLabel.setText("กรุณากรอกตัวเลขให้ถูกต้อง");
+                return;
+            }
             promptLabel.setText("");
             int userEstimateProgressRate = Integer.parseInt(userEstimateProgressRateStr);
             Product product = work.getProduct();

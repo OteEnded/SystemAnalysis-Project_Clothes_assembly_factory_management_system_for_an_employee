@@ -122,9 +122,9 @@ public class EditProductPageController {
     }
 
     @FXML
-    public void handleAddMaterialToProductButton(){
+    public void handleAddMaterialToProductButton() throws SQLException {
         String materialName = materialNameComboBox.getValue();
-
+        if(!validateAddMaterial()) return;
         Button deleteAlreadyAddedButton = null;
         for (HBox hbox: materialListView.getItems()){
             String material_name = ((Label) hbox.getChildren().get(0)).getText().split(" \\(")[0];
@@ -160,14 +160,44 @@ public class EditProductPageController {
             promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
             return false;
         }
-
-        if (!sizeTextField.getText().matches("[0-9]+")){
-            promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข");
+        // check if sizeTextField is integer (less than long)
+        if (Long.parseLong(sizeTextField.getText()) > Integer.MAX_VALUE){
+            promptLabel.setText("กรุณากรอกขนาดสินค้าเป็นตัวเลข (out of bound of Integer)");
+            return false;
+        }
+        // check if sizeTextField is in range 0-199
+        if (Integer.parseInt(sizeTextField.getText()) <= 0 || Integer.parseInt(sizeTextField.getText())  > 200 ){
+            promptLabel.setText("กรุณากรอกขนาดสินค้าให้ถูกต้อง (out of bound range)");
+            return false;
+        }
+        // check if material is null
+        if (materialListView.getItems().isEmpty()){
+            promptLabel.setText("กรุณาใส่วัตถุดิบที่ใช้ในการผลิต");
             return false;
         }
 
-        if (materialListView.getItems().isEmpty()){
-            promptLabel.setText("กรุณาใส่วัตถุดิบที่ใช้ในการผลิต");
+        return true;
+    }
+
+    private boolean validateAddMaterial() throws SQLException {
+        if(materialNameComboBox.getValue() == null){
+            promptLabel.setText("กรุณากรอกชื่อวัตถุดิบ");
+            return false;
+        }
+        if(!amountTextField.getText().matches("[0-9]+")){
+            promptLabel.setText("กรุณากรอกจำนวนของวัตถุดิบเป็นตัวเลข");
+            return false;
+        }
+        if(Long.parseLong(amountTextField.getText()) > Integer.MAX_VALUE){
+            promptLabel.setText("กรุณากรอกจำนวนของวัตถุดิบให้ถูกต้อง (out of bound of Integer)");
+            return false;
+        }
+        if(!yieldTextField.getText().matches("[0-9]+")){
+            promptLabel.setText("กรอกจำนวนสินค้าต่อวัตถุดิบเป็นตัวเลข");
+            return false;
+        }
+        if(Long.parseLong(amountTextField.getText()) > Integer.MAX_VALUE){
+            promptLabel.setText("กรอกจำนวนสินค้าต่อวัตถุดิบให้ถูกต้อง (out of bound of Integer)");
             return false;
         }
 

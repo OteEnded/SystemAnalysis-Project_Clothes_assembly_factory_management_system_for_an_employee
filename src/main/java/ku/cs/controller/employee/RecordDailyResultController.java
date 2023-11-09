@@ -76,10 +76,6 @@ public class RecordDailyResultController {
                 dailyRecord.setAmount(daily);
                 dailyRecord.save();
 
-                if(work.getProgressAmount() == work.getGoalAmount()) {
-                    work.setStatus(Works.status_done);
-                }
-                Works.save(work);
                 try {
                     com.github.saacsos.FXRouter.goTo("work-in-progress-work");
                 } catch (Exception e) {

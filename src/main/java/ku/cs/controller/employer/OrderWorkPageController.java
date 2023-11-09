@@ -86,6 +86,7 @@ public class OrderWorkPageController {
         workTypeComboBox.getSelectionModel().select(Works.type_repair);
         if (FXRouter.getData() != null){
             addingRepairWork = (Work) FXRouter.getData();
+            ProjectUtility.debug("#######", addingRepairWork);
             Product product = addingRepairWork.getProduct();
             productComboBox.getSelectionModel().select(product.getName() + " "
                     + product.getSize() + " นิ้ว");
@@ -125,6 +126,7 @@ public class OrderWorkPageController {
         work.setNote(noteTextArea.getText());
         if (addingRepairWork != null){
             addingRepairWork.setStatus(Works.status_checked);
+            addingRepairWork.save();
         }
 
         if (work.getProduct().getProgressRate() != -1){
@@ -137,18 +139,6 @@ public class OrderWorkPageController {
                 return false;
             }
         }
-//        else {
-//            Work bufferWork = new Work(work.getData());
-//            bufferWork.save();
-//            if (bufferWork.getRecommendedProgressRate() == 100){
-//                HashMap<String, Object> passingData = new HashMap<>();
-//                passingData.put("work", bufferWork);
-//                PopUpUtility.popUp("order-estimated-late", passingData);
-//                return false;
-//            }
-//            bufferWork.delete();
-//        }
-
         work.save();
         System.out.println(work);
         return true;
@@ -170,6 +160,7 @@ public class OrderWorkPageController {
         String[] values = productComboBox.getValue().split(" ");
         Products.addFilter("product_name", values[0]);
         Products.addFilter("size", Integer.parseInt(values[1]));
+
         Work work = new Work();
         work.setProduct(Products.toList(Products.getFilteredData()).get(0));
         int amount = Integer.parseInt(amountTextField.getText());

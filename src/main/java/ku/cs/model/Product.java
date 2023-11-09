@@ -106,6 +106,7 @@ public class Product implements Row {
     @Override
     public void load(String primaryKeys) throws SQLException {
         EntityUtility.checkId(Products.getSqlTable(), primaryKeys);
+        setId(primaryKeys);
         if (Products.isNew(this)) throw new RuntimeException("Product[load]: cannot found product with id -> " + primaryKeys);
         setData(Products.find(primaryKeys).getData());
     }

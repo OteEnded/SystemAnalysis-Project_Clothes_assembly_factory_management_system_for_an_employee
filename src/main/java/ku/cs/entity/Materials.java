@@ -100,7 +100,7 @@ public class Materials {
 
     public static boolean isNew(Material material) throws SQLException {
         if (material == null) throw new RuntimeException("Materials[isNew]: material is null");
-        if (material.getId() == null) throw new RuntimeException("Materials[isNew]: material's id is null");
+        if (material.getId() == null) return true;
         return isNew(material.getId());
     }
 

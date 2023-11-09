@@ -50,11 +50,13 @@ public class EntityUtility {
     }
 
     public static String getNewId(SQLTable sqlTable) throws SQLException {
+        ProjectUtility.debug("EntityUtility[getNewId]: generating new id for table -> " + sqlTable);
         List<SQLColumn> primaryKeys = sqlTable.getPrimaryKeys();
         if (primaryKeys.size() != 1) throw new RuntimeException("EntityUtility[getNewId]: cannot get new id from table with multiple primary keys -> " + sqlTable);
         String idColumnName = primaryKeys.get(0).getName();
         List<SQLRow> ids = sqlTable.getColumnsValues(idColumnName);
         List<String> oldIds = new ArrayList<>();
+        ProjectUtility.debug("EntityUtility[getNewId]: old ids -> " + ids);
         for (SQLRow sqlRow: ids) oldIds.add(sqlRow.getValuesMap().get(idColumnName).toString());
         if (oldIds.isEmpty()) return idFormatter(sqlTable, 1);
         Collections.sort(oldIds);

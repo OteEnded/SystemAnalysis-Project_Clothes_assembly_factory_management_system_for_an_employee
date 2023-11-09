@@ -65,6 +65,7 @@ public class Material implements Row{
     @Override
     public void load(String primaryKeys) throws SQLException {
         EntityUtility.checkId(Materials.getSqlTable(), primaryKeys);
+        setId(primaryKeys);
         if (Materials.isNew(this)) throw new RuntimeException("Material[load]: cannot found material with id: " + primaryKeys);
         setData(Materials.find(primaryKeys).getData());
     }

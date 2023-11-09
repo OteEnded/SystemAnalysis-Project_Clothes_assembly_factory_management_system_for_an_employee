@@ -97,7 +97,7 @@ public class DailyRecord implements Row {
     @Override
     public HashMap<String, Object> getPrimaryKeys() {
         HashMap<String, Object> primaryKeys = new HashMap<>();
-        for (SQLColumn sqlColumn : Products.getSqlTable().getPrimaryKeys()) {
+        for (SQLColumn sqlColumn : DailyRecords.getSqlTable().getPrimaryKeys()) {
             primaryKeys.put(sqlColumn.getName(), data.get(sqlColumn.getName()));
         }
         return primaryKeys;

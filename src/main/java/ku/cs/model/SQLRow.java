@@ -86,6 +86,7 @@ public class SQLRow {
 
     public String getJoinedPrimaryKeys() {
         ProjectUtility.debug("SQLRow[getJoinedPrimaryKeys]: getting joined primaryKeys of sqlRow ->", this);
+        ProjectUtility.debug("SQLRow[getJoinedPrimaryKeys]: getting joined primaryKeys of sqlRow ->", primaryKeys);
         List<String> primaryKeyList = new ArrayList<>();
         for (String key : columns) {
             if (primaryKeys.containsKey(key)) primaryKeyList.add(valuesMap.get(key).toString());

@@ -98,7 +98,8 @@ public class FinishedWorkController {
         // เรียกข้อมูล
         Product product = handleProductStringToProductObject(value);
         WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
-        Work work = Works.getData().get(selectedWork.getId());
+        Work work = new Work();
+        work.load(selectedWork.getId());
 
         // เพิ่มช้อมูลเข้าลิสต์
         for (MaterialUsage materialUsage : product.getMaterialsUsed()){
@@ -112,7 +113,8 @@ public class FinishedWorkController {
     @FXML private void handleSendWorkBtn() throws SQLException, ParseException {
         WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
         ProjectUtility.debug("####", selectedWork.getId());
-        Work work = Works.getData().get(selectedWork.getId());
+        Work work = new Work();
+        work.load(selectedWork.getId());
 //
 //        Work work = Works.getData().get(selectedWork.getId());
         if (work != null){

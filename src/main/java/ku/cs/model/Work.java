@@ -195,6 +195,7 @@ public class Work implements Row {
     @Override
     public void load(String primaryKeys) throws SQLException {
         EntityUtility.checkId(Works.getSqlTable(), primaryKeys);
+        setId(primaryKeys);
         if (Works.isNew(this)) throw new RuntimeException("Work[load]: cannot found work with id -> " + primaryKeys);
         setData(Works.find(primaryKeys).getData());
     }

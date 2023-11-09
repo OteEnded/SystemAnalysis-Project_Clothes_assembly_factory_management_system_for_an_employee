@@ -122,7 +122,8 @@ public class ReviewPageController {
     @FXML void handleAddRepairWork(){
         try {
             WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
-            Work work = Works.getData().get(selectedWork.getId());
+            Work work = new Work();
+            work.load(selectedWork.getId());
 //            work.setStatus(Works.status_checked);
             com.github.saacsos.FXRouter.goTo("order", work);
         } catch (Exception e){
@@ -134,8 +135,10 @@ public class ReviewPageController {
     @FXML void handleCheckedPassButton() throws SQLException {
         try {
             WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
-            Work work = Works.getData().get(selectedWork.getId());
+            Work work = new Work();
+            work.load(selectedWork.getId());
             work.setStatus(Works.status_checked);
+            work.save();
             com.github.saacsos.FXRouter.goTo("complete-work");
         } catch (Exception e){
             System.err.println("ไปหน้า order ไม่ได้");

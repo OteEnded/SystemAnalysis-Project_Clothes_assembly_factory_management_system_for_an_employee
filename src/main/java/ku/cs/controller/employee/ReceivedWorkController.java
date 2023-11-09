@@ -95,6 +95,8 @@ public class ReceivedWorkController {
     }
 
     private void showSelectedRow(WorkWrapper newValue) throws SQLException {
+        Work work = new Work();
+        work.load(newValue.getId());
         detailPane.setVisible(true);
         workTypeLabel.setText(newValue.getType());
         productLabel.setText(newValue.getDisplay_product());
@@ -102,10 +104,11 @@ public class ReceivedWorkController {
         amountLabel.setText(String.valueOf(newValue.getGoal_amount()));
         showListView(newValue.getDisplay_product());
         noteText.setText(newValue.getNote());
-        if(newValue.getEstimate().equals("ทันเวลา")) {
+
+        if(work.getEstimated().equals(Works.estimate_onTime)) {
             acceptBtn.setVisible(true);
             putWorkRateBtn.setVisible(false);
-        } else if (newValue.getEstimate().equals("ไม่พบอัตราการทำงาน")) {
+        } else if (work.getProduct().getProgressRate() == -1) {
             acceptBtn.setVisible(false);
             putWorkRateBtn.setVisible(true);
         }
@@ -128,7 +131,8 @@ public class ReceivedWorkController {
         // เรียกข้อมูล
         Product product = handleProductStringToProductObject(value);
         WorkWrapper selectedWork = tableView.getSelectionModel().getSelectedItem();
-        Work work = Works.getData().get(selectedWork.getId());
+        Work work = new Work();
+        work.load(selectedWork.getId());
 
         // เพิ่มช้อมูลเข้าลิสต์
         for (MaterialUsage materialUsage : product.getMaterialsUsed()){

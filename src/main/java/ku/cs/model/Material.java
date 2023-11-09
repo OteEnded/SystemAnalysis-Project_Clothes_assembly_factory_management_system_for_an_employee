@@ -64,7 +64,7 @@ public class Material implements Row{
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-//        if(Materials.getData() == null) Materials.load();
+//        if(Materials.getData() == null) Materials.getAll();
         boolean cannotLoad;
         try {
             cannotLoad = Materials.isNew(primaryKeys);
@@ -73,7 +73,7 @@ public class Material implements Row{
             cannotLoad = true;
         }
         cannotLoad = cannotLoad || !EntityUtility.isIdValid(Materials.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("Material[load]: Can't load material with primaryKeys: " + primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Material[getAll]: Can't getAll material with primaryKeys: " + primaryKeys);
         setData(Materials.getData().get(primaryKeys).getData());
     }
 

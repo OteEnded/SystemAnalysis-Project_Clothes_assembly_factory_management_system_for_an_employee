@@ -1,6 +1,5 @@
 package ku.cs.entity;
 
-import javafx.scene.paint.Material;
 import ku.cs.model.*;
 import ku.cs.service.DataSourceDB;
 import ku.cs.utility.EntityUtility;
@@ -72,18 +71,18 @@ public class Products {
         return load(true);
     }
 
-    // load data from database
+    // getAll data from database
     public static HashMap<String, Product> load(boolean updateBuffer) throws SQLException {
 
         try {
             PopUpUtility.popUp("loading", "Products (สินค้า)");
         } catch (Exception e){
-            ProjectUtility.debug("Products[load]: cannot do pop ups thing");
+            ProjectUtility.debug("Products[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
         HashMap<String, Product> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Product(sqlRow.getValuesMap()));
         }
@@ -92,7 +91,6 @@ public class Products {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("Products[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -145,7 +143,7 @@ public class Products {
         if(!isProductValid(product)) throw new RuntimeException("Products[save]: product's data is not valid ->" + verifyProduct(product));
         if (isNew(product)) {
             addData(product);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, product)));
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, product)));
         }
 
         if (data.get(getJoinedPrimaryKeys(product)).getProgressRate() == -1 && product.getProgressRate() != -1) {
@@ -157,7 +155,7 @@ public class Products {
         }
 
         data.put(getJoinedPrimaryKeys(product), product);
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, product)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, product)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
@@ -170,7 +168,7 @@ public class Products {
         ProjectUtility.debug("Products[delete]: deleting product ->", product);
         if (isNew(product)) throw new RuntimeException("Products[delete]: Can't delete product that is not in database");
         data.remove(getJoinedPrimaryKeys(product));
-        int affectedRow = DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
+        int affectedRow = DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
         Works.load();
         MaterialUsages.load();
         return affectedRow;
@@ -192,46 +190,30 @@ public class Products {
         return getFilteredData();
     }
     public static HashMap<String, Product> getFilteredData() throws SQLException {
-        if (filter == null) throw new RuntimeException("Product[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Products.getData()");
-        if (data == null) load();
+        if (filter == null) throw new RuntimeException("Products[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Products.getData()");
         HashMap<String, Product> filteredData = new HashMap<>();
-        for (Product product: getData().values()) {
-            boolean isFiltered = true;
-            for (String column: filter.keySet()) {
-                if (product.getData().get(column) == null) {
-                    isFiltered = false;
-                    break;
-                }
-                if(!product.getData().get(column).equals(filter.get(column))) {
-                    isFiltered = false;
-                    break;
-                }
+        try {
+            for (SQLRow sqlRow: sqlTable.getWhere(filter)) {
+                filteredData.put(sqlRow.getJoinedPrimaryKeys(), new Product(sqlRow.getValuesMap()));
             }
-            if (isFiltered) filteredData.put(product.getId(), product);
         }
-        filter = null;
+        catch (ParseException e){
+            e.printStackTrace();
+            throw new RuntimeException("products[getFilteredData]: ParseException");
+        }
         return filteredData;
     }
+
+    public static List<Product> getFilteredDataSortedBy(String column){
+        return null;
+    }
+
     public static List<Product> getSortedBy(String column) throws SQLException {
         if (data == null) load();
         return getSortedBy(column, data);
     }
 
     public static List<Product> getSortedBy(String column, HashMap<String, Product> data) throws SQLException {
-//        ProjectUtility.debug("Products[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("Products[getSortedBy]: data is null, Please load data first or get all data without filter using -> Products.getData()");
-//        List<String> sortedValues = new ArrayList<String>();
-//        for (Product product : data.values()) {
-//            sortedValues.add(product.getData().get(column).toString());
-//        }
-//        Collections.sort(sortedValues);
-//        ProjectUtility.debug("Products[getSortedBy]: sorted target ->", sortedValues);
-//        List<Product> sortedProducts = new ArrayList<>();
-//        for (String sortedValue : sortedValues) {
-//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-//            sortedProducts.addAll(getFilteredData().values());
-//        }
-//        return sortedProducts;
         List<Product> products = toList(data);
         products.sort((o1, o2) -> {
             try {

@@ -71,12 +71,12 @@ public class Materials {
         try {
             PopUpUtility.popUp("loading", "Materials (วัตถุดิบ)");
         } catch (Exception e){
-            ProjectUtility.debug("Materials[load]: cannot do pop ups thing");
+            ProjectUtility.debug("Materials[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
         HashMap<String, Material> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Material(sqlRow.getValuesMap()));
         }
@@ -85,7 +85,6 @@ public class Materials {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("Materials[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -138,10 +137,10 @@ public class Materials {
         if (!isMaterialValid(material)) throw new RuntimeException("Materials[save]: material's data is not valid ->" + verifyMaterial(material));
         if (isNew(material)) {
             addData(material);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, material)));
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, material)));
         }
         data.put(getJoinedPrimaryKeys(material), material);
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, material)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, material)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
@@ -154,7 +153,7 @@ public class Materials {
         ProjectUtility.debug("Materials[delete]: deleting material ->", material);
         if (isNew(material)) throw new RuntimeException("Materials[delete]: Can not delete material that is not in database");
         data.remove(getJoinedPrimaryKeys(material));
-        int affectedRow =  DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
+        int affectedRow =  DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
         MaterialUsages.load();
         return affectedRow;
     }
@@ -176,23 +175,16 @@ public class Materials {
     }
     public static HashMap<String, Material> getFilteredData() throws SQLException{
         if (filter == null) throw new RuntimeException("Materials[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> Materials.getData()");
-        if (data == null) load();
         HashMap<String, Material> filteredData = new HashMap<>();
-        for (Material material: getData().values()) {
-            boolean isFiltered = true;
-            for (String column: filter.keySet()) {
-                if (material.getData().get(column) == null) {
-                    isFiltered = false;
-                    break;
-                }
-                if(!material.getData().get(column).equals(filter.get(column))) {
-                    isFiltered = false;
-                    break;
-                }
+        try {
+            for (SQLRow sqlRow: sqlTable.getWhere(filter)) {
+                filteredData.put(sqlRow.getJoinedPrimaryKeys(), new Material(sqlRow.getValuesMap()));
             }
-            if (isFiltered) filteredData.put(material.getId(), material);
         }
-        filter = null;
+        catch (ParseException e){
+            e.printStackTrace();
+            throw new RuntimeException("Materials[getFilteredData]: ParseException");
+        }
         return filteredData;
     }
 
@@ -202,20 +194,6 @@ public class Materials {
     }
 
     public static List<Material> getSortedBy(String column, HashMap<String, Material> data) throws SQLException {
-//        ProjectUtility.debug("Materials[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("Materials[getSortedBy]: data is null, Please load data first or get all data without filter using -> Materials.getData()");
-//        List<String> sortedValues = new ArrayList<String>();
-//        for (Material material : data.values()) {
-//            sortedValues.add(material.getData().get(column).toString());
-//        }
-//        Collections.sort(sortedValues);
-//        ProjectUtility.debug("Materials[getSortedBy]: sorted target ->", sortedValues);
-//        List<Material> sortedMaterial = new ArrayList<>();
-//        for (String sortedValue : sortedValues) {
-//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-//            sortedMaterial.addAll(getFilteredData().values());
-//        }
-//        return sortedMaterial;
         List<Material> materials = toList(data);
         materials.sort((o1, o2) -> {
             try {

@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ku.cs.controller.employee.dialogs.ProgressRateWarningDialogController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="300" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employee.dialogs.ProgressRateWarningDialogController">
+    <children>
+        <Label fx:id="headerLabel" layoutX="40.0" layoutY="60.0" prefHeight="35.0" prefWidth="542.0" styleClass="bold-text" text="จากอัตราการทำงานที่คุณประเมิน อาจทำงานไม่ทัน" textFill="#dd0000">
+            <font>
+                <Font name="System Bold Italic" size="24.0" />
+            </font>
+        </Label>
+        <VBox layoutX="40.0" layoutY="100.0" prefHeight="80.0" prefWidth="517.0">
+            <children>
+                <HBox prefHeight="50.0" prefWidth="500.0">
+                    <children>
+                        <Label prefHeight="15.0" prefWidth="500.0" style="-fx-font-size: 16;" text="จากการประเมินแล้ว อัตรการทำงานที่คุณกรอก จะไม่สามารถทำงานทำตามกำหนดได้" textFill="#172b4d" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="50.0" prefWidth="500.0">
+                    <children>
+                        <Label style="-fx-font-size: 14;" text="หากคุณต้องการทำงานให้ทัน คุณต้องทำงานอย่างน้อย " textFill="#172b4d" />
+                        <Label fx:id="recommendedProgressRate" style="-fx-font-size: 14;" text="8" textFill="#172b4d" />
+                        <Label style="-fx-font-size: 14;" text=" ชิ้น ต่อวัน" textFill="#172b4d" />
+                    </children>
+                </HBox>
+                <HBox fx:id="recommendGoalAmountHBox" prefHeight="50.0" prefWidth="500.0" visible="false">
+                    <children>
+                        <Label style="-fx-font-size: 14;" text="หากต้องการให้ส่งงานวันที่ " textFill="#172b4d" />
+                        <Label fx:id="workDeadLineLabel" style="-fx-font-size: 14;" text="objectLabel" textFill="#172b4d" />
+                        <Label style="-fx-font-size: 14;" text=" ลูกจ้างจะสามารถผลิตได้ " textFill="#172b4d" />
+                        <Label fx:id="recommendGoalAmountLabel" style="-fx-font-size: 14;" text="objectLabel" textFill="#172b4d" />
+                        <Label style="-fx-font-size: 14;" text=" ชิ้น" textFill="#172b4d" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+        <Button fx:id="noButton" layoutX="449.0" layoutY="219.0" mnemonicParsing="false" onAction="#onNoButtonClick" prefHeight="34.0" prefWidth="105.0" style="-fx-font-size: 14;" styleClass="red-btn" text="ไม่รับงาน" textFill="WHITE" />
+      <Button fx:id="okButton" layoutX="334.0" layoutY="219.0" mnemonicParsing="false" onAction="#onOkButtonClick" prefHeight="34.0" prefWidth="105.0" style="-fx-font-size: 14;" styleClass="blue-btn" text="ตกลง" textFill="WHITE" />
+    </children>
 </AnchorPane>

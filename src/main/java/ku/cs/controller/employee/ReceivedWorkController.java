@@ -55,7 +55,7 @@ public class ReceivedWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         acceptBtn.setVisible(false);
         putWorkRateBtn.setVisible(false);
 
@@ -142,10 +142,17 @@ public class ReceivedWorkController {
     private void handlePutWorkRateBtn(ActionEvent actionEvent) throws IOException, SQLException {
         HashMap<String, Object> passingData = new HashMap<>();
         passingData.put("objectLabel", tableView.getSelectionModel().getSelectedItem().getDisplay_product());
-        passingData.put("work", Works.getData().get(tableView.getSelectionModel().getSelectedItem().getId()));
+        ProjectUtility.debug(tableView.getSelectionModel().getSelectedItem().getId());
+        Works.load();
+        Work work = new Work();
+        work.load(tableView.getSelectionModel().getSelectedItem().getId());
+        ProjectUtility.debug(work);
+        passingData.put("work", work);
         System.out.println(passingData);
         PopUpUtility.popUp("set-progress-rate", passingData);
-        if (!PopUpUtility.getPopUp("set-progress-rate").isPositiveClosing()) return;
+        if (PopUpUtility.getPopUp("set-progress-rate").isPositiveClosing()) {
+            tableView.setItems(fetchData());
+        }
     }
 
     /* Navbar Btn */
@@ -221,7 +228,10 @@ public class ReceivedWorkController {
         }
     }
 
+
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
+
+        Works.load();
 
         Works.addFilter("status", Works.status_waitForAccept);
         List<Work> works =  Works.getSortedBy("deadline", Works.getFilteredData());

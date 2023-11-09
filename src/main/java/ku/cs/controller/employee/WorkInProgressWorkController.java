@@ -51,7 +51,7 @@ public class WorkInProgressWorkController {
 
     @FXML
     void initialize() throws SQLException {
-
+        detailPane.setVisible(false);
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
         display_product.setCellValueFactory(new PropertyValueFactory<>("display_product"));
         goal_amount.setCellValueFactory(new PropertyValueFactory<>("goal_amount"));
@@ -166,6 +166,15 @@ public class WorkInProgressWorkController {
             FXRouter.goTo("checked-work");
         } catch (Exception e) {
             System.err.println("ไปหน้า checked-work ไม่ได้");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void handleDailyRecordBtn() throws IOException {
+        try {
+            com.github.saacsos.FXRouter.goTo("record-daily-result");
+        } catch (Exception e) {
+            System.err.println("ไปหน้า received-work ไม่ได้");
             e.printStackTrace();
         }
     }

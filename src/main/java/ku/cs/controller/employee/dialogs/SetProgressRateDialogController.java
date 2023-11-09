@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import ku.cs.entity.Works;
 import ku.cs.model.DailyRecord;
 import ku.cs.model.Material;
+import ku.cs.model.Product;
 import ku.cs.model.Work;
 import ku.cs.utility.CustomPopUp;
 import ku.cs.utility.PopUpUtility;
@@ -15,6 +16,7 @@ import ku.cs.utility.ProjectUtility;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
@@ -33,6 +35,8 @@ public class SetProgressRateDialogController {
     private Button cancelButton;
 
     @FXML private Label objectLabel;
+    @FXML private Label promptLabel;
+
     private Work work;
 
 
@@ -59,9 +63,30 @@ public class SetProgressRateDialogController {
     }
 
     @FXML
-    public void onConfirmButtonClick() throws SQLException, IOException {
+    public void onConfirmButtonClick() throws SQLException, IOException, ParseException {
         customPopUp.setCloseBy(PopUpUtility.closeWith_confirm);
-        handleEstimate();
+
+        String userEstimateProgressRateStr = textField.getText();
+        boolean checkNumeric = Pattern.matches("[0-9]+", userEstimateProgressRateStr);
+        if(checkNumeric) {
+            promptLabel.setText("");
+            int userEstimateProgressRate = Integer.parseInt(userEstimateProgressRateStr);
+            Product product = work.getProduct();
+            if(userEstimateProgressRate < 8){ // work.getEstimated().equals(Works.estimate_late)) {
+                HashMap<String, Object> passingData = new HashMap<>();
+                passingData.put("work", work);
+                PopUpUtility.popUp("progress-rate-warning", passingData);
+                if (PopUpUtility.getPopUp("progress-rate-warning").isPositiveClosing()) return;
+            }
+            product.setProgressRate(userEstimateProgressRate);
+            product.save();
+        } else {
+            System.err.println("invalid");
+            promptLabel.setText("กรุณากรอกตัวเลขเท่านั้น");
+            return;
+        }
+
+
         customPopUp.close();
     }
 
@@ -69,22 +94,5 @@ public class SetProgressRateDialogController {
     public void onCancelButtonClick() {
         customPopUp.setCloseBy(PopUpUtility.closeWith_cancel);
         customPopUp.close();
-    }
-
-    private void handleEstimate() throws SQLException, IOException {
-        String userEstimateProgressRateStr = textField.getText();
-        boolean checkNumeric = Pattern.matches("[0-9]+", userEstimateProgressRateStr);
-        if(checkNumeric) {
-            int userEstimateProgressRate = Integer.parseInt(userEstimateProgressRateStr);
-            work.getProduct().setProgressRate(userEstimateProgressRate);
-            if(work.getEstimated().equals(Works.estimate_late)) {
-                HashMap<String, Object> passingData = new HashMap<>();
-                passingData.put("work", work);
-                PopUpUtility.popUp("progress-rate-warning", passingData);
-                if (!PopUpUtility.getPopUp("progress-rate-warning").isPositiveClosing()) return;
-            }
-        } else {
-            System.err.println("invalid");
-        }
     }
 }

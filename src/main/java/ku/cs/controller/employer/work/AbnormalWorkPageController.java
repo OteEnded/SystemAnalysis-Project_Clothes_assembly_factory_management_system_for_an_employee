@@ -43,9 +43,6 @@ public class AbnormalWorkPageController {
     @FXML private ListView<String> materialListView;
     @FXML private ListView<String> total_materialListView;
 
-
-
-
     @FXML
     void initialize() throws SQLException {
         detailPane.setVisible(false);

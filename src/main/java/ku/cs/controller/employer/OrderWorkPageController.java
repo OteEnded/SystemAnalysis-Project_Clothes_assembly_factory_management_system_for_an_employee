@@ -16,6 +16,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class OrderWorkPageController {
     @FXML private Text headerText;
@@ -36,6 +38,32 @@ public class OrderWorkPageController {
         }
         else initForAddWork();
 
+        deadlineDatePicker.setDisable(true);
+
+        productComboBox.getSelectionModel().selectedItemProperty().addListener((ov, oldValue, newValue) -> {
+            deadlineDatePicker.setDisable(newValue == null);
+            deadlineDatePicker.setDisable(Objects.equals(amountTextField.getText(), ""));
+        });
+
+       amountTextField.textProperty().addListener((ov, oldValue, newValue) -> {
+           deadlineDatePicker.setDisable(Objects.equals(newValue, "")
+                   || Integer.parseInt(newValue) < 1
+                   || productComboBox.getValue() == null);
+           try {
+               setRecommendedDateToDatePicker();
+           } catch (SQLException e) {
+               throw new RuntimeException(e);
+           }
+       });
+
+       deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
+           @Override
+           public void updateItem(LocalDate date, boolean empty) {
+               super.updateItem(date, empty);
+               LocalDate tomorrow = ProjectUtility.getDate(1).toLocalDate();
+               setDisable(empty || date.isBefore(tomorrow));
+           }
+       });
 
     }
 
@@ -69,16 +97,14 @@ public class OrderWorkPageController {
 
 //        PopUpUtility.popUp("loading", "กำลังบันทึกข้อมูล...");
 
-        ProjectUtility.debug("###############################");
-        ProjectUtility.debug(validate());
+//        ProjectUtility.debug("###############################");
+//        ProjectUtility.debug(validate());
 
         if (validate()) {
             promptLabel.setText("");
-//            if (!addWork()){
-//                // pop up
-//            }
-
-            addWork();
+            if (!addWork()){
+                return;
+            }
 
             try {
                 com.github.saacsos.FXRouter.goTo("wait-for-receive");
@@ -89,7 +115,7 @@ public class OrderWorkPageController {
         }
     }
 
-    private boolean addWork() throws SQLException, ParseException {
+    private boolean addWork() throws SQLException, ParseException, IOException {
         Work work = new Work();
         work.setStatus(Works.status_waitForAccept);
         work.setWorkType(workTypeComboBox.getValue());
@@ -99,14 +125,30 @@ public class OrderWorkPageController {
         work.setNote(noteTextArea.getText());
         if (addingRepairWork != null){
             addingRepairWork.setStatus(Works.status_checked);
-            work.setRepairWork(addingRepairWork);
         }
 
         if (work.getProduct().getProgressRate() != -1){
             if (work.getEstimated().equals(Works.estimate_late)){
+
+                HashMap<String, Object> passingData = new HashMap<>();
+                passingData.put("work", work);
+                PopUpUtility.popUp("order-estimated-late", passingData);
+
                 return false;
             }
         }
+//        else {
+//            Work bufferWork = new Work(work.getData());
+//            bufferWork.save();
+//            if (bufferWork.getRecommendedProgressRate() == 100){
+//                HashMap<String, Object> passingData = new HashMap<>();
+//                passingData.put("work", bufferWork);
+//                PopUpUtility.popUp("order-estimated-late", passingData);
+//                return false;
+//            }
+//            bufferWork.delete();
+//        }
+
         work.save();
         System.out.println(work);
         return true;
@@ -123,24 +165,46 @@ public class OrderWorkPageController {
         }
     }
 
-    private boolean validate(){
+    private void setRecommendedDateToDatePicker() throws SQLException {
+        String[] values = productComboBox.getValue().split(" ");
+        Products.addFilter("product_name", values[0]);
+        Products.addFilter("size", Integer.parseInt(values[1]));
+        Work work = new Work();
+        work.setProduct(Products.toList(Products.getFilteredData()).get(0));
+        int amount = Integer.parseInt(amountTextField.getText());
+        double progress_rate = work.getProduct().getProgressRate();
+        System.out.println(progress_rate * amount);
+        if(progress_rate == -1) {
+            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), 1).toLocalDate());
+        } else {
+            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), (int) (amount * progress_rate)).toLocalDate());
+        }
+    }
+
+    private boolean validate() {
         if (productComboBox.getSelectionModel().isEmpty()){
             if (addingRepairWork != null) return true;
             promptLabel.setText("กรุณาเลือกสินค้าที่ต้องการสั่งผลิต");
             return false;
         }
-        if (amountTextField.getText().isEmpty()){
-            promptLabel.setText("กรุณากรอกจำนวนงาน");
+        try {
+            int amount = Integer.parseInt(amountTextField.getText());
+        } catch(Exception e) {
+            promptLabel.setText("กรุณากรอกจำนวนงานให้ถูกต้อง");
             return false;
         }
-        if (deadlineDatePicker.getValue().isBefore(LocalDate.now())){
+        if(Integer.parseInt(amountTextField.getText()) < 1)  {
+            promptLabel.setText("กรุณากรอกจำนวนงานให้ถูกต้อง");
+            return false;
+        }
+        if(deadlineDatePicker.getValue().isBefore(LocalDate.now())){
             promptLabel.setText("กรุณากรอกวันกำหนดส่งให้ถูกต้อง");
             return false;
         }
+
+
         return true;
     }
-
-
 
     // MenuBar Handle
     @FXML

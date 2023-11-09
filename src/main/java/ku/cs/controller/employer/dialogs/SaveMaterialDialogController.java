@@ -74,8 +74,16 @@ public class SaveMaterialDialogController {
             promptLabel.setText("กรุณากรอกชื่อวัตถุดิบ");
             return false;
         }
+        if(materialName.getText().matches("[0-9]+")) {
+            promptLabel.setText("กรุณากรอกชื่อวัตถุดิบให้ถูกต้อง");
+            return false;
+        }
         if (materialUnitName.getText().isEmpty()){
             promptLabel.setText("กรุณากรอกหน่วยของวัตถุดิบ");
+            return false;
+        }
+        if(materialUnitName.getText().matches("[0-9]+")) {
+            promptLabel.setText("กรุณากรอกหน่วยของวัตถุดิบให้ถูกต้อง");
             return false;
         }
         return true;

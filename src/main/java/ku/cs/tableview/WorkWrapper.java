@@ -4,6 +4,7 @@ import ku.cs.model.Product;
 import ku.cs.model.Work;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 
 /* for tableView only */
@@ -32,7 +33,6 @@ public class WorkWrapper {
         this.goal_amount = work.getGoalAmount();
         this.progress_amount = work.getProgressAmount();
         this.note = work.getNote();
-        this.repair_work = work.isPass() ? getRepair_work() : null;
         Product product = work.getProduct();
         this.estimate = product.getProgressRate() == -1 ? "ไม่พบอัตราการทำงาน" : work.getEstimated();
         this.display_product = product.getName() + " ขนาด " + product.getSize() + " นิ้ว";

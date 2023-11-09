@@ -119,6 +119,10 @@ public class SQLRow {
 
     public static List<SQLRow> castRS(ResultSet resultSet) throws SQLException {
         ProjectUtility.debug("SQLRow[castRS]: casting from resultSet...");
+        if (resultSet == null) {
+            ProjectUtility.debug("SQLRow[castRS]: resultSet is null");
+            return null;
+        }
         ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
         String tableName = ProjectUtility.capitalize(resultSetMetaData.getTableName(1));
         ProjectUtility.debug("SQLRow[castRS]: found tableName ->", tableName);

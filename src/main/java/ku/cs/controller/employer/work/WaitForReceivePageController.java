@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import ku.cs.entity.Products;
-import ku.cs.entity.Users;
 import ku.cs.entity.Works;
 import ku.cs.model.Material;
 import ku.cs.model.MaterialUsage;
@@ -118,10 +117,12 @@ public class WaitForReceivePageController {
 
         Works.addFilter("status", Works.status_waitForAccept);
         HashMap<String, Work> works = Works.getFilteredData();
+        ProjectUtility.debug(works);
 
         ObservableList<WorkWrapper> workWrappers = FXCollections.observableArrayList();
         for(String workId : works.keySet()) {
             Work work = works.get(workId);
+            ProjectUtility.debug("WaitForReceivePageController[fetchData]: work ->", work);
             WorkWrapper workWrapper = new WorkWrapper(work);
             workWrappers.add(workWrapper);
         }

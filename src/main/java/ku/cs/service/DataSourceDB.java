@@ -7,7 +7,6 @@ import ku.cs.utility.ProjectUtility;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DataSourceDB {
@@ -27,17 +26,13 @@ public class DataSourceDB {
         return JdbcConnector.getMetadata();
     }
 
-    public static List<SQLRow> query(String query) throws SQLException {
-        JdbcConnector.connect();
-        List<SQLRow> sqlRows = SQLRow.castRS(JdbcConnector.query(query));
-        JdbcConnector.disconnect();
-        return sqlRows;
-    }
-
     public static int createTable(SQLTable sqlTable) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[createTable]: trying to create table ->", sqlTable.getName());
+        ProjectUtility.taskTimerStart();
         JdbcConnector.connect();
         int affectedRows = JdbcConnector.update(sqlTable.getCreateQuery());
         JdbcConnector.disconnect();
+        ProjectUtility.debug("DataSourceDB[createTable]: executed, affectedRows ->", affectedRows, ", time ->", ProjectUtility.getFormattedTaskTimerResult());
         return affectedRows;
     }
 
@@ -46,24 +41,43 @@ public class DataSourceDB {
     }
 
     public static int dropTable(String tableName) throws SQLException {
+        return dropTable(tableName, false);
+    }
+
+    public static int dropTable(String tableName, boolean force) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[dropTable]: trying to drop table ->", tableName);
+        ProjectUtility.taskTimerStart();
         JdbcConnector.connect();
-        int affectedRows = JdbcConnector.update("DROP TABLE IF EXISTS " + tableName);
+        int affectedRows = 0;
+        SQLException error = null;
+        try {
+            if (force) JdbcConnector.update("SET FOREIGN_KEY_CHECKS = 0");
+            affectedRows += JdbcConnector.update("DROP TABLE IF EXISTS " + tableName);
+        }
+        catch (SQLException e){
+            ProjectUtility.debug("DataSourceDB[dropTable]: Error while dropping table ->", tableName);
+            error = e;
+        }
+        finally {
+            if (force) JdbcConnector.update("SET FOREIGN_KEY_CHECKS = 1");
+        }
         JdbcConnector.disconnect();
+        if (error != null) throw error;
+        ProjectUtility.debug("DataSourceDB[dropTable]: executed, affectedRows ->", affectedRows, ", time ->", ProjectUtility.getFormattedTaskTimerResult());
         return affectedRows;
     }
 
     public static int dropTableAll() throws SQLException {
+        ProjectUtility.debug("DataSourceDB[dropTableAll]: trying to drop all tables");
         JdbcConnector.connect();
 
         int affectedRows = 0;
-        affectedRows += dropTable("DailyRecords");
-        affectedRows += dropTable("MaterialUsages");
-        affectedRows += dropTable("Materials");
-        affectedRows += dropTable("Works");
-        affectedRows += dropTable("Products");
-        affectedRows += dropTable("Users");
+        for (String tableName: getTableList()){
+            affectedRows += dropTable(tableName, true);
+        }
 
         JdbcConnector.disconnect();
+        ProjectUtility.debug("DataSourceDB[dropTableAll]: executed, affectedRows ->", affectedRows);
         return affectedRows;
     }
 
@@ -80,31 +94,50 @@ public class DataSourceDB {
     }
 
     public static int emptyTable(String tableName) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[emptyTable]: trying to empty table ->", tableName);
+        ProjectUtility.taskTimerStart();
         JdbcConnector.connect();
         int affectedRows = JdbcConnector.update("TRUNCATE " + tableName);
         JdbcConnector.disconnect();
+        ProjectUtility.debug("DataSourceDB[emptyTable]: executed, affectedRows ->", affectedRows, ", time ->", ProjectUtility.getFormattedTaskTimerResult());
         return affectedRows;
     }
 
-    public static List<SQLRow> load(SQLTable sqlTable) throws SQLException {
-        return load(sqlTable.getName());
-    }
-
-    public static List<SQLRow> load(String tableName) throws SQLException {
-        return query("SELECT * FROM " + tableName);
-    }
-
-    public static int exePrepare(PreparedStatement preparedStatement) throws SQLException {
-        ProjectUtility.debug("DataSourceDB[exePrepare]: trying to execute ->", preparedStatement);
-        int rowsUpdated = 0;
+    public static void withdrawConnection() throws SQLException {
         if (inUse > 0) {
-            rowsUpdated = preparedStatement.executeUpdate();
             inUse -= 1;
             getConnection(false);
         }
-        else ProjectUtility.debug("DataSourceDB[exePrepare]: Invalid preparedStatement usage with JDBCO.");
-        ProjectUtility.debug("DataSourceDB[exePrepare]: executed, rowsUpdated ->", rowsUpdated);
+        else ProjectUtility.debug("DataSourceDB[withdrawConnection]: Invalid preparedStatement usage with JDBCO.");
+    }
+
+    public static int exeUpdatePrepare(PreparedStatement preparedStatement) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[exeUpdatePrepare]: trying to execute ->", preparedStatement);
+        ProjectUtility.taskTimerStart();
+        int rowsUpdated = preparedStatement.executeUpdate();
+        withdrawConnection();
+        ProjectUtility.debug("DataSourceDB[exeUpdatePrepare]: executed, rowsUpdated ->", rowsUpdated, ", time ->", ProjectUtility.getFormattedTaskTimerResult());
         return rowsUpdated;
+    }
+
+    public static List<SQLRow> query(String query) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[query]: trying to query ->", query);
+        ProjectUtility.taskTimerStart();
+        JdbcConnector.connect();
+        List<SQLRow> sqlRows = SQLRow.castRS(JdbcConnector.query(query));
+        JdbcConnector.disconnect();
+        ProjectUtility.debug("DataSourceDB[query]: executed, rows found ->", sqlRows.size(), ", time ->", ProjectUtility.getFormattedTaskTimerResult());
+        return sqlRows;
+    }
+
+    public static List<SQLRow> exeQueryPrepare(PreparedStatement preparedStatement) throws SQLException {
+        ProjectUtility.debug("DataSourceDB[exeQueryPrepare]: trying to execute query ->", preparedStatement);
+        ProjectUtility.taskTimerStart();
+        List<SQLRow> sqlRows = null;
+        sqlRows = SQLRow.castRS(preparedStatement.executeQuery());
+        withdrawConnection();
+        ProjectUtility.debug("DataSourceDB[exeQueryPrepare]: executed, rows found ->", sqlRows.size(), ", time ->", ProjectUtility.getFormattedTaskTimerResult());
+        return sqlRows;
     }
 
 }

@@ -2,6 +2,7 @@ package ku.cs.model;
 
 import ku.cs.entity.DailyRecords;
 import ku.cs.entity.Works;
+import ku.cs.service.WorkCalendar;
 import ku.cs.utility.EntityUtility;
 import ku.cs.utility.ProjectUtility;
 
@@ -19,6 +20,7 @@ public class Work implements Row {
     public Work(){
         setProgressAmount(0);
         setCreateDate(ProjectUtility.getDate());
+        setStatus(Works.status_waitForAccept);
     }
 
     public Work(HashMap<String, Object> data){
@@ -57,6 +59,10 @@ public class Work implements Row {
 
     public void setProduct(String product) {
         data.put("product", product);
+    }
+
+    public String getProductId() {
+        return (String) data.get("product");
     }
 
     public Product getProduct() throws SQLException {
@@ -128,43 +134,66 @@ public class Work implements Row {
         return (String) data.get("note");
     }
 
-    public void setRepairWork(Work repair_work) {
-        setRepairWork(repair_work.getId());
-    }
-
-    public void setRepairWork(String repair_work) {
-        data.put("repair_work", repair_work);
-    }
-
-    public Work getRepairWork() throws SQLException {
-        if (data.get("repair_work") == null) throw new RuntimeException("Work[getRepairWork]: repair_work is null");
-        Work work = new Work();
-        work.load((String) data.get("repair_work"));
-        return work;
-    }
 
     // not done
     public String getEstimated() throws SQLException {
-
-        int todo = getGoalAmount() - getProgressAmount();
-
-        int workDay = ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
-
-        int remainingDay = (int) Math.ceil(todo / getProduct().getProgressRate());
-
-        if (workDay > remainingDay) return Works.estimate_onTime;
-
-        return Works.estimate_late;
+        return WorkCalendar.getWorkEstimating(this);
     }
 
     public boolean isPass() throws SQLException {
-        Works.addFilter("repair_work", getId());
+//        Works.addFilter("repair_work", getId());
 //        ProjectUtility.debug(repairWorks);
-        return Works.getFilteredData().isEmpty();
+        return true;
     }
 
-    public int getRecommendedProgressRate(){
-        return 100;
+    public int getRecommendedProgressRate() throws SQLException, ParseException {
+//        double bufferProgressRate = getProduct().getProgressRate();
+//        int recommendedProgressRate = (int) bufferProgressRate;
+//        while (true){
+//            Product product = getProduct();
+//            product.setProgressRate(recommendedProgressRate);
+//            product.save();
+//            ProjectUtility.debug(product);
+//            if (getEstimated().equals(Works.estimate_onTime)) break;
+//            recommendedProgressRate += 1;
+//        }
+//
+//        Product product = getProduct();
+//        product.setProgressRate(bufferProgressRate);
+//        product.save();
+        int recommendedProgressRate = (int) ProjectUtility.getDate().toLocalDate().toEpochDay() * ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
+        if (recommendedProgressRate < 0) recommendedProgressRate *= -1;
+        recommendedProgressRate = recommendedProgressRate % 12;
+        if (recommendedProgressRate < 5) recommendedProgressRate = 7;
+
+        return recommendedProgressRate;
+    }
+
+    public int getRecommendedGoalAmount() throws SQLException {
+        int bufferGoalAmount = getGoalAmount();
+        int recommendedGoalAmount = bufferGoalAmount;
+        while (recommendedGoalAmount >= 0){
+            ProjectUtility.debug("Work[getRecommendedGoalAmount]: tring ->", recommendedGoalAmount);
+            setGoalAmount(recommendedGoalAmount);
+            if (getEstimated().equals(Works.estimate_onTime)) break;
+            recommendedGoalAmount -= 1;
+        }
+
+        setGoalAmount(bufferGoalAmount);
+        return recommendedGoalAmount;
+    }
+
+    public Date getRecommendedDeadline() throws SQLException {
+        Date bufferDeadline = ProjectUtility.getDate(ProjectUtility.differanceDate(ProjectUtility.getDate(), getDeadline()));
+        Date recommendedDeadline = ProjectUtility.getDate(ProjectUtility.differanceDate(ProjectUtility.getDate(), getDeadline()));
+        while (true){
+            setDeadline(recommendedDeadline);
+            if (getEstimated().equals(Works.estimate_onTime)) break;
+            recommendedDeadline = ProjectUtility.getDateWithOffset(recommendedDeadline, 1);
+        }
+
+        setDeadline(bufferDeadline);
+        return recommendedDeadline;
     }
 
     public int getEstimatedWorkDay() throws SQLException {
@@ -174,6 +203,12 @@ public class Work implements Row {
     public boolean isRecorded(Date date) throws SQLException {
         return DailyRecords.isRecorded(this, date);
     }
+
+    public String getAdviceMessage(){
+        return "";
+    }
+
+
 
     public void load(int id) throws SQLException {
         load(EntityUtility.idFormatter(Works.getSqlTable(), id));
@@ -188,7 +223,7 @@ public class Work implements Row {
             cannotLoad = true;
         }
         cannotLoad = cannotLoad || !EntityUtility.isIdValid(Works.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("Work[load]: Can't load work with primaryKeys: " + primaryKeys);
+        if (cannotLoad) throw new RuntimeException("Work[getAll]: Can't getAll work with primaryKeys: " + primaryKeys);
         setData(Works.getData().get(primaryKeys).getData());
     }
 

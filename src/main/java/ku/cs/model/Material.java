@@ -64,17 +64,9 @@ public class Material implements Row{
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-//        if(Materials.getData() == null) Materials.getAll();
-        boolean cannotLoad;
-        try {
-            cannotLoad = Materials.isNew(primaryKeys);
-        }
-        catch (RuntimeException e) {
-            cannotLoad = true;
-        }
-        cannotLoad = cannotLoad || !EntityUtility.isIdValid(Materials.getSqlTable(), primaryKeys);
-        if (cannotLoad) throw new RuntimeException("Material[getAll]: Can't getAll material with primaryKeys: " + primaryKeys);
-        setData(Materials.getData().get(primaryKeys).getData());
+        EntityUtility.checkId(Materials.getSqlTable(), primaryKeys);
+        if (Materials.isNew(this)) throw new RuntimeException("Material[load]: cannot found material with id: " + primaryKeys);
+        setData(Materials.find(primaryKeys).getData());
     }
 
     @Override

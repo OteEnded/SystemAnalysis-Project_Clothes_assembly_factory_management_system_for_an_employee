@@ -141,26 +141,10 @@ public class Work implements Row {
     }
 
     public boolean isPass() throws SQLException {
-//        Works.addFilter("repair_work", getId());
-//        ProjectUtility.debug(repairWorks);
-        return true;
+        return !getNote().contains(Works.note_noRepair);
     }
 
     public int getRecommendedProgressRate() throws SQLException, ParseException {
-//        double bufferProgressRate = getProduct().getProgressRate();
-//        int recommendedProgressRate = (int) bufferProgressRate;
-//        while (true){
-//            Product product = getProduct();
-//            product.setProgressRate(recommendedProgressRate);
-//            product.save();
-//            ProjectUtility.debug(product);
-//            if (getEstimated().equals(Works.estimate_onTime)) break;
-//            recommendedProgressRate += 1;
-//        }
-//
-//        Product product = getProduct();
-//        product.setProgressRate(bufferProgressRate);
-//        product.save();
         int recommendedProgressRate = (int) ProjectUtility.getDate().toLocalDate().toEpochDay() * ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
         if (recommendedProgressRate < 0) recommendedProgressRate *= -1;
         recommendedProgressRate = recommendedProgressRate % 12;
@@ -211,7 +195,7 @@ public class Work implements Row {
     @Override
     public void load(String primaryKeys) throws SQLException {
         EntityUtility.checkId(Works.getSqlTable(), primaryKeys);
-        if (Works.isNew(this)) throw new RuntimeException("Work[load]: cannot find work with id -> " + primaryKeys);
+        if (Works.isNew(this)) throw new RuntimeException("Work[load]: cannot found work with id -> " + primaryKeys);
         setData(Works.find(primaryKeys).getData());
     }
 

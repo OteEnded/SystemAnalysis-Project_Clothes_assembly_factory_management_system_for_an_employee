@@ -126,10 +126,12 @@ public class Works {
 
     private static HashMap<String, Work> data;
     private static boolean isDataDirty = true;
+    public static void setDirty() {
+        isDataDirty = true;
+    }
 
     public static HashMap<String, Work> getData() throws SQLException{
-        load();
-        return data;
+        return load();
     }
 
     public static List<Work> getDataAsList() throws SQLException {
@@ -138,10 +140,6 @@ public class Works {
 
     public static List<Work> toList(HashMap<String, Work> data) {
         return new ArrayList<>(data.values());
-    }
-
-    public static void setData(HashMap<String, Work> data) {
-        Works.data = data;
     }
 
     public static HashMap<String, Work> load() throws SQLException {
@@ -183,15 +181,7 @@ public class Works {
     }
 
     public static String getNewId() throws SQLException {
-        List<SQLRow> work_ids = sqlTable.getColumnsValues("work_id");
-        List<String> oldIds = new ArrayList<>();
-        for (SQLRow sqlRow: work_ids) {
-            oldIds.add(sqlRow.getValuesMap().get("work_id").toString());
-        }
-        if (oldIds.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
-        Collections.sort(oldIds);
-        int oldLastId = Integer.parseInt((oldIds.get(getData().size() - 1).substring(1,6)));
-        return EntityUtility.idFormatter(sqlTable, oldLastId + 1);
+        return EntityUtility.getNewId(sqlTable);
     }
 
     public static boolean isNew(Work work) throws SQLException {
@@ -216,17 +206,15 @@ public class Works {
     public static int save(Work work) throws SQLException, ParseException {
         ProjectUtility.debug("Works[save]: saving work ->", work);
         if (!isWorkValid(work)) throw new RuntimeException("Works[save]: work's data is not valid -> " + verifyWork(work));
-        isDataDirty = true;
-        int affectedRow = 0;
+        setDirty();
+//        int affectedRow = 0;
         if (isNew(work)){
             Products.load();
             if (work.getProduct().getProgressRate() == -1) work.setNote(Works.note_waitForUserEstimate + "\n" + work.getNote());
             work.setId(getNewId());
-            affectedRow += DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
-            return affectedRow;
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, work)));
         }
-        affectedRow += DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
-        return affectedRow;
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, work)));
     }
 
     public static int delete(String id) throws SQLException, ParseException {
@@ -238,9 +226,8 @@ public class Works {
     public static int delete(Work work) throws SQLException, ParseException {
         ProjectUtility.debug("Works[delete]: deleting work ->", work);
         if (isNew(work)) throw new RuntimeException("Works[delete]: Can't find work with work_id: " + work.getId());
-        isDataDirty = true;
+        setDirty();
         int affectedRow = DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, work)));
-        Works.load();
         DailyRecords.load();
         return affectedRow;
     }

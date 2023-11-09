@@ -123,17 +123,7 @@ public class WorkCalendar {
     }
 
     public static String getWorkEstimating(Work work) throws SQLException {
-//        if (workCalendar == null)
         init();
-
-//        if (!isNew(work)) {
-//            HashMap<String, Object> workEvent = getEventFromWork(work);
-//
-//            if (ProjectUtility.differanceDate(work.getDeadline(), (Date) workEvent.get("done_date")) < 0)
-//                return Works.estimate_late;
-//            else return Works.estimate_onTime;
-//        }
-//        ProjectUtility.debug("WorkCalendar[getWorkEstimating]: work is new");
 
         if (!isWorkPlanAble(work)) return "cannot estimate this work";
 

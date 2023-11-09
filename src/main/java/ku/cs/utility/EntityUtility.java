@@ -2,9 +2,12 @@ package ku.cs.utility;
 
 import ku.cs.model.Row;
 import ku.cs.model.SQLColumn;
+import ku.cs.model.SQLRow;
 import ku.cs.model.SQLTable;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,5 +47,18 @@ public class EntityUtility {
             }
         }
         return error;
+    }
+
+    public static String getNewId(SQLTable sqlTable) throws SQLException {
+        List<SQLColumn> primaryKeys = sqlTable.getPrimaryKeys();
+        if (primaryKeys.size() != 1) throw new RuntimeException("EntityUtility[getNewId]: cannot get new id from table with multiple primary keys -> " + sqlTable);
+        String idColumnName = primaryKeys.get(0).getName();
+        List<SQLRow> ids = sqlTable.getColumnsValues(idColumnName);
+        List<String> oldIds = new ArrayList<>();
+        for (SQLRow sqlRow: ids) oldIds.add(sqlRow.getValuesMap().get(idColumnName).toString());
+        if (oldIds.isEmpty()) return idFormatter(sqlTable, 1);
+        Collections.sort(oldIds);
+        int oldLastId = Integer.parseInt((oldIds.get(oldIds.size() - 1).substring(1,6)));
+        return idFormatter(sqlTable, oldLastId + 1);
     }
 }

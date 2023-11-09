@@ -28,5 +28,7 @@ public class Test1_NoName {
 //        work.setDeadline(ProjectUtility.getDate(5));
 //        work.setGoalAmount(100);
 //        work.save();
+
+        ProjectUtility.debug(Works.getNewId());
     }
 }

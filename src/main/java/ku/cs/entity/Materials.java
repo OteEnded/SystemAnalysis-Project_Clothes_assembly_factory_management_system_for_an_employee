@@ -43,23 +43,21 @@ public class Materials {
     }
 
     private static HashMap<String, Material> data;
+    private static boolean isDataDirty = true;
+    public static void setDirty() {
+        isDataDirty = true;
+    }
 
     public static HashMap<String, Material> getData() throws SQLException{
-        if(data == null) load();
-        return data;
+        return load();
     }
 
     public static List<Material> getDataAsList() throws SQLException {
-        if(data == null) load();
-        return toList(data);
+        return toList(load());
     }
 
     public static List<Material> toList(HashMap<String, Material> data) {
         return new ArrayList<>(data.values());
-    }
-
-    public static void setData(HashMap<String, Material> data) {
-        Materials.data = data;
     }
 
     public static HashMap<String, Material> load() throws SQLException {
@@ -67,27 +65,27 @@ public class Materials {
     }
 
     public static HashMap<String, Material> load(boolean updateBuffer) throws SQLException {
-
+        if (!isDataDirty) return data;
         try {
             PopUpUtility.popUp("loading", "Materials (วัตถุดิบ)");
         } catch (Exception e){
             ProjectUtility.debug("Materials[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
-
         HashMap<String, Material> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Material(sqlRow.getValuesMap()));
         }
-        if (updateBuffer) data = dataFromDB;
-
+        if (updateBuffer) {
+            data = dataFromDB;
+            isDataDirty = false;
+        }
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
             ProjectUtility.debug(e);
         }
-
         return dataFromDB;
     }
 
@@ -97,30 +95,18 @@ public class Materials {
     }
 
     public static String getNewId() throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
-        ArrayList<String> oldId = new ArrayList<>(getData().keySet());
-        Collections.sort(oldId);
-        int oldLastId = Integer.parseInt(oldId.get(oldId.size() - 1).substring(1,6));
-        return EntityUtility.idFormatter(sqlTable, oldLastId + 1);
-    }
-
-    public static void addData(Material material) throws SQLException{
-        ProjectUtility.debug("Materials[addData]: adding material ->", material);
-        if (data == null) load();
-        if (material.getId() == null) material.setId(getNewId());
-        data.put(getJoinedPrimaryKeys(material), material);
-        ProjectUtility.debug("Materials[addData]: added material with primaryKeys ->", getJoinedPrimaryKeys(material), "=", material);
+        return EntityUtility.getNewId(sqlTable);
     }
 
     public static boolean isNew(Material material) throws SQLException {
+        if (material == null) throw new RuntimeException("Materials[isNew]: material is null");
+        if (material.getId() == null) throw new RuntimeException("Materials[isNew]: material's id is null");
         return isNew(material.getId());
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return true;
-        return !data.containsKey(primaryKeys);
+        Materials.addFilter("material_id", primaryKeys);
+        return Materials.getFilteredData().isEmpty();
     }
 
     public static boolean isMaterialValid(Material material) {
@@ -128,18 +114,17 @@ public class Materials {
     }
 
     public static List<String> verifyMaterial(Material material) {
-        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, material));
-        return error;
+        return new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, material));
     }
 
     public static int save(Material material) throws SQLException, ParseException {
         ProjectUtility.debug("Materials[save]: saving material ->", material);
         if (!isMaterialValid(material)) throw new RuntimeException("Materials[save]: material's data is not valid ->" + verifyMaterial(material));
+        setDirty();
         if (isNew(material)) {
-            addData(material);
+            material.setId(getNewId());
             return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, material)));
         }
-        data.put(getJoinedPrimaryKeys(material), material);
         return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, material)));
     }
 
@@ -152,7 +137,7 @@ public class Materials {
     public static int delete(Material material) throws SQLException, ParseException {
         ProjectUtility.debug("Materials[delete]: deleting material ->", material);
         if (isNew(material)) throw new RuntimeException("Materials[delete]: Can not delete material that is not in database");
-        data.remove(getJoinedPrimaryKeys(material));
+        setDirty();
         int affectedRow =  DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, material)));
         MaterialUsages.load();
         return affectedRow;
@@ -169,6 +154,29 @@ public class Materials {
     public static HashMap<String, Object> getFilter() {
         return filter;
     }
+
+    public static Material find(String id) throws SQLException {
+        addFilter("material_id", id);
+        return find();
+    }
+
+    public static Material find(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return find();
+    }
+
+    public static Material find() throws SQLException {
+        try {
+            return new Material(sqlTable.getFindOne(filter).getValuesMap());
+        }
+        catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            filter = null;
+        }
+    }
+
     public static HashMap<String, Material> getFilteredData(HashMap<String, Object> filter) throws SQLException {
         setFilter(filter);
         return getFilteredData();

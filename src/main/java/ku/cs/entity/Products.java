@@ -48,23 +48,21 @@ public class Products {
     }
 
     private static HashMap<String, Product> data;
+    private static boolean isDataDirty = true;
+    public static void setDirty() {
+        isDataDirty = true;
+    }
 
     public static HashMap<String, Product> getData() throws SQLException{
-        if(data == null) load();
-        return data;
+        return load();
     }
 
     public static List<Product> getDataAsList() throws SQLException {
-        if(data == null) load();
-        return toList(data);
+        return toList(load());
     }
 
     public static List<Product> toList(HashMap<String, Product> data) {
         return new ArrayList<>(data.values());
-    }
-
-    public static void setData(HashMap<String, Product> data) {
-        Products.data = data;
     }
 
     public static HashMap<String, Product> load() throws SQLException {
@@ -73,7 +71,7 @@ public class Products {
 
     // getAll data from database
     public static HashMap<String, Product> load(boolean updateBuffer) throws SQLException {
-
+        if (!isDataDirty) return data;
         try {
             PopUpUtility.popUp("loading", "Products (สินค้า)");
         } catch (Exception e){
@@ -86,7 +84,10 @@ public class Products {
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new Product(sqlRow.getValuesMap()));
         }
-        if (updateBuffer) data = dataFromDB;
+        if (updateBuffer) {
+            data = dataFromDB;
+            isDataDirty = false;
+        }
 
         try {
             PopUpUtility.close("loading", true);
@@ -103,30 +104,18 @@ public class Products {
     }
 
     public static String getNewId() throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return EntityUtility.idFormatter(sqlTable, 1);
-        ArrayList<String> oldId = new ArrayList<>(getData().keySet());
-        Collections.sort(oldId);
-        int oldLastId = Integer.parseInt((oldId.get(getData().size() - 1).substring(1,6)));
-        return EntityUtility.idFormatter(sqlTable, oldLastId + 1);
-    }
-
-    public static void addData(Product product) throws SQLException {
-        if (data == null) load();
-        ProjectUtility.debug("Products[addData]: adding product ->", product);
-        if (product.getId() == null) product.setId(getNewId());
-        data.put(getJoinedPrimaryKeys(product), product);
-        ProjectUtility.debug("Products[addData]: added product with primaryKeys ->", getJoinedPrimaryKeys(product), "=", product);
+        return EntityUtility.getNewId(sqlTable);
     }
 
     public static boolean isNew(Product product) throws SQLException {
+        if (product == null) throw new RuntimeException("Products[isNew]: product is null");
+        if (product.getId() == null) return true;
         return isNew(product.getId());
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return true;
-        return !data.containsKey(primaryKeys);
+        Products.addFilter("product_id", primaryKeys);
+        return Products.getFilteredData().isEmpty();
     }
 
     public static boolean isProductValid(Product product) {
@@ -134,27 +123,26 @@ public class Products {
     }
 
     public static List<String> verifyProduct(Product product) {
-        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, product));
-        return error;
+        return new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, product));
     }
 
     public static int save(Product product) throws SQLException, ParseException {
         ProjectUtility.debug("Products[save]: saving product ->", product);
         if(!isProductValid(product)) throw new RuntimeException("Products[save]: product's data is not valid ->" + verifyProduct(product));
+        setDirty();
         if (isNew(product)) {
-            addData(product);
+            product.setId(getNewId());
             return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, product)));
         }
-
-        if (data.get(getJoinedPrimaryKeys(product)).getProgressRate() == -1 && product.getProgressRate() != -1) {
+        Product oldData = new Product();
+        oldData.load(product.getId());
+        if (oldData.getProgressRate() == -1 && product.getProgressRate() != -1) {
             Works.addFilter("product", product.getId());
             for (Work work : Works.getFilteredData().values()) {
                 work.setNote(work.getNote().replace(Works.note_waitForUserEstimate, ""));
                 work.save();
             }
         }
-
-        data.put(getJoinedPrimaryKeys(product), product);
         return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, product)));
     }
 
@@ -167,7 +155,7 @@ public class Products {
     public static int delete(Product product) throws SQLException, ParseException {
         ProjectUtility.debug("Products[delete]: deleting product ->", product);
         if (isNew(product)) throw new RuntimeException("Products[delete]: Can't delete product that is not in database");
-        data.remove(getJoinedPrimaryKeys(product));
+        setDirty();
         int affectedRow = DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, product)));
         Works.load();
         MaterialUsages.load();
@@ -185,6 +173,29 @@ public class Products {
     public static HashMap<String, Object> getFilter() {
         return filter;
     }
+
+    public static Product find(String id) throws SQLException {
+        addFilter("product_id", id);
+        return find();
+    }
+
+    public static Product find(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return find();
+    }
+
+    public static Product find() throws SQLException {
+        try {
+            return new Product(sqlTable.getFindOne(filter).getValuesMap());
+        }
+        catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            filter = null;
+        }
+    }
+
     public static HashMap<String, Product> getFilteredData(HashMap<String, Object> filter) throws SQLException {
         setFilter(filter);
         return getFilteredData();
@@ -209,8 +220,7 @@ public class Products {
     }
 
     public static List<Product> getSortedBy(String column) throws SQLException {
-        if (data == null) load();
-        return getSortedBy(column, data);
+        return getSortedBy(column, load());
     }
 
     public static List<Product> getSortedBy(String column, HashMap<String, Product> data) throws SQLException {

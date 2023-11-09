@@ -80,15 +80,8 @@ public class DailyRecord implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        boolean connotLoad;
-        try {
-            connotLoad = DailyRecords.isNew(primaryKeys);
-        }
-        catch (RuntimeException e) {
-            connotLoad = true;
-        }
-        if (connotLoad) throw new RuntimeException("Cannot getAll DailyRecord with primaryKeys -> " + primaryKeys);
-        setData(DailyRecords.getData().get(primaryKeys).getData());
+        if (DailyRecords.isNew(this)) throw new RuntimeException("DailyRecord[load]: cannot found DailyRecord with primaryKeys -> " + primaryKeys);
+        setData(DailyRecords.find(primaryKeys).getData());
     }
 
     @Override

@@ -48,23 +48,21 @@ public class DailyRecords {
     }
 
     private static HashMap<String, DailyRecord> data;
+    private static boolean isDataDirty = true;
+    public static void setDirty() {
+        isDataDirty = true;
+    }
 
     public static HashMap<String, DailyRecord> getData() throws SQLException{
-        if (data == null) load();
-        return data;
+        return load();
     }
 
     public static List<DailyRecord> getDataAsList() throws SQLException {
-        if (data == null) load();
-        return toList(data);
+        return toList(load());
     }
 
     public static List<DailyRecord> toList(HashMap<String, DailyRecord> data) {
         return new ArrayList<>(data.values());
-    }
-
-    public static void setData(HashMap<String, DailyRecord> data) {
-        DailyRecords.data = data;
     }
 
     public static HashMap<String, DailyRecord> load() throws SQLException {
@@ -72,40 +70,33 @@ public class DailyRecords {
     }
 
     public static HashMap<String, DailyRecord> load(boolean updateBuffer) throws SQLException {
-
+        if (!isDataDirty) return data;
         try {
             PopUpUtility.popUp("loading", "DailyRecords (บันทึกการทำงาน)");
         } catch (Exception e){
             ProjectUtility.debug("DailyRecords[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
-
         HashMap<String, DailyRecord> dataFromDB = new HashMap<>();
         List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new DailyRecord(sqlRow.getValuesMap()));
         }
-        if (updateBuffer) data = dataFromDB;
-
+        if (updateBuffer) {
+            data = dataFromDB;
+            isDataDirty = false;
+        }
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
             ProjectUtility.debug(e);
         }
-
         return dataFromDB;
     }
 
     public static String getJoinedPrimaryKeys(DailyRecord dailyRecord) {
         SQLRow sqlRow = new SQLRow(sqlTable, dailyRecord);
         return sqlRow.getJoinedPrimaryKeys();
-    }
-
-    public static void addData(DailyRecord dailyRecord) throws SQLException{
-        if (data == null) load();
-        ProjectUtility.debug("DailyRecords[addData]: adding dailyRecord ->", dailyRecord);
-        data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
-        ProjectUtility.debug("DailyRecords[addData]: added dailyRecord with primaryKeys ->", getJoinedPrimaryKeys(dailyRecord), "=", dailyRecord);
     }
 
     public static boolean isRecorded(Work work, Date date) throws SQLException {
@@ -120,9 +111,10 @@ public class DailyRecords {
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
-        if (data == null) load();
-        if (data.isEmpty()) return true;
-        return !data.containsKey(primaryKeys);
+        String[] keys = primaryKeys.split("\\|");
+        addFilter("for_work", keys[0]);
+        addFilter("date", ProjectUtility.getDate(keys[1]));
+        return DailyRecords.getFilteredData().isEmpty();
     }
 
     public static boolean isDailyRecordValid(DailyRecord dailyRecord) {
@@ -130,20 +122,17 @@ public class DailyRecords {
     }
 
     public static List<String> verifyDailyRecord(DailyRecord dailyRecord) {
-        List<String> error = new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, dailyRecord));
-        return error;
+        return new ArrayList<>(EntityUtility.verifyRowByTable(sqlTable, dailyRecord));
     }
 
     public static int save(DailyRecord dailyRecord) throws SQLException, ParseException {
         ProjectUtility.debug("DailyRecords[save]: saving dailyRecord ->", dailyRecord);
         if(!isDailyRecordValid(dailyRecord)) throw new RuntimeException("DailyRecords[save]: dailyRecord is not valid ->" + verifyDailyRecord(dailyRecord));
+        setDirty();
         Work w = dailyRecord.getForWork();
         w.setProgressAmount(w.getProgressAmount() + dailyRecord.getAmount());
         w.save();
         if(isNew(dailyRecord)) {
-            addData(dailyRecord);
-
-
             Product product = dailyRecord.getForWork().getProduct();
             if (product.getProgressRate() == -1) {
                 product.setProgressRate(dailyRecord.getAmount());
@@ -172,15 +161,13 @@ public class DailyRecords {
         ProjectUtility.debug("DailyRecords[save]: adding new dailyRecord.getAmount() ->", dailyRecord.getAmount());
         dailyRecord.setAmount(dailyRecord.getAmount() + DailyRecords.getData().get(getJoinedPrimaryKeys(dailyRecord)).getAmount());
         ProjectUtility.debug("DailyRecords[save]: new dailyRecord.getAmount() ->", dailyRecord.getAmount());
-
-        data.put(getJoinedPrimaryKeys(dailyRecord), dailyRecord);
         return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, dailyRecord)));
     }
 
     public static int delete(DailyRecord dailyRecord) throws SQLException, ParseException {
         ProjectUtility.debug("DailyRecords[delete]: deleting dailyRecord ->", dailyRecord);
         if (isNew(dailyRecord)) throw new RuntimeException("DailyRecords[delete]: Can't delete dailyRecord that is not in database");
-        data.remove(getJoinedPrimaryKeys(dailyRecord));
+        setDirty();
         return DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, dailyRecord)));
     }
 
@@ -195,6 +182,35 @@ public class DailyRecords {
     public static HashMap<String, Object> getFilter() {
         return filter;
     }
+
+    public static DailyRecord find(String primaryKeys) throws SQLException {
+        String[] keys = primaryKeys.split("\\|");
+        return find(keys[0], ProjectUtility.getDate(keys[1]));
+    }
+
+    public static DailyRecord find(String for_work, Date date) throws SQLException {
+        addFilter("for_work", for_work);
+        addFilter("date", date);
+        return find();
+    }
+
+    public static DailyRecord find(HashMap<String, Object> filter) throws SQLException {
+        setFilter(filter);
+        return find();
+    }
+
+    public static DailyRecord find() throws SQLException {
+        try {
+            return new DailyRecord(sqlTable.getFindOne(filter).getValuesMap());
+        }
+        catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            filter = null;
+        }
+    }
+
     public static HashMap<String, DailyRecord> getFilteredData(HashMap<String, Object> filter) throws SQLException {
         setFilter(filter);
         return getFilteredData();

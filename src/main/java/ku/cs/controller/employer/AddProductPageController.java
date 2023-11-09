@@ -17,9 +17,7 @@ import ku.cs.utility.ProjectUtility;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class AddProductPageController {
 
@@ -117,6 +115,7 @@ public class AddProductPageController {
                 if(name.startsWith(materialName)){
                     ProjectUtility.debug("AddProductPageController[removeMaterialList]: removing material use list for materialName ->", materialName);
                     materialListView.getItems().remove(box);
+                    Collections.reverse(materialListView.getItems());
                 }
             }
             materialListView.refresh();
@@ -144,6 +143,7 @@ public class AddProductPageController {
         int yield = Integer.parseInt(yieldTextField.getText());
         HBox box = createMaterialList(materialName, amount, yield);
         materialListView.getItems().add(box);
+        Collections.reverse(materialListView.getItems());
         materialListView.refresh();
 
         materialNameComboBox.getSelectionModel().clearSelection();

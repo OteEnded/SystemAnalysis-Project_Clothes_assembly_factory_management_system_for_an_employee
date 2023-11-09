@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -101,6 +102,7 @@ public class EditProductPageController {
         for (MaterialUsage materialUsage : product.getMaterialsUsed()){
             HBox box = createMaterialList(materialUsage.getMaterial().getName(), materialUsage.getAmount(), materialUsage.getYield());
             materialListView.getItems().add(box);
+            Collections.reverse(materialListView.getItems());
             materialListView.refresh();
         }
     }
@@ -140,6 +142,7 @@ public class EditProductPageController {
 
         HBox box = createMaterialList(materialName, amount, yield);
         materialListView.getItems().add(box);
+        Collections.reverse(materialListView.getItems());
         materialListView.refresh();
 
         materialNameComboBox.getSelectionModel().clearSelection();

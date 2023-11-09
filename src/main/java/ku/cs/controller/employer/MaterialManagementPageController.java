@@ -14,7 +14,10 @@ import ku.cs.utility.ProjectUtility;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class MaterialManagementPageController {
 
@@ -26,7 +29,9 @@ public class MaterialManagementPageController {
 
     private void refreshMaterialList() throws SQLException {
         materialListview.getItems().clear();
-        for (Material material : Materials.getDataAsList()){
+        List<Material> materials = Materials.getDataAsList();
+        Collections.reverse(materials);
+        for (Material material : materials){
             materialListview.getItems().add(createMaterialList(material.getName(), material.getUnitName()));
         }
     }

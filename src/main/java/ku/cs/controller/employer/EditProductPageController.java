@@ -210,7 +210,7 @@ public class EditProductPageController {
             if (!validate()) return;
             promptLabel.setText("");
             Product product = (Product) com.github.saacsos.FXRouter.getData();
-            product.setName(productTextField.getText());
+            product.setName(productTextField.getText().replaceAll("\\s","")); //cut whitespace in string
             product.setSize(Integer.parseInt(sizeTextField.getText()));
 
             List<String> deletingMaterialUsageList = new ArrayList<>();

@@ -35,7 +35,7 @@ public class ProjectApplication extends Application {
         stage.setResizable(false);
         stage.getIcons().add(ProjectUtility.getProgramIcon());
 
-        ProjectUtility.setDBSource(ProjectUtility.DB_Azure);
+        ProjectUtility.setDBSource(ProjectUtility.DB_Xampp);
         if (!ProjectUtility.connectDB()) return;
 //        DBMigration.migrate(true);
 //        DBSeedAndLoad.seed();

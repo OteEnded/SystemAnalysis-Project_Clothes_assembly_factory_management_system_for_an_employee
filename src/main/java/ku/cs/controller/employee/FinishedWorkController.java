@@ -188,7 +188,7 @@ public class FinishedWorkController {
     }
 
     private ObservableList<WorkWrapper> fetchData() throws SQLException {
-
+        Works.load();
         Works.addFilter("status", Works.status_done);
         List<Work> works =  Works.getSortedBy("deadline", Works.getFilteredData());
         System.out.println(works);

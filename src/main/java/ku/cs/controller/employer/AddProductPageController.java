@@ -220,7 +220,7 @@ public class AddProductPageController {
             if (!validate()) return;
             promptLabel.setText("");
             Product product = new Product();
-            product.setName(productTextField.getText());
+            product.setName(productTextField.getText().replaceAll("\\s",""));
             product.setSize(Integer.parseInt(sizeTextField.getText()));
             product.setProgressRate(-1);
             product.save();

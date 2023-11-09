@@ -159,6 +159,7 @@ public class OrderWorkPageController {
         Products.addFilter("product_name", values[0]);
         Products.addFilter("size", Integer.parseInt(values[1]));
         try {
+            System.out.println(Products.toList(Products.getFilteredData()).get(0));
             return Products.toList(Products.getFilteredData()).get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -173,11 +174,12 @@ public class OrderWorkPageController {
         work.setProduct(Products.toList(Products.getFilteredData()).get(0));
         int amount = Integer.parseInt(amountTextField.getText());
         double progress_rate = work.getProduct().getProgressRate();
-        System.out.println(progress_rate * amount);
+        int day = (int) Math.ceil(amount / progress_rate) + 1;
+        System.out.println(amount + "/" + progress_rate + "->" + day);
         if(progress_rate == -1) {
             deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), 1).toLocalDate());
         } else {
-            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), (int) (amount * progress_rate)).toLocalDate());
+            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), day).toLocalDate());
         }
     }
 

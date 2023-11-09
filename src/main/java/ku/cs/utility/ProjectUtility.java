@@ -248,7 +248,7 @@ public class ProjectUtility {
 
     }
 
-    private static String DB_source = DB_Azure;
+    private static String DB_source = DB_Xampp;
     public static void setDBSource(String source){
         DB_source = source;
     }

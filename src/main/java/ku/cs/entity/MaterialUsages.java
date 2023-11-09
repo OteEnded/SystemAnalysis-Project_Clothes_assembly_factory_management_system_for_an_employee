@@ -9,7 +9,6 @@ import ku.cs.utility.ProjectUtility;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -81,18 +80,18 @@ public class MaterialUsages {
         return load(true);
     }
 
-    // load data from database
+    // getAll data from database
     public static HashMap<String, MaterialUsage> load(boolean updateBuffer) throws SQLException {
 
         try {
             PopUpUtility.popUp("loading", "MaterialUsages (การใช้วัตถุดิบ)");
         } catch (Exception e){
-            ProjectUtility.debug("MaterialUsages[load]: cannot do pop ups thing");
+            ProjectUtility.debug("MaterialUsages[getAll]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
         HashMap<String, MaterialUsage> dataFromDB = new HashMap<>();
-        List<SQLRow> sqlRows = DataSourceDB.load(sqlTable);
+        List<SQLRow> sqlRows = sqlTable.getAll();
         for (SQLRow sqlRow : sqlRows) {
             dataFromDB.put(sqlRow.getJoinedPrimaryKeys(), new MaterialUsage(sqlRow.getValuesMap()));
         }
@@ -101,7 +100,6 @@ public class MaterialUsages {
         try {
             PopUpUtility.close("loading", true);
         } catch (Exception e){
-            ProjectUtility.debug("MaterialUsages[load]: cannot do pop ups thing");
             ProjectUtility.debug(e);
         }
 
@@ -146,10 +144,10 @@ public class MaterialUsages {
         if (!isMaterialUsageValid(materialUsage)) throw new RuntimeException("MaterialUsages[save]: materialUsage is not valid -> " + verifyMaterialUsage(materialUsage));
         if (isNew(materialUsage)) {
             addData(materialUsage);
-            return DataSourceDB.exePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, materialUsage)));
+            return DataSourceDB.exeUpdatePrepare(sqlTable.getInsertQuery(new SQLRow(sqlTable, materialUsage)));
         }
         data.put(getJoinedPrimaryKeys(materialUsage), materialUsage);
-        return DataSourceDB.exePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, materialUsage)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getUpdateQuery(new SQLRow(sqlTable, materialUsage)));
     }
 
     public static int delete(MaterialUsage materialUsage) throws SQLException, ParseException {
@@ -157,7 +155,7 @@ public class MaterialUsages {
         ProjectUtility.debug(data);
         if (isNew(materialUsage)) throw new RuntimeException("MaterialUsages[delete]: Can't delete materialUsage that is not in database");
         data.remove(getJoinedPrimaryKeys(materialUsage));
-        return DataSourceDB.exePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, materialUsage)));
+        return DataSourceDB.exeUpdatePrepare(sqlTable.getDeleteQuery(new SQLRow(sqlTable, materialUsage)));
     }
 
     public static HashMap<String, Object> filter;
@@ -179,24 +177,17 @@ public class MaterialUsages {
 
     public static HashMap<String, MaterialUsage> getFilteredData() throws SQLException {
         ProjectUtility.debug("MaterialUsages[getFilteredData]: getting data with filter ->", filter);
-        if (filter == null) throw new RuntimeException("MaterialUsages[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> MaterialUsages.getData()");
-        if (data == null) load();
+        if (filter == null)
+            throw new RuntimeException("MaterialUsages[getFilteredData]: filter is null, Please set filter first or get all data without filter using -> MaterialUsages.getData()");
         HashMap<String, MaterialUsage> filteredData = new HashMap<>();
-        for (MaterialUsage materialUsage : getData().values()) {
-            boolean isFiltered = true;
-            for (String column : filter.keySet()) {
-                if (materialUsage.getData().get(column) == null) {
-                    isFiltered = false;
-                    break;
-                }
-                if (!materialUsage.getData().get(column).equals(filter.get(column))) {
-                    isFiltered = false;
-                    break;
-                }
+        try {
+            for (SQLRow sqlRow : sqlTable.getWhere(filter)) {
+                filteredData.put(sqlRow.getJoinedPrimaryKeys(), new MaterialUsage(sqlRow.getValuesMap()));
             }
-            if (isFiltered) filteredData.put(getJoinedPrimaryKeys(materialUsage), materialUsage);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new RuntimeException("MaterialUsages[getFilteredData]: ParseException");
         }
-        filter = null;
         return filteredData;
     }
 
@@ -206,20 +197,6 @@ public class MaterialUsages {
     }
 
     public static List<MaterialUsage> getSortedBy(String column, HashMap<String, MaterialUsage> data) throws SQLException {
-//        ProjectUtility.debug("MaterialUsages[getSortedBy]: getting data sorted by ->", column);
-//        if (data == null) throw new RuntimeException("MaterialUsages[getSortedBy]: data is null, Please set data first or get all data without filter using -> MaterialUsages.getData()");
-//        List<String> sortedValues = new ArrayList<String>();
-//        for (MaterialUsage materialUsage : data.values()) {
-//            sortedValues.add(materialUsage.getData().get(column).toString());
-//        }
-//        Collections.sort(sortedValues);
-//        ProjectUtility.debug("MaterialUsages[getSortedBy]: sorted target ->", sortedValues);
-//        List<MaterialUsage> sortedMaterialUsages = new ArrayList<>();
-//        for (String sortedValue : sortedValues) {
-//            addFilter(column, ProjectUtility.castStringToObject(sortedValue, sqlTable.getColumnByName(column).getClassType()));
-//            sortedMaterialUsages.addAll(getFilteredData().values());
-//        }
-//        return sortedMaterialUsages;
         List<MaterialUsage> materialUsages = toList(data);
         materialUsages.sort((o1, o2) -> {
             try {

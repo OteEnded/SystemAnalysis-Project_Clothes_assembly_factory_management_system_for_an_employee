@@ -186,12 +186,6 @@ public class ProjectUtility {
         return new Image(ProjectUtility.class.getResource("/ku/cs/data/images/icon.png").toExternalForm());
     }
 
-    public static boolean connectDB(){
-        boolean isConnectAble = JdbcConnector.connect();
-        JdbcConnector.disconnect();
-        return isConnectAble;
-    }
-
     public static String capitalize(String str) {
         if (str == null || str.isEmpty()) return str;
         if (str.length() == 1) return str.toUpperCase();
@@ -208,6 +202,62 @@ public class ProjectUtility {
         if (targetClass == Date.class) return Date.valueOf(stringValue);
         if (targetClass == Timestamp.class) return Timestamp.valueOf(stringValue);
         throw new RuntimeException("ProjectUtility[castStringToObject]: Invalid targetClass -> " + targetClass);
+    }
+
+    private static long taskTimerStartAt = -1;
+    private static long taskTimerStopAt = -1;
+    public static void taskTimerStart(){
+        taskTimerStartAt = System.currentTimeMillis();
+    }
+    public static void taskTimerStop(){
+        if (taskTimerStartAt == -1) throw new RuntimeException("ProjectUtility[taskTimerStop]: taskTimer is never started.");
+        taskTimerStopAt = System.currentTimeMillis();
+    }
+    public static long getTaskTimerResult(){
+        if (taskTimerStopAt == -1) taskTimerStop();
+        long result = taskTimerStopAt - taskTimerStartAt;
+        taskTimerStartAt = -1;
+        taskTimerStopAt = -1;
+        return result;
+    }
+    public static String getFormattedTaskTimerResult(){
+        return getFormattedTaskTimerResult("mm:ss:SSS");
+    }
+    public static String getFormattedTaskTimerResult(String format){
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        Date date = new Date(getTaskTimerResult());
+        return formatter.format(date);
+    }
+
+    public static final String DB_Azure = "azure";
+    public static final String DB_Xampp = "xampp";
+    public static final HashMap<String, HashMap<String, String>> DB_option = new HashMap<>();
+    static {
+        HashMap<String, String> DB_AzureDetail = new HashMap<>();
+        DB_AzureDetail.put("db_URL", "jdbc:mysql://mowcodeserver.eastus.cloudapp.azure.com:3306/sa_longname");
+        DB_AzureDetail.put("db_username", "project");
+        DB_AzureDetail.put("db_password", "Ku81Cs36");
+        DB_option.put(DB_Azure, DB_AzureDetail);
+        HashMap<String, String> DB_XamppDetail = new HashMap<>();
+        DB_XamppDetail.put("db_URL", "jdbc:mysql://localhost:3306/sa_longname");
+        DB_XamppDetail.put("db_username", "root");
+        DB_XamppDetail.put("db_password", "");
+        DB_option.put(DB_Xampp, DB_XamppDetail);
+    }
+
+    private static String DB_source = DB_Azure;
+    public static void setDBSource(String source){
+        DB_source = source;
+    }
+
+    public static HashMap<String, String> getDBSource(){
+        return DB_option.get(DB_source);
+    }
+
+    public static boolean connectDB(){
+        boolean isConnectAble = JdbcConnector.connect();
+        JdbcConnector.disconnect();
+        return isConnectAble;
     }
 
 

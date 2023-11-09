@@ -87,7 +87,7 @@ public class DailyRecord implements Row {
         catch (RuntimeException e) {
             connotLoad = true;
         }
-        if (connotLoad) throw new RuntimeException("Cannot load DailyRecord with primaryKeys -> " + primaryKeys);
+        if (connotLoad) throw new RuntimeException("Cannot getAll DailyRecord with primaryKeys -> " + primaryKeys);
         setData(DailyRecords.getData().get(primaryKeys).getData());
     }
 

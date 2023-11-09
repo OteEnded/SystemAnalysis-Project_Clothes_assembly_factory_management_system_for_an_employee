@@ -4,14 +4,11 @@ import ku.cs.model.SQLRow;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class JdbcConnector {
 
-    private static final String db_URL = "jdbc:mysql://mowcodeserver.eastus.cloudapp.azure.com:3306/sa_longname";
-//    private static final String db_URL = "jdbc:mysql://localhost:3306/sa_testing";
-    private static final String db_username = "project";
-    private static final String db_password = "Ku81Cs36";
     private static Connection db_connection = null;
 
     private static int connectionStack = 0;
@@ -31,8 +28,9 @@ public class JdbcConnector {
                 return false;
             }
             // setup
+            HashMap<String, String> dbSource = ProjectUtility.getDBSource();
             Class.forName("com.mysql.cj.jdbc.Driver");
-            db_connection = DriverManager.getConnection(db_URL, db_username, db_password);
+            db_connection = DriverManager.getConnection(dbSource.get("db_URL"), dbSource.get("db_username"), dbSource.get("db_password"));
             if (db_connection != null) {
                 return true;
             }
@@ -69,7 +67,7 @@ public class JdbcConnector {
     }
 
     public static boolean disconnect(){
-        return true;
+        return realDisconnect();
     }
 
 

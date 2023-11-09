@@ -141,9 +141,9 @@ public class Work implements Row {
     }
 
     public boolean isPass() throws SQLException {
-        Works.addFilter("repair_work", getId());
+//        Works.addFilter("repair_work", getId());
 //        ProjectUtility.debug(repairWorks);
-        return Works.getFilteredData().isEmpty();
+        return true;
     }
 
     public int getRecommendedProgressRate() throws SQLException, ParseException {

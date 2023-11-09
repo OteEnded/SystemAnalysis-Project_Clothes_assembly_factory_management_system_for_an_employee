@@ -30,31 +30,31 @@ public class DBSeedAndLoad {
         Product p1 = new Product();
         p1.setName("กระโปรงขาว");
         p1.setSize(26);
-        p1.setProgressRate(4);
+        p1.setProgressRate(5.375);
         p1.save();
 
         Product p2 = new Product();
         p2.setName("กระโปรงดำ");
         p2.setSize(28);
-        p2.setProgressRate(8);
+        p2.setProgressRate(-1);
         p2.save();
 
         Product p3 = new Product();
         p3.setName("กางเกงขาว");
         p3.setSize(28);
-        p3.setProgressRate(12);
+        p3.setProgressRate(5);
         p3.save();
 
         Product p4 = new Product();
         p4.setName("กางเกงดำ");
         p4.setSize(30);
-        p4.setProgressRate(16);
+        p4.setProgressRate(4);
         p4.save();
 
         Product p5 = new Product();
         p5.setName("เสื้อขาว");
         p5.setSize(34);
-        p5.setProgressRate(20);
+        p5.setProgressRate(5.625);
         p5.save();
 //      End Section: Products
 
@@ -63,8 +63,8 @@ public class DBSeedAndLoad {
         w1.setWorkType(Works.type_normal);
         w1.setProduct(p1);
         w1.setStatus(Works.status_checked);
-        w1.setCreateDate(ProjectUtility.getDate());
-        w1.setDeadline(ProjectUtility.getDate(10));
+        w1.setCreateDate(ProjectUtility.getDate()); // Excel : 2023-09-27
+        w1.setDeadline(ProjectUtility.getDate(10)); // Excel : 2023-09-31
         w1.setGoalAmount(20);
         w1.setProgressAmount(20);
         w1.setNote("-");
@@ -73,9 +73,9 @@ public class DBSeedAndLoad {
         Work w2 = new Work();
         w2.setWorkType(Works.type_normal);
         w2.setProduct(p2);
-        w2.setStatus(Works.status_sent);
-        w2.setCreateDate(ProjectUtility.getDate());
-        w2.setDeadline(ProjectUtility.getDate(15));
+        w2.setStatus(Works.status_checked);
+        w2.setCreateDate(ProjectUtility.getDate()); // Excel : 2023-09-28
+        w2.setDeadline(ProjectUtility.getDate(15)); // Excel : 2023-10-07
         w2.setGoalAmount(30);
         w2.setProgressAmount(30);
         w2.save();
@@ -84,8 +84,8 @@ public class DBSeedAndLoad {
         w3.setWorkType(Works.type_rush);
         w3.setProduct(p3);
         w3.setStatus(Works.status_done);
-        w3.setCreateDate(ProjectUtility.getDate());
-        w3.setDeadline(ProjectUtility.getDate(18));
+        w3.setCreateDate(ProjectUtility.getDate()); // Excel : 2023-09-28
+        w3.setDeadline(ProjectUtility.getDate(18)); // Excel : 2023-10-15
         w3.setGoalAmount(25);
         w3.setProgressAmount(25);
         w3.save();
@@ -93,12 +93,12 @@ public class DBSeedAndLoad {
         Work w4 = new Work();
         w4.setWorkType(Works.type_repair);
         w4.setProduct(p4);
-        w4.setStatus(Works.status_waitForMaterial);
+        w4.setStatus(Works.status_checked);
         w4.setCreateDate(ProjectUtility.getDate());
         w4.setDeadline(ProjectUtility.getDate(5));
-        w4.setGoalAmount(10);
-        w4.setProgressAmount(0);
-        w4.setRepairWork(w1);
+        w4.setGoalAmount(20);
+        w4.setProgressAmount(20);
+//        w4.setRepairWork(w1);
         w4.save();
 
         Work w5 = new Work();

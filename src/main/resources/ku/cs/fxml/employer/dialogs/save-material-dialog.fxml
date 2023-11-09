@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="300" prefWidth="600.0" stylesheets="@../../style/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.controller.employer.dialogs.SaveMaterialDialogController">
    <children>
-      <Label fx:id="headerLabel" layoutX="67.0" layoutY="64.0" styleClass="bold-text" text="เพิ่ม-แก้ใขวัตถุดิบ" textFill="#172b4d">
+      <Label fx:id="headerLabel" layoutX="67.0" layoutY="64.0" styleClass="bold-text" text="เพิ่ม-แก้ไขวัตถุดิบ" textFill="#172b4d">
          <font>
             <Font name="System Bold Italic" size="24.0" />
          </font>

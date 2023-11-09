@@ -9,7 +9,7 @@ import java.text.ParseException;
 
 public class DBControlPanel {
     public static void main(String[] args) throws SQLException, ParseException {
-//        ProjectUtility.setDBSource(ProjectUtility.DB_Xampp);
+        ProjectUtility.setDBSource(ProjectUtility.DB_Xampp);
         DBMigration.migrate(true);
 //        DBSeedAndLoad.seed();
     }

@@ -41,7 +41,7 @@ public class ProjectApplication extends Application {
 //        DBSeedAndLoad.seed();
         DBSeedAndLoad.quickLoad();
 
-        FXRouter.goTo("edit-work");
+        FXRouter.goTo("order");
 
 //        PopUpUtility.getPopUp("delete-confirmation").getPassingData();
 

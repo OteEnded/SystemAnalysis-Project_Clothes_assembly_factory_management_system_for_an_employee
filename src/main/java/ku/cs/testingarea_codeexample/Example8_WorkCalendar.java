@@ -40,7 +40,7 @@ public class Example8_WorkCalendar {
 //        ProjectUtility.debug(WorkCalendar.fetch());
 
         Work work = new Work();
-        work.load(3);
+        work.load(2);
         ProjectUtility.debug(work.getRecommendedProgressRate());
     }
 }

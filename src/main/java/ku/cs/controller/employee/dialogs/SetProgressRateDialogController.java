@@ -73,10 +73,15 @@ public class SetProgressRateDialogController {
                 promptLabel.setText("กรุณากรอกตัวเลขให้ถูกต้อง");
                 return;
             }
+            if(Integer.parseInt(textField.getText()) == 0){
+                promptLabel.setText("กรุณากรอกตัวเลขให้ถูกต้อง");
+                return;
+            }
             promptLabel.setText("");
             int userEstimateProgressRate = Integer.parseInt(userEstimateProgressRateStr);
             Product product = work.getProduct();
-            if(userEstimateProgressRate < 8){ // work.getEstimated().equals(Works.estimate_late)) {
+            ProjectUtility.debug("######################",work.getRecommendedProgressRate());
+            if(userEstimateProgressRate < work.getRecommendedProgressRate()){
                 HashMap<String, Object> passingData = new HashMap<>();
                 passingData.put("work", work);
                 PopUpUtility.popUp("progress-rate-warning", passingData);

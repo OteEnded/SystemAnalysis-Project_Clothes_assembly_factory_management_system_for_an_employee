@@ -137,6 +137,7 @@ public class Work implements Row {
 
     // not done
     public String getEstimated() throws SQLException {
+        WorkCalendar.init();
         return WorkCalendar.getWorkEstimating(this);
     }
 

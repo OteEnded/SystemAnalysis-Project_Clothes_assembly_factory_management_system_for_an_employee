@@ -38,7 +38,7 @@ public class ProgressRateWarningDialogController {
         if (customPopUp.getPassingData() != null && customPopUp.getPassingData() instanceof HashMap) {
             HashMap<String, Object> passingData = (HashMap<String, Object>) customPopUp.getPassingData();
             work = (Work) passingData.get("work");
-//            recommendedProgressRate.setText(String.valueOf(work.getRecommendedProgressRate()));
+            recommendedProgressRate.setText(String.valueOf(work.getRecommendedProgressRate()));
         }
         else {
             throw new RuntimeException("DeleteConfirmationDialogController[initialize]: passingData is not valid");

@@ -105,7 +105,11 @@ public class ReceivedWorkController {
         showListView(newValue.getDisplay_product());
         noteText.setText(newValue.getNote());
 
-        if(work.getEstimated().equals(Works.estimate_onTime)) {
+        if (work.getEstimated().equals(Works.estimate_late)){
+            acceptBtn.setVisible(false);
+            putWorkRateBtn.setVisible(false);
+        }
+        else if(work.getEstimated().equals(Works.estimate_onTime)) {
             acceptBtn.setVisible(true);
             putWorkRateBtn.setVisible(false);
         } else if (work.getProduct().getProgressRate() == -1) {

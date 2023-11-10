@@ -60,7 +60,7 @@ public class OrderWorkPageController {
            @Override
            public void updateItem(LocalDate date, boolean empty) {
                super.updateItem(date, empty);
-               LocalDate tomorrow = ProjectUtility.getDate(1).toLocalDate();
+               LocalDate tomorrow = ProjectUtility.getDate(2).toLocalDate();
                setDisable(empty || date.isBefore(tomorrow));
            }
        });
@@ -164,34 +164,34 @@ public class OrderWorkPageController {
 //        int day = (int) Math.ceil(amount / progress_rate) + 1;
 //        System.out.println(amount + "/" + progress_rate + "->" + day);
         if(work.getProduct().getProgressRate() == -1) {
-            deadlineDatePicker.setValue(ProjectUtility.getDate(1).toLocalDate());
-            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
-                @Override
-                public void updateItem(LocalDate date, boolean empty) {
-                    super.updateItem(date, empty);
-                    LocalDate tomorrow = ProjectUtility.getDate(1).toLocalDate();
-                    setDisable(empty || date.isBefore(tomorrow));
-                }
-            });
+            deadlineDatePicker.setValue(ProjectUtility.getDate(2).toLocalDate());
+//            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
+//                @Override
+//                public void updateItem(LocalDate date, boolean empty) {
+//                    super.updateItem(date, empty);
+//                    LocalDate tomorrow = ProjectUtility.getDate(2).toLocalDate();
+//                    setDisable(empty || date.isBefore(tomorrow));
+//                }
+//            });
         } else {
             deadlineDatePicker.setValue((work.getRecommendedDeadline()).toLocalDate());
-            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
-                @Override
-                public void updateItem(LocalDate date, boolean empty) {
-                    try {
-                        super.updateItem((work.getRecommendedDeadline()).toLocalDate(), empty);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                    LocalDate tomorrow = null;
-                    try {
-                        tomorrow = (work.getRecommendedDeadline()).toLocalDate();
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
-                    setDisable(empty || date.isBefore(tomorrow));
-                }
-            });
+//            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
+//                @Override
+//                public void updateItem(LocalDate date, boolean empty) {
+//                    try {
+//                        super.updateItem((work.getRecommendedDeadline()).toLocalDate(), empty);
+//                    } catch (SQLException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    LocalDate tomorrow = null;
+//                    try {
+//                        tomorrow = (work.getRecommendedDeadline()).toLocalDate();
+//                    } catch (SQLException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    setDisable(empty || date.isBefore(tomorrow));
+//                }
+//            });
         }
     }
 

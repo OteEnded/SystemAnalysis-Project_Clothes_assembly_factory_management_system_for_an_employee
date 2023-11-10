@@ -105,6 +105,7 @@ public class Materials {
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
+        setFilter(null);
         Materials.addFilter("material_id", primaryKeys);
         return Materials.getFilteredData().isEmpty();
     }
@@ -156,6 +157,7 @@ public class Materials {
     }
 
     public static Material find(String id) throws SQLException {
+        setFilter(null);
         addFilter("material_id", id);
         return find();
     }

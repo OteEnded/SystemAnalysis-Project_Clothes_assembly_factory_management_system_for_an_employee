@@ -26,14 +26,17 @@ public class Example8_WorkCalendar {
 //        ProjectUtility.debug(work);
 //        ProjectUtility.debug(work.getEstimated());
 
-        Works.addFilter("status", Works.status_waitForAccept);
-        ProjectUtility.debug(Works.getFilteredData());
-
-
-
-        Work work = new Work();
-        work.load(5);
+//        Works.addFilter("status", Works.status_waitForAccept);
+//        ProjectUtility.debug(Works.getFilteredData());
+//
+//
+//
+//        Work work = new Work();
+//        work.load(5);
 //        ProjectUtility.debug(work.getEstimated());
 //        ProjectUtility.debug(work.getRecommendedProgressRate());
+
+//        WorkCalendar.init();
+        ProjectUtility.debug(WorkCalendar.fetch());
     }
 }

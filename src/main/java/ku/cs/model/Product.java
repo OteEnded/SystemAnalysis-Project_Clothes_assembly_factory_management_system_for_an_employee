@@ -3,6 +3,7 @@ package ku.cs.model;
 import ku.cs.entity.MaterialUsages;
 import ku.cs.entity.Products;
 import ku.cs.utility.EntityUtility;
+import ku.cs.utility.ProjectUtility;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -105,6 +106,7 @@ public class Product implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
+        ProjectUtility.debug("Product[load]: loading product with id ->", primaryKeys);
         EntityUtility.checkId(Products.getSqlTable(), primaryKeys);
         setId(primaryKeys);
         if (Products.isNew(this)) throw new RuntimeException("Product[load]: cannot found product with id -> " + primaryKeys);

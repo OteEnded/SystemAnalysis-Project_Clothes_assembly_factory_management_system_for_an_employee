@@ -141,8 +141,8 @@ public class Work implements Row {
     }
 
     public boolean isPass() throws SQLException {
-        return !getNote().contains(Works.note_noRepair);
-    }
+        return !getNote().contains(Works.note_haveToRepair);
+    } 
 
     public int getRecommendedProgressRate() throws SQLException, ParseException {
         int recommendedProgressRate = (int) ProjectUtility.getDate().toLocalDate().toEpochDay() * ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());

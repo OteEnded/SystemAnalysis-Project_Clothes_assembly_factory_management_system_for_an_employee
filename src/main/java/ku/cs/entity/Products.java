@@ -108,14 +108,19 @@ public class Products {
     }
 
     public static boolean isNew(Product product) throws SQLException {
+        ProjectUtility.debug("Products[isNew]: checking if product is new ->", product);
         if (product == null) throw new RuntimeException("Products[isNew]: product is null");
         if (product.getId() == null) return true;
         return isNew(product.getId());
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException {
+        setFilter(null);
         Products.addFilter("product_id", primaryKeys);
-        return Products.getFilteredData().isEmpty();
+        HashMap<String, Object> filter = Products.getFilter();
+        ProjectUtility.debug("Products[isNew]: trying to find product in database with filter ->", filter);
+        ProjectUtility.debug("Products[isNew]: trying to find product in database with filter ->", Products.getFilteredData(filter));
+        return Products.getFilteredData(filter).isEmpty();
     }
 
     public static boolean isProductValid(Product product) {
@@ -175,6 +180,7 @@ public class Products {
     }
 
     public static Product find(String id) throws SQLException {
+        setFilter(null);
         addFilter("product_id", id);
         return find();
     }

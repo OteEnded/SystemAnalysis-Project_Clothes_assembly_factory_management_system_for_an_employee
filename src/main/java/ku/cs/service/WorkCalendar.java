@@ -19,7 +19,7 @@ public class WorkCalendar {
     }
 
     public static List<HashMap<String, Object>> fetch() throws SQLException {
-        return fetch(Works.getData());
+        return fetch(Works.load());
     }
 
     public static List<HashMap<String, Object>> fetch(HashMap<String, Work> workInPlan) throws SQLException {

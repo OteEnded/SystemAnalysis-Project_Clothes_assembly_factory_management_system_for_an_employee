@@ -191,6 +191,7 @@ public class Works {
     }
 
     public static boolean isNew(String primaryKeys) throws SQLException{
+        setFilter(null);
         Works.addFilter("work_id", primaryKeys);
         return Works.getFilteredData().isEmpty();
     }
@@ -246,6 +247,7 @@ public class Works {
     }
 
     public static Work find(String id) throws SQLException {
+        setFilter(null);
         addFilter("work_id", id);
         return find();
     }
@@ -307,7 +309,7 @@ public class Works {
     public static HashMap<String, Work> getAbnormalWorks() throws SQLException {
         if (data == null) load();
         HashMap<String, Work> abnormalWorks = new HashMap<>();
-        for (Work work: getData().values()) {
+        for (Work work: Works.load().values()){
             if (Objects.equals(work.getEstimated(), Works.estimate_late)) abnormalWorks.put(work.getId(), work);
         }
 

@@ -36,7 +36,8 @@ public class Test1_NoName {
 //
 //        ProjectUtility.debug(p1.getProgressRate());
 
-
-        ProjectUtility.debug();
+        Product product = new Product();
+        product.load("P00002");
+        ProjectUtility.debug(product);
     }
 }

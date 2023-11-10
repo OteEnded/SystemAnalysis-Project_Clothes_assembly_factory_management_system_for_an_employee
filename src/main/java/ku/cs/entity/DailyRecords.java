@@ -114,6 +114,7 @@ public class DailyRecords {
     public static boolean isNew(String primaryKeys) throws SQLException {
         ProjectUtility.debug("DailyRecords[isNew]: checking if dailyRecord is new ->", primaryKeys);
         String[] keys = primaryKeys.split("\\|");
+        setFilter(null);
         addFilter("for_work", keys[0]);
         addFilter("date", ProjectUtility.getDate(keys[1]));
         return DailyRecords.getFilteredData().isEmpty();
@@ -132,10 +133,6 @@ public class DailyRecords {
         if(!isDailyRecordValid(dailyRecord)) throw new RuntimeException("DailyRecords[save]: dailyRecord is not valid ->" + verifyDailyRecord(dailyRecord));
         setDirty();
         Work w = dailyRecord.getForWork();
-
-        ProjectUtility.debug("##########", w);
-        ProjectUtility.debug("##########", w.getProgressAmount());
-        ProjectUtility.debug("##########", dailyRecord.getAmount());
         w.setProgressAmount(w.getProgressAmount() + dailyRecord.getAmount());
         if(w.getProgressAmount() >= w.getGoalAmount()) {
             w.setProgressAmount(w.getGoalAmount());
@@ -161,10 +158,6 @@ public class DailyRecords {
                     totalAmount += dr.getAmount();
                 }
                 product.setProgressRate((totalAmount + product.getProgressRate()) / (dailyRecords.size() + 1));
-//                ProjectUtility.debug("totalAmount", totalAmount);
-//                ProjectUtility.debug("product.getProgressRate()", product.getProgressRate());
-//                ProjectUtility.debug("dailyRecords.size()", dailyRecords.size());
-//                ProjectUtility.debug("totalAmount + product.getProgressRate() / dailyRecords.size() + 1", product.getProgressRate());
 
                 product.save();
             }
@@ -204,6 +197,7 @@ public class DailyRecords {
     }
 
     public static DailyRecord find(String for_work, Date date) throws SQLException {
+        setFilter(null);
         addFilter("for_work", for_work);
         addFilter("date", date);
         return find();

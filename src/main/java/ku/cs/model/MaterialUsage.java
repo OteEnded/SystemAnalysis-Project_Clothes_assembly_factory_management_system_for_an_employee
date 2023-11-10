@@ -117,15 +117,8 @@ public class MaterialUsage implements Row {
 
     @Override
     public void load(String primaryKeys) throws SQLException {
-        boolean cannotLoad;
-        try {
-            cannotLoad = MaterialUsages.isNew(primaryKeys);
-        }
-        catch (RuntimeException e) {
-            cannotLoad = true;
-        }
-        if (cannotLoad) throw new RuntimeException("Cannot getAll MaterialUsage with primaryKeys -> " + primaryKeys);
-        setData(MaterialUsages.getData().get(primaryKeys).getData());
+        if (MaterialUsages.isNew(primaryKeys)) throw new RuntimeException("MaterialUsages[load]: Cannot load MaterialUsage with primaryKeys -> " + primaryKeys);
+        setData(MaterialUsages.find(primaryKeys).getData());
     }
 
     @Override

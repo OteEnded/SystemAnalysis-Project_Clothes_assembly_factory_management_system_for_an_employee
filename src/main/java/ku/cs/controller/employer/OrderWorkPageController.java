@@ -96,11 +96,6 @@ public class OrderWorkPageController {
     @FXML
     public void handleSubmitButton() throws SQLException, ParseException, IOException {
 
-//        PopUpUtility.popUp("loading", "กำลังบันทึกข้อมูล...");
-
-//        ProjectUtility.debug("###############################");
-//        ProjectUtility.debug(validate());
-
         if (validate()) {
             promptLabel.setText("");
             if (!addWork()){
@@ -163,14 +158,40 @@ public class OrderWorkPageController {
 
         Work work = new Work();
         work.setProduct(Products.toList(Products.getFilteredData()).get(0));
-        int amount = Integer.parseInt(amountTextField.getText());
-        double progress_rate = work.getProduct().getProgressRate();
-        int day = (int) Math.ceil(amount / progress_rate) + 1;
-        System.out.println(amount + "/" + progress_rate + "->" + day);
-        if(progress_rate == -1) {
-            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), 1).toLocalDate());
+        work.setGoalAmount(Integer.parseInt(amountTextField.getText()));
+//        int amount = Integer.parseInt(amountTextField.getText());
+//        double progress_rate = work.getProduct().getProgressRate();
+//        int day = (int) Math.ceil(amount / progress_rate) + 1;
+//        System.out.println(amount + "/" + progress_rate + "->" + day);
+        if(work.getProduct().getProgressRate() == -1) {
+            deadlineDatePicker.setValue(ProjectUtility.getDate(1).toLocalDate());
+            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    LocalDate tomorrow = ProjectUtility.getDate(1).toLocalDate();
+                    setDisable(empty || date.isBefore(tomorrow));
+                }
+            });
         } else {
-            deadlineDatePicker.setValue(ProjectUtility.getDateWithOffset(LocalDate.now(), day).toLocalDate());
+            deadlineDatePicker.setValue((work.getRecommendedDeadline()).toLocalDate());
+            deadlineDatePicker.setDayCellFactory(picker -> new DateCell() {
+                @Override
+                public void updateItem(LocalDate date, boolean empty) {
+                    try {
+                        super.updateItem((work.getRecommendedDeadline()).toLocalDate(), empty);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    LocalDate tomorrow = null;
+                    try {
+                        tomorrow = (work.getRecommendedDeadline()).toLocalDate();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    setDisable(empty || date.isBefore(tomorrow));
+                }
+            });
         }
     }
 

@@ -31,6 +31,7 @@ public class WorkCalendar {
         for (Work work: workInPlan.values()) {
             if (!isWorkPlanAble(work)) { notInPlan.add(Works.getJoinedPrimaryKeys(work)); }
         }
+        ProjectUtility.debug("WorkCalendar[fetch]: notInPlan ->", notInPlan);
         for (String key: notInPlan) {
             workInPlan.remove(key);
         }

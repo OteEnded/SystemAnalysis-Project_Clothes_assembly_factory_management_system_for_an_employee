@@ -3,7 +3,6 @@ module cs.ku {
     requires javafx.fxml;
     requires java.sql;
     requires mysql.connector.j;
-    requires reflections;
 
 
     opens ku.cs to javafx.fxml;

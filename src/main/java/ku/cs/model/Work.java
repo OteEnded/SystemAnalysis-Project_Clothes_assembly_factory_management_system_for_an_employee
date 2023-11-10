@@ -145,39 +145,63 @@ public class Work implements Row {
     } 
 
     public int getRecommendedProgressRate() throws SQLException, ParseException {
-        int recommendedProgressRate = (int) ProjectUtility.getDate().toLocalDate().toEpochDay() * ProjectUtility.differanceDate(getDeadline(), ProjectUtility.getDate());
-        if (recommendedProgressRate < 0) recommendedProgressRate *= -1;
-        recommendedProgressRate = recommendedProgressRate % 12;
-        if (recommendedProgressRate < 5) recommendedProgressRate = 7;
+
+        if (getId() == null) setId(Works.getNewId());
+
+        double bufferProgressRate = getProduct().getProgressRate();
+        Product product = getProduct();
+        product.setProgressRate(1);
+        product.save();
+
+        WorkCalendar.init();
+        HashMap<String, Object> event = WorkCalendar.getEventFromWork(this);
+        if (event == null) throw new RuntimeException("Work[getRecommendedProgressRate]: event is null");
+        ProjectUtility.debug("Work[getRecommendedProgressRate]: event ->", event);
+        int avaliableDay = ProjectUtility.differanceDate (getDeadline(), (Date) event.get("start_date"));
+        ProjectUtility.debug("Work[getRecommendedProgressRate]: avaliableDay ->", avaliableDay);
+        if (avaliableDay <= 0) {
+            product.setProgressRate(bufferProgressRate);
+            product.save();
+            return -1;
+        }
+        int recommendedProgressRate = (int) Math.ceil(getRemainingAmount() / avaliableDay);
+
+        product.setProgressRate(bufferProgressRate);
+        product.save();
 
         return recommendedProgressRate;
     }
 
     public int getRecommendedGoalAmount() throws SQLException {
-        int bufferGoalAmount = getGoalAmount();
-        int recommendedGoalAmount = bufferGoalAmount;
-        while (recommendedGoalAmount >= 0){
-            ProjectUtility.debug("Work[getRecommendedGoalAmount]: tring ->", recommendedGoalAmount);
-            setGoalAmount(recommendedGoalAmount);
-            if (getEstimated().equals(Works.estimate_onTime)) break;
-            recommendedGoalAmount -= 1;
-        }
 
-        setGoalAmount(bufferGoalAmount);
-        return recommendedGoalAmount;
+        if (getId() == null) setId(Works.getNewId());
+
+        HashMap<String, Work> workInPlan = new HashMap<>(Works.load());
+        workInPlan.put(getId(), this);
+        HashMap<String, Object> event = WorkCalendar.getEventFromWork(this, WorkCalendar.fetch(workInPlan));
+
+        if (event == null) throw new RuntimeException("Work[getRecommendedDeadline]: event is null");
+        ProjectUtility.debug("Work[getRecommendedDeadline]: event ->", event);
+
+        int avaliableDay = ProjectUtility.differanceDate (getDeadline(), (Date) event.get("start_date"));
+        ProjectUtility.debug("Work[getRecommendedProgressRate]: avaliableDay ->", avaliableDay);
+
+        return (int) getProduct().getProgressRate() / avaliableDay;
     }
 
     public Date getRecommendedDeadline() throws SQLException {
-        Date bufferDeadline = ProjectUtility.getDate(ProjectUtility.differanceDate(ProjectUtility.getDate(), getDeadline()));
-        Date recommendedDeadline = ProjectUtility.getDate(ProjectUtility.differanceDate(ProjectUtility.getDate(), getDeadline()));
-        while (true){
-            setDeadline(recommendedDeadline);
-            if (getEstimated().equals(Works.estimate_onTime)) break;
-            recommendedDeadline = ProjectUtility.getDateWithOffset(recommendedDeadline, 1);
-        }
 
-        setDeadline(bufferDeadline);
-        return recommendedDeadline;
+        if (getId() == null) setId(Works.getNewId());
+
+        HashMap<String, Work> workInPlan = new HashMap<>(Works.load());
+        workInPlan.put(getId(), this);
+        HashMap<String, Object> event = WorkCalendar.getEventFromWork(this, WorkCalendar.fetch(workInPlan));
+
+        if (event == null) throw new RuntimeException("Work[getRecommendedDeadline]: event is null");
+        ProjectUtility.debug("Work[getRecommendedDeadline]: event ->", event);
+        int workDay = (int) Math.ceil(getGoalAmount() * getProduct().getProgressRate());
+
+        return ProjectUtility.getDateWithOffset((Date) event.get("start_date"), workDay);
     }
 
     public int getEstimatedWorkDay() throws SQLException {
